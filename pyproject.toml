@@ -1,0 +1,67 @@
+[build-system]
+requires = ["hatchling==1.32.0"]
+build-backend = "hatchling.build"
+
+[project]
+name = "planrace-subnet"
+version = "0.1.0"
+description = "A Bittensor market for exact-result-verified SQL optimization artifacts"
+readme = "README.md"
+requires-python = ">=3.12,<3.13"
+license = "Apache-2.0"
+authors = [{ name = "PlanRace contributors" }]
+keywords = ["bittensor", "sql", "query-optimization", "verifiable-compute"]
+dependencies = [
+  "bittensor==11.1.0",
+  "fastapi==0.141.1",
+  "httpx==0.28.1",
+  "pydantic==2.13.5",
+  "typer==0.27.1",
+  "uvicorn==0.52.4",
+]
+
+[dependency-groups]
+dev = [
+  "detect-secrets==1.5.0",
+  "mypy==2.3.1",
+  "pip-audit==2.10.1",
+  "pytest==9.1.1",
+  "pytest-cov==7.1.0",
+  "ruff==0.16.5",
+]
+
+[project.scripts]
+planrace = "planrace.cli:app"
+
+[tool.hatch.build.targets.wheel]
+packages = ["planrace"]
+
+[tool.uv]
+required-version = "==0.12.7"
+
+[tool.pytest.ini_options]
+addopts = "--strict-config -ra"
+testpaths = ["tests"]
+
+[tool.coverage.run]
+branch = true
+source = ["planrace"]
+
+[tool.coverage.report]
+fail_under = 85
+show_missing = true
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["B", "E", "F", "I", "PERF", "RUF", "S", "SIM", "UP"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**/*.py" = ["S101"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+files = ["planrace"]
