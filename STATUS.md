@@ -16,7 +16,7 @@ Updated: 2026-08-31 (Asia/Tokyo)
 - official Subtensor localnet with three registered neurons;
 - endpoint publication and verified on-chain local weight update;
 - 37 unit/integration/property tests with 86.09% branch-aware coverage.
-- public evidence dashboard and reproducible demo UI.
+- public Vercel evidence dashboard and reproducible demo UI.
 
 ## In progress
 

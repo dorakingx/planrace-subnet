@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://planrace-verified-sql.doraking.chatgpt.site'),
+  metadataBase: new URL('https://planrace-subnet.vercel.app'),
   title: 'PlanRace — Verified Query Optimization Market',
   description:
     'A Bittensor subnet where miners compete on faster SQL artifacts and validators prove exact results before awarding weight.',

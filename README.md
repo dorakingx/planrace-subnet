@@ -2,7 +2,7 @@
 
 **The competitive market for verified query plans.**
 
-[Live evidence dashboard](https://planrace-verified-sql.doraking.chatgpt.site) ·
+[Live evidence dashboard](https://planrace-subnet.vercel.app) ·
 [GitHub](https://github.com/dorakingx/planrace-subnet)
 
 PlanRace is a Bittensor subnet prototype where miners return faster SQL rewrites and bounded index plans. Validators first require exact result equivalence on hidden generated databases; only correct artifacts compete on robust latency, plan cost, and amortized setup cost.
