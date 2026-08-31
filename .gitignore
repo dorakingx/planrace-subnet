@@ -14,3 +14,5 @@ build/
 *.egg-info/
 results/*.json
 !results/.gitkeep
+!results/localnet-epoch-8.json
+.localnet-state/

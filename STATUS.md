@@ -12,13 +12,13 @@ Updated: 2026-08-31 (Asia/Tokyo)
 - exact result oracle and scorer;
 - three reference miner profiles;
 - multi-epoch local simulation;
-- initial unit/integration tests.
+- signed Bittensor v11 miner/validator HTTP boundary;
+- official Subtensor localnet with three registered neurons;
+- endpoint publication and verified on-chain local weight update;
+- 35 unit/integration tests with 86.09% branch-aware coverage.
 
 ## In progress
 
-- dependency lock and CI verification;
-- Bittensor v11 signed HTTP miner/validator boundary;
-- local subtensor orchestration and on-chain weight evidence;
 - public dashboard and reproducible demo.
 
 ## Not complete

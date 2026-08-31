@@ -19,9 +19,9 @@ simulation.py ─ multiple epochs + ranking
 - `scoring.py`: reference execution, canonical hash, hard gate, and measured score.
 - `simulation.py`: epoch orchestration independent of a chain.
 
-## Target Bittensor data plane
+## Bittensor data plane
 
-Bittensor v11 removed the historical application networking stack, so PlanRace will own its FastAPI/httpx data plane and use `bittensor.http_auth.sign/verify` for receiver-bound request authentication. `ServeAxon` publishes endpoint metadata; it is not the HTTP server.
+Bittensor v11 removed the historical application networking stack, so PlanRace owns its FastAPI/httpx data plane and uses `bittensor.http_auth.sign/verify` for receiver-bound request authentication. `ServeAxon` publishes endpoint metadata; it is not the HTTP server. This path has been exercised against registered localnet neurons; see [LOCALNET.md](LOCALNET.md).
 
 ```text
 subtensor local/test

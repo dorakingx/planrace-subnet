@@ -54,6 +54,15 @@ The bootstrap installs the security-fixed, pinned `uv==0.12.7` inside `.bootstra
 
 See [MECHANISM.md](MECHANISM.md), [ARCHITECTURE.md](ARCHITECTURE.md), and [THREAT_MODEL.md](THREAT_MODEL.md).
 
+## Bittensor localnet proof
+
+The current implementation has also completed a signed, end-to-end epoch on an
+official local Subtensor image. Two registered miners served receiver-bound HTTP
+responses; exact-result verification scored the honest miner above zero and
+hard-gated the gaming miner to zero; the validator then wrote the resulting
+weight to netuid 2. See [LOCALNET.md](LOCALNET.md) and the
+[machine-readable run](results/localnet-epoch-8.json).
+
 ## Current status
 
 Implemented now:
@@ -66,10 +75,13 @@ Implemented now:
 - repeated timing, setup amortization, and plan-cost scoring;
 - honest, low-quality, and gaming miners;
 - multi-epoch simulation and tests.
+- Bittensor v11 receiver-bound signed miner HTTP;
+- validator dispatch and deterministic weight planning;
+- official Subtensor localnet registration, Axon publication, and weight evidence.
 
 Not yet claimed:
 
-- Bittensor localnet/testnet registration or on-chain weight evidence;
+- Bittensor testnet registration or on-chain weight evidence;
 - independent-validator timing calibration;
 - production sandbox isolation;
 - DuckDB/PostgreSQL tracks;

@@ -1,0 +1,45 @@
+{
+  "observed_at": "2026-08-31T21:13:08+09:00",
+  "network": "local",
+  "netuid": 2,
+  "task_id": "orders-v1-e8-20324183",
+  "seed_commitment": "0fd2e7847695e4f7443f6803bc5b1c3fd54569f0c99e9671e48192cff8b1646b",
+  "miners": [
+    {
+      "uid": 1,
+      "profile": "honest",
+      "hotkey": "5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty",
+      "accepted": true,
+      "correct": true,
+      "score": 9.083956420602034,
+      "result_hash": "684756d875205ef7b42065242d025cb271435640f6de1cb400b60e108cd632e2",
+      "reference_hash": "684756d875205ef7b42065242d025cb271435640f6de1cb400b60e108cd632e2",
+      "plan_cost": 56,
+      "median_warm_ms": 9.75925,
+      "setup_ms": 19.316917,
+      "failure_code": null
+    },
+    {
+      "uid": 2,
+      "profile": "gaming",
+      "hotkey": "5FLSigC9HGRKVhB9FiEo4Y3koPsNmBmLJbpXg2mp1hXcS59Y",
+      "accepted": true,
+      "correct": false,
+      "score": 0.0,
+      "failure_code": "result_mismatch"
+    }
+  ],
+  "weight_plan": {"uids": [1], "weights": [1.0]},
+  "extrinsic": {
+    "success": true,
+    "message": "Success",
+    "block_hash": "0x04d1ed9f36009f55bd90e0115014b27561800ee10413c4f88a6a657f08c44e25",
+    "extrinsic_id": "1870-0002",
+    "fee_tao": 0.0
+  },
+  "chain_readback": {
+    "validator_uid": 0,
+    "last_update": 1870,
+    "raw_weights": [[1, 65535]]
+  }
+}

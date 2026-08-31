@@ -1,6 +1,6 @@
 UV := .bootstrap/bin/uv
 
-.PHONY: bootstrap sync test lint typecheck audit verify demo secrets
+.PHONY: bootstrap sync test lint typecheck audit verify demo local-epoch secrets
 
 bootstrap:
 	./scripts/bootstrap.sh
@@ -28,3 +28,6 @@ verify: lint typecheck test secrets
 
 demo:
 	@$(UV) run planrace simulate --epochs 5
+
+local-epoch:
+	@$(UV) run python scripts/run_local_epoch.py --epoch 8
