@@ -2,6 +2,9 @@
 
 **The competitive market for verified query plans.**
 
+[Live evidence dashboard](https://planrace-verified-sql.doraking.chatgpt.site) ·
+[GitHub](https://github.com/dorakingx/planrace-subnet)
+
 PlanRace is a Bittensor subnet prototype where miners return faster SQL rewrites and bounded index plans. Validators first require exact result equivalence on hidden generated databases; only correct artifacts compete on robust latency, plan cost, and amortized setup cost.
 
 ```text
@@ -52,7 +55,8 @@ The bootstrap installs the security-fixed, pinned `uv==0.12.7` inside `.bootstra
 5. Correct artifacts are scored by repeated warm latency, plan complexity, and amortized setup cost.
 6. Epoch scores are aggregated into non-negative miner weights for Bittensor consensus.
 
-See [MECHANISM.md](MECHANISM.md), [ARCHITECTURE.md](ARCHITECTURE.md), and [THREAT_MODEL.md](THREAT_MODEL.md).
+See [MECHANISM.md](MECHANISM.md), [PROTOCOL.md](PROTOCOL.md), [SCORING.md](SCORING.md),
+[ARCHITECTURE.md](ARCHITECTURE.md), and [THREAT_MODEL.md](THREAT_MODEL.md).
 
 ## Bittensor localnet proof
 

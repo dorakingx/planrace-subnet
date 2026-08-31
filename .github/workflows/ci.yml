@@ -25,3 +25,21 @@ jobs:
       - run: uv run mypy planrace
       - run: uv run pytest --cov=planrace --cov-report=term-missing
       - run: uv run detect-secrets scan --all-files --exclude-files '(^uv\.lock$|^\.git/)' >/dev/null
+
+  dashboard:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: dashboard
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: npm
+          cache-dependency-path: dashboard/package-lock.json
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run build
+      - run: npm audit --audit-level=high
