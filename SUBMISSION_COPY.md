@@ -11,10 +11,14 @@ The competitive market for verified query plans.
 ## Short description
 
 PlanRace is a Bittensor subnet where miners produce faster SQL rewrites and
-bounded index plans. Validators replay artifacts on unpredictable hidden
-databases, require exact result equivalence, measure performance themselves,
+bounded index plans. Validators replay artifacts on unrevealed generated test
+databases, require exact result equality, measure performance themselves,
 and convert only correct scores into weights. It makes optimization open to
 competing solvers while keeping verification cheap, objective, and reproducible.
+
+The published epoch-8 evidence is historical protocol v1 localnet evidence. Its
+deterministic task ID leaked the fixture seed, responses were unsigned, and no
+testnet result is claimed; these limits are carried in the signed manifest.
 
 ## Users and roadmap
 

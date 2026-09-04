@@ -1,0 +1,13 @@
+FROM python@sha256:9d2e5553305c7c7b0097999bb17187c69b921ccd6bc9d40e4bb5ebe652c00285
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PIP_DISABLE_PIP_VERSION_CHECK=1 \
+    PYTHONPATH=/opt/planrace
+
+WORKDIR /opt/planrace
+RUN pip install --no-cache-dir pydantic==2.13.5 sqlglot==30.17.0
+COPY --chown=65532:65532 planrace /opt/planrace/planrace
+
+USER 65532:65532
+ENTRYPOINT ["python", "-m", "planrace.sandbox_worker"]

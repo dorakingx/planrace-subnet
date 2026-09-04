@@ -5,7 +5,7 @@
 [Live evidence dashboard](https://planrace-subnet.vercel.app) ·
 [GitHub](https://github.com/dorakingx/planrace-subnet)
 
-PlanRace is a Bittensor subnet prototype where miners return faster SQL rewrites and bounded index plans. Validators first require exact result equivalence on hidden generated databases; only correct artifacts compete on robust latency, plan cost, and amortized setup cost.
+PlanRace is a Bittensor subnet prototype where miners return faster SQL rewrites and bounded index plans. Validators first require exact result equality on unrevealed generated test databases; only correct artifacts compete on robust latency, plan cost, and amortized setup cost.
 
 ```text
 known-correct SQL + schema + commitment
@@ -16,12 +16,12 @@ known-correct SQL + schema + commitment
         │        │        │
         └────────┼────────┘
                  ▼
- hidden rows → exact result hash gate → performance score → weights
+ unrevealed test rows → exact result hash gate → performance score → weights
 ```
 
 ## Why this is a subnet
 
-Database workloads, engines, distributions, and releases keep changing. Independent miners can compete with rules, program synthesis, learned optimizers, and engine-specific expertise. Verification is cheaper than open-ended optimization: validators replay bounded artifacts, reject semantic drift exactly, and publish evidence that buyers can reproduce.
+Database workloads, engines, distributions, and releases keep changing. Independent miners can compete with rules, program synthesis, learned optimizers, and engine-specific expertise. Verification is cheaper than open-ended optimization: validators replay bounded artifacts, reject exact-result mismatches on test fixtures, and publish evidence that buyers can reproduce.
 
 PlanRace does **not** translate natural language to SQL and does not sell query answers. Its digital commodity is a reusable, executable optimization artifact for an already-correct query.
 
@@ -33,7 +33,7 @@ The repository includes three miner profiles and a multi-epoch simulator:
 - `baseline` returns the correct query unchanged;
 - `gaming-fast-wrong` widens a filter to appear productive but changes results.
 
-The validator generates hidden skewed datasets from committed seeds. Wrong results score zero before latency matters.
+The validator generates skewed test datasets from committed seeds. Wrong results score zero before latency matters. Historical protocol v1 encoded its deterministic seed in the task ID, so the published v1 run is not claimed as unpredictable; see its signed evidence limitations.
 
 ```bash
 make bootstrap
@@ -50,7 +50,7 @@ The bootstrap installs the security-fixed, pinned `uv==0.12.7` inside `.bootstra
 
 1. A validator publishes `QueryTask`: pinned engine, schema, known-correct SQL, task-generator version, seed commitment, limits, and repetitions.
 2. A miner returns `OptimizationArtifact`: candidate SQL plus at most two admitted `CREATE INDEX` statements.
-3. After the deadline, the validator reveals the task seed and builds the hidden database deterministically.
+3. After the deadline, the validator reveals the task seed and builds the generated test database deterministically.
 4. Reference and candidate results are canonicalized and SHA-256 hashed. Any mismatch receives zero.
 5. Correct artifacts are scored by repeated warm latency, plan complexity, and amortized setup cost.
 6. Epoch scores are aggregated into non-negative miner weights for Bittensor consensus.
@@ -60,9 +60,9 @@ See [MECHANISM.md](MECHANISM.md), [PROTOCOL.md](PROTOCOL.md), [SCORING.md](SCORI
 
 ## Bittensor localnet proof
 
-The current implementation has also completed a signed, end-to-end epoch on an
+The current implementation has also completed a request-authenticated end-to-end epoch on an
 official local Subtensor image. Two registered miners served receiver-bound HTTP
-responses; exact-result verification scored the honest miner above zero and
+requests; protocol v1 responses were not signed. Exact-result verification scored the honest miner above zero and
 hard-gated the gaming miner to zero; the validator then wrote the resulting
 weight to netuid 2. See [LOCALNET.md](LOCALNET.md) and the
 [machine-readable run](results/localnet-epoch-8.json).
@@ -85,7 +85,7 @@ Implemented now:
 
 Not yet claimed:
 
-- Bittensor testnet registration or on-chain weight evidence;
+- Bittensor testnet registration or testnet weight evidence;
 - independent-validator timing calibration;
 - production sandbox isolation;
 - DuckDB/PostgreSQL tracks;

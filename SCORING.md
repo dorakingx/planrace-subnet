@@ -1,15 +1,62 @@
-# Scoring
+# Scoring v2
 
-The validator first executes the reference query and hashes canonical result
-rows. Candidate output must have the same hash. Admission failure, timeout, SQL
-error, task mismatch, or result mismatch scores zero.
+PlanRace v2 ranks only artifacts that pass admission and produce exact result
+equality across the validator's multiple unrevealed databases and parameter
+sets. A wrong result, malformed bundle, policy violation, or excessive timeout
+rate receives zero. If the reference query or benchmark worker fails, the
+benchmark is invalid and weights are not updated from it.
 
-For a correct artifact:
+The historical `planrace/1` absolute score remains in `planrace/scoring.py` only
+to replay the v1 local-chain evidence. New mechanism work uses
+`planrace/scoring_v2.py`.
+
+## Same-worker relative measurement
+
+The validator measures the known-correct baseline and candidate in the same
+disposable worker. Trials alternate a randomized `baseline-first` /
+`candidate-first` order. Mixed workers and unbalanced order arms are invalid.
+For each paired trial and reuse horizon `h ∈ {1, 10, 100, 1000}`:
 
 ```text
-amortized_ms = median(warm repetitions) + setup_ms / 100
-score = 100 / (1 + amortized_ms + plan_instruction_count / 1000)
+B_h = baseline_cold_ms + (h - 1) × baseline_warm_ms
+C_h = (setup_ms + candidate_cold_ms + (h - 1) × candidate_warm_ms)
+      × (1 + artifact_bytes / database_bytes × 0.10)
+relative_log_speedup_h = log2(B_h / C_h)
 ```
 
-Measurements occur on the validator, never on miner-reported timing. Tracks and
-hardware must be calibrated separately; v1 does not compare unlike engines.
+The score uses a 10% winsorized center and a MAD-based lower confidence bound
+for each horizon. The lower-bound speedup becomes fractional savings, never a
+positive reward for a baseline-equivalent or slower artifact. Precommitted
+horizon masses are 15%, 25%, 30%, and 30%. Candidate timeout frequency applies
+a squared reliability penalty; a rate above 20% receives zero.
+
+This construction includes cold time, warm time, setup cost, storage cost, and
+timeouts while cancelling common hardware scale. It never trusts miner-reported
+timings.
+
+## Multi-epoch aggregation
+
+Each miner needs at least 12 tasks, every required workload family, at least 75%
+availability, and at least 95% compliance. Family scores receive fixed equal
+mass so a validator cannot silently inflate a miner by over-sampling its best
+family. The aggregate is a winsorized family center minus a MAD uncertainty
+penalty, then multiplied by observed availability and compliance.
+
+Artifacts sharing a canonical strategy digest form one reward group. The group
+receives at most its best member's reward and identities split that fixed mass;
+duplicating an identity cannot create reward. Final canonical-strategy weights
+have a 20% cap and require five distinct positive strategies. If
+all candidates fail, diversity is insufficient, or the cap cannot be met, the
+validator emits a safe no-update instead of fabricating a winner.
+
+Every allocation reports strategy-level Gini, HHI, top-one share, and effective
+strategy count.
+Rank stability is measured with Kendall tau-b.
+
+## Implementation boundary
+
+`score_benchmark` consumes validator-owned measurements; it does not execute SQL
+or weaken the sandbox. Result canonicalization, hidden holdout construction,
+and sandbox enforcement are protocol gates upstream of this mechanism. See
+`MECHANISM_SIMULATION.md` for deterministic adversarial evidence and its stated
+limits.

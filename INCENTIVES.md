@@ -1,12 +1,17 @@
-# Incentives
+# Incentives v2
 
-Positive epoch scores are normalized into non-negative weights. Zero-scoring
-miners receive no weight; UID order is deterministic. Hidden committed seeds
-make fixed-answer memorization unprofitable, exact hashes defeat semantic
-shortcuts, receiver-bound signatures resist replay/relay, and setup amortization
-discourages indexes whose build cost exceeds repeat value.
+Weights reward a lower-confidence, baseline-relative saving measured on the
+validator—not a miner's claimed runtime and not an absolute millisecond score.
+Exact result equality and policy compliance are hard gates. Cold/warm execution,
+setup, storage, four reuse horizons, and timeouts are all priced explicitly.
 
-Production aggregation should use several validators, workload-family quotas,
-robust multi-epoch statistics, and public replay artifacts. Concentration,
-collusion, curriculum bias, and hardware variance remain explicit risks rather
-than claimed-away problems.
+Across epochs, fixed workload-family mass, downside uncertainty, availability,
+and compliance prevent one lucky or cherry-picked task from determining weight.
+Canonical duplicate strategies share one fixed reward pool and allocation, so
+identity cloning does not add strategy reward. A 20% canonical-strategy cap and
+reported Gini, HHI, and top-one share make concentration observable and bounded
+under the current policy. All failures produce a safe no-update.
+
+These are mechanism rules, not a claim of solved real-world Sybil resistance.
+The deterministic evidence in `results/mechanism-v2/` exercises duplicate
+identities and validator attacks; testnet observations are still required.

@@ -1,0 +1,31 @@
+{
+  "artifacts": {
+    "profile-rewards.csv": "e5e8818c943c52a72a8750d402ef510b97e99c3492211d3ce3aac11ffb573d51",
+    "replications.csv": "858efb1df979ebdaec0ed9efb2915991170f9ccace7f40e35b454960c8f80d64",
+    "simulation.json": "8c31b86d65dcdc696386a9d2611ccf9f2270071405cf23d133fb9bde3f982209",
+    "summary.json": "6edee4f0102b410574d619a27de6733cdf8209cfaf3ede8d0a1f06c4e758454d"
+  },
+  "config_sha256": "5bcf51d30323072739665ba2c823ef348b0f0a81b0639e13b2fd6bae226901d3",
+  "dependency_lock": {
+    "path": "uv.lock",
+    "sha256": "f6570d432c7c467dbb830734724e6c8eab0a97564dd287b6eee2ae2008d0f50d"
+  },
+  "environment": {
+    "byteorder": "little",
+    "implementation": "CPython",
+    "platform": "macOS-15.6.1-arm64-arm-64bit",
+    "python": "3.12.3",
+    "sqlite": "3.45.1"
+  },
+  "reproduction_command": "uv run python scripts/run_mechanism_v2.py",
+  "root_seed": 20260901,
+  "schema_version": "planrace-mechanism-evidence/2",
+  "seed_commitment": "d79f0f7af9d5ecf1a066a7ccdf87919809186d61fed121832f38e42e98652b78",
+  "source_files": {
+    "planrace/mechanism_simulation.py": "3c720f38c35b66a11f4264194bdf5a226a3f93a8674156d317567e7c4eec441f",
+    "planrace/scoring_v2.py": "a1e5233a47ec9d7c6fcf981a1b8578ac06092b2cbc69aa5c268d5f46acefa881",
+    "scripts/run_mechanism_v2.py": "e66a27e4de7c7909201439f1eaf8e6507173a56cdbadef57192ddb7b3ac8909b"
+  },
+  "source_git_base_commit": "3bf091901c4867725f2013cff2d2a64d84801861",
+  "source_tree_dirty": true
+}

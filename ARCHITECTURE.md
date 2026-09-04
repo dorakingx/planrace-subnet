@@ -3,7 +3,7 @@
 ## Current executable slice
 
 ```text
-taskgen.py ── QueryTask + hidden workload ──┐
+taskgen.py ── QueryTask + generated fixture ─┐
                                             │
 miners.py ── OptimizationArtifact ──────────┼─ scoring.py ─ ScoreBreakdown
                                             │
@@ -13,7 +13,7 @@ simulation.py ─ multiple epochs + ranking
 ```
 
 - `models.py`: strict immutable versioned wire objects.
-- `taskgen.py`: deterministic hidden workload, seed commitment, and reveal verification.
+- `taskgen.py`: historical v1 deterministic fixture, seed commitment, and reveal verification.
 - `miners.py`: reference strategies only; the protocol does not require their implementation.
 - `sandbox.py`: narrow SQL/DDL admission and query progress deadline.
 - `scoring.py`: reference execution, canonical hash, hard gate, and measured score.

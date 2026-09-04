@@ -1,0 +1,290 @@
+{
+  "accepted_injected_false_claims": 0,
+  "all_fail_safe_no_update_rate": 1.0,
+  "duplicate_evaluation_cache_hits": 12288,
+  "epochs_per_replication": 24,
+  "false_acceptance_rate": 0.0,
+  "false_acceptances": 0,
+  "hardware_rank_pair_count": 64,
+  "hardware_rank_stability_tau_b": 1.0,
+  "honest_winner_rate": 1.0,
+  "injected_false_claims": 6079,
+  "invalid_attempts": 42563,
+  "max_abs_sybil_strategy_allocation_gain": 5.551115123125783e-17,
+  "max_top1_share": 0.20000000000000007,
+  "mean_gaming_weight": 0.0,
+  "mean_gini": 0.15356540052240986,
+  "mean_hhi": 0.11162784106205938,
+  "mean_honest_weight": 0.9186989242700128,
+  "mean_rank_stability_tau_b": 0.5623597611388972,
+  "mean_sybil_strategy_allocation_gain": 1.3629970168389198e-18,
+  "mean_sybil_weight": 0.08130107572998721,
+  "mean_top1_share": 0.1357572017666779,
+  "mean_validator_disagreement_tv": 0.09707791165925282,
+  "measured_trial_pairs": 1805670,
+  "miner_profile_count": 18,
+  "profile_metrics": {
+    "aggregate-rewrite": {
+      "category": "honest",
+      "gate_failures": {
+        "insufficient_tasks": 144
+      },
+      "mean_aggregate_reward": 35.715115481194516,
+      "mean_weight": 0.0953243584659388,
+      "strategy_digest": "3861095f7191f888d78b2949b163f9e2344edd91d601c6688362a7f9220684c5"
+    },
+    "balanced-index": {
+      "category": "honest",
+      "gate_failures": {
+        "insufficient_tasks": 167
+      },
+      "mean_aggregate_reward": 27.900147874272815,
+      "mean_weight": 0.07534815501765431,
+      "strategy_digest": "dec29c283ffd4915cfb3f2f0c0b76f078c2e690d90a0b93ca68ebd1bbc9d37e6"
+    },
+    "cold-specialist": {
+      "category": "honest",
+      "gate_failures": {
+        "insufficient_tasks": 148
+      },
+      "mean_aggregate_reward": 9.13278070413966,
+      "mean_weight": 0.024340515741951018,
+      "strategy_digest": "10b7dfb01d6e14a7c058b556f39ed9d01ce8382260354675262421b1a942f9e6"
+    },
+    "conservative": {
+      "category": "honest",
+      "gate_failures": {
+        "insufficient_tasks": 159
+      },
+      "mean_aggregate_reward": 13.320206558401345,
+      "mean_weight": 0.035556822076905935,
+      "strategy_digest": "f5edde91272cd0cd992a45f4219cb3dca69eacf4b1d0b98a3a0c1d7a8ec559ec"
+    },
+    "constant-answer": {
+      "category": "gaming",
+      "gate_failures": {
+        "correctness_gate": 375,
+        "insufficient_tasks": 137
+      },
+      "mean_aggregate_reward": 0.0,
+      "mean_weight": 0.0,
+      "strategy_digest": "12a852a08f64fd31cbcaf924a31f2b13616b4b8a3e8bc0f4f05d99abc9e19462"
+    },
+    "covering-join": {
+      "category": "honest",
+      "gate_failures": {
+        "insufficient_tasks": 124
+      },
+      "mean_aggregate_reward": 35.08472855211119,
+      "mean_weight": 0.09455764435101718,
+      "strategy_digest": "bc2d1556175bc612f20be018bbaccc490f0d2b624fb1c39ee63b1b76cec6957e"
+    },
+    "fixture-memorizer": {
+      "category": "gaming",
+      "gate_failures": {
+        "correctness_gate": 354,
+        "insufficient_tasks": 158
+      },
+      "mean_aggregate_reward": 0.0,
+      "mean_weight": 0.0,
+      "strategy_digest": "9f3ec7995e22191f299fa62076f3ee2c2f228cec33f46895921d400144821e09"
+    },
+    "high-setup-star": {
+      "category": "honest",
+      "gate_failures": {
+        "insufficient_tasks": 154
+      },
+      "mean_aggregate_reward": 29.69705707787035,
+      "mean_weight": 0.08095239946354736,
+      "strategy_digest": "0e54f23acc7d5bfccb188e056bb972a1e0738f87220b7c97a2524778d5b9df89"
+    },
+    "low-storage": {
+      "category": "honest",
+      "gate_failures": {
+        "insufficient_tasks": 137
+      },
+      "mean_aggregate_reward": 23.26208537425306,
+      "mean_weight": 0.06310023298173312,
+      "strategy_digest": "3f784135ee64c669ae90c04617f432c23e72ece3261330c8f6e25acffe2bc337"
+    },
+    "malformed-bundle": {
+      "category": "gaming",
+      "gate_failures": {
+        "compliance_gate": 311,
+        "insufficient_tasks": 201
+      },
+      "mean_aggregate_reward": 0.0,
+      "mean_weight": 0.0,
+      "strategy_digest": "1db89624c575ef687aa28343f1a6b8c329e73b65fc8f874440b3cee5057e8b02"
+    },
+    "noisy-search": {
+      "category": "honest",
+      "gate_failures": {
+        "insufficient_tasks": 151
+      },
+      "mean_aggregate_reward": 31.43998463207707,
+      "mean_weight": 0.08450036925257852,
+      "strategy_digest": "01a2a9bab588bc6921e76551b11f9b2b8134b9df016a948063ff656a468d10e3"
+    },
+    "partial-index": {
+      "category": "honest",
+      "gate_failures": {
+        "insufficient_tasks": 154
+      },
+      "mean_aggregate_reward": 29.254667159765535,
+      "mean_weight": 0.07843602328753761,
+      "strategy_digest": "b05ea915314a52b19ffd97b60779872d6e584c02734e4ed1a9b99e22d8bfd422"
+    },
+    "robust-generalist": {
+      "category": "honest",
+      "gate_failures": {
+        "insufficient_tasks": 146
+      },
+      "mean_aggregate_reward": 25.75127257877006,
+      "mean_weight": 0.06892561912397904,
+      "strategy_digest": "572a955c2bebb624a50a3e251e48b0bdab35a877c93b78ea7aaa33ee26f23c6e"
+    },
+    "sybil-copy-a": {
+      "category": "sybil",
+      "gate_failures": {
+        "insufficient_tasks": 139
+      },
+      "mean_aggregate_reward": 13.147168324209515,
+      "mean_weight": 0.0355692206318694,
+      "strategy_digest": "c9be5403e18d9d4e4756dd2823f143bd5b8843a887aaa4bce5efdb5f84667dfc"
+    },
+    "sybil-copy-b": {
+      "category": "sybil",
+      "gate_failures": {
+        "insufficient_tasks": 139
+      },
+      "mean_aggregate_reward": 13.147168324209515,
+      "mean_weight": 0.0355692206318694,
+      "strategy_digest": "c9be5403e18d9d4e4756dd2823f143bd5b8843a887aaa4bce5efdb5f84667dfc"
+    },
+    "timeout-prone": {
+      "category": "honest",
+      "gate_failures": {
+        "insufficient_tasks": 415
+      },
+      "mean_aggregate_reward": 6.262689468555998,
+      "mean_weight": 0.015424942015796927,
+      "strategy_digest": "54ffe48cca13904611776f11006f580b8f5360cb388e0c35cdad185ebaae5e08"
+    },
+    "warm-specialist": {
+      "category": "honest",
+      "gate_failures": {
+        "insufficient_tasks": 162
+      },
+      "mean_aggregate_reward": 33.345958038546144,
+      "mean_weight": 0.08739447695762137,
+      "strategy_digest": "11b24d3e457a936d2a24672bdb8ba347d416ffafdff0721b054377f1a30bc365"
+    },
+    "wrong-fast": {
+      "category": "gaming",
+      "gate_failures": {
+        "correctness_gate": 330,
+        "insufficient_tasks": 182
+      },
+      "mean_aggregate_reward": 0.0,
+      "mean_weight": 0.0,
+      "strategy_digest": "f222bef6999bb022ae1ad7dd22a16a6c4c5b8272900ab60fe2682ae769bfe788"
+    }
+  },
+  "replications": 512,
+  "scenario_metrics": {
+    "all-fail": {
+      "accepted_injected_false_claims": 0,
+      "false_acceptance_rate": 0.0,
+      "injected_false_claims": 0,
+      "mean_cross_validator_disagreement_tv": null,
+      "mean_gaming_weight": 0.0,
+      "mean_tau_b": null,
+      "mean_top1_share": 0.0,
+      "planned_rate": 0.0,
+      "replications": 64
+    },
+    "curriculum-skew": {
+      "accepted_injected_false_claims": 0,
+      "false_acceptance_rate": 0.0,
+      "injected_false_claims": 0,
+      "mean_cross_validator_disagreement_tv": 0.057831239081222646,
+      "mean_gaming_weight": 0.0,
+      "mean_tau_b": 0.5695622956142815,
+      "mean_top1_share": 0.13289252555420272,
+      "planned_rate": 1.0,
+      "replications": 64
+    },
+    "false-accept-claim": {
+      "accepted_injected_false_claims": 0,
+      "false_acceptance_rate": 0.0,
+      "injected_false_claims": 6079,
+      "mean_cross_validator_disagreement_tv": 0.05783123908122263,
+      "mean_gaming_weight": 0.0,
+      "mean_tau_b": 0.5695622956142815,
+      "mean_top1_share": 0.1328925255542027,
+      "planned_rate": 1.0,
+      "replications": 64
+    },
+    "fast-worker": {
+      "accepted_injected_false_claims": 0,
+      "false_acceptance_rate": 0.0,
+      "injected_false_claims": 0,
+      "mean_cross_validator_disagreement_tv": 0.057831239081222646,
+      "mean_gaming_weight": 0.0,
+      "mean_tau_b": 0.5695622956142815,
+      "mean_top1_share": 0.13289252555420272,
+      "planned_rate": 1.0,
+      "replications": 64
+    },
+    "honest": {
+      "accepted_injected_false_claims": 0,
+      "false_acceptance_rate": 0.0,
+      "injected_false_claims": 0,
+      "mean_cross_validator_disagreement_tv": 0.05783123908122263,
+      "mean_gaming_weight": 0.0,
+      "mean_tau_b": 0.5695622956142815,
+      "mean_top1_share": 0.1328925255542027,
+      "planned_rate": 1.0,
+      "replications": 64
+    },
+    "order-bias": {
+      "accepted_injected_false_claims": 0,
+      "false_acceptance_rate": 0.0,
+      "injected_false_claims": 0,
+      "mean_cross_validator_disagreement_tv": 0.10691123640954454,
+      "mean_gaming_weight": 0.0,
+      "mean_tau_b": 0.5691159151842782,
+      "mean_top1_share": 0.14468972234105557,
+      "planned_rate": 1.0,
+      "replications": 64
+    },
+    "slow-worker": {
+      "accepted_injected_false_claims": 0,
+      "false_acceptance_rate": 0.0,
+      "injected_false_claims": 0,
+      "mean_cross_validator_disagreement_tv": 0.057831239081222646,
+      "mean_gaming_weight": 0.0,
+      "mean_tau_b": 0.5695622956142815,
+      "mean_top1_share": 0.13289252555420272,
+      "planned_rate": 1.0,
+      "replications": 64
+    },
+    "timing-outliers": {
+      "accepted_injected_false_claims": 0,
+      "false_acceptance_rate": 0.0,
+      "injected_false_claims": 0,
+      "mean_cross_validator_disagreement_tv": 0.283477949799112,
+      "mean_gaming_weight": 0.0,
+      "mean_tau_b": 0.5195909347165941,
+      "mean_top1_share": 0.1411480622546763,
+      "planned_rate": 1.0,
+      "replications": 64
+    }
+  },
+  "strategy_evaluations": 208896,
+  "sybil_allocation_comparison_count": 448,
+  "sybil_strategy_allocation_gain": 5.551115123125783e-17,
+  "validator_disagreement_pair_count": 1344,
+  "validator_scenario_count": 8
+}

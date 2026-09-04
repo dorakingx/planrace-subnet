@@ -14,12 +14,26 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://planrace-subnet.vercel.app'),
-  title: 'PlanRace — Verified Query Optimization Market',
+  title: {
+    default: 'PlanRace — Verified Query Optimization Market',
+    template: '%s · PlanRace',
+  },
   description:
-    'A Bittensor subnet where miners compete on faster SQL artifacts and validators prove exact results before awarding weight.',
+    'A Bittensor subnet where miners compete on faster query artifacts and validators check exact results before awarding weight.',
+  alternates: {
+    canonical: '/',
+  },
+  applicationName: 'PlanRace',
+  category: 'technology',
+  icons: {
+    icon: '/favicon.svg',
+  },
   openGraph: {
     title: 'PlanRace — Faster queries. Truth first.',
     description: 'A verified query-optimization market on Bittensor.',
+    type: 'website',
+    url: '/',
+    siteName: 'PlanRace',
     images: ['/og.png'],
   },
   twitter: {

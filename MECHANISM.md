@@ -1,58 +1,75 @@
-# Incentive Mechanism
+# Incentive Mechanism v2
 
-## Commodity
+## Commodity and validity
 
-A PlanRace artifact is a versioned, canonical pair:
+The v2 commodity is a versioned, canonical optimization bundle admitted by the
+track policy. The validator—not the miner—executes it in isolation. A candidate
+is valid only when it produces exact result equality against the known-correct
+query across multiple unrevealed databases and parameter sets. Incorrect,
+malformed, non-compliant, late, replayed, or over-budget submissions receive
+zero.
 
-1. an SQL statement semantically equivalent to a supplied known-correct statement; and
-2. zero or more bounded index definitions admitted by the track policy.
+This does not claim universal semantic equivalence. It is finite, replayable
+evidence over a precommitted hidden holdout and pinned engine.
 
-The artifact is executable and independently replayable. Prose advice, natural-language answers, and approximate result sets are not commodities in v1.
+## Lifecycle
 
-## Task lifecycle
+1. **Commit:** bind the opaque task, validator, engine/generator/policy digests,
+   hidden fixture root, deadline, and independent secret seed/salt.
+2. **Compete:** authenticated miners return signed, receiver-bound bundles
+   without access to holdout fixtures.
+3. **Close:** seal accepted submissions at the deadline; reject late or replayed
+   responses.
+4. **Reveal and audit:** reveal after close so peers can regenerate fixtures and
+   verify the commitment.
+5. **Gate:** enforce admission, isolation, resource limits, and exact result
+   equality. Any gate failure is zero.
+6. **Benchmark:** interleave candidate and reference measurements on the same
+   worker across cold/warm runs and four reuse horizons.
+7. **Aggregate:** apply fixed family quotas, robust centers, uncertainty,
+   availability, compliance, and canonical duplicate grouping.
+8. **Allocate:** cap concentration, publish metrics, and produce either a
+   non-negative vector or an explicit safe no-update.
 
-1. **Commit:** validator publishes the task, limits, generator version, and `SHA256(protocol, task_id, seed, salt)`.
-2. **Compete:** miners search without seeing hidden rows or distributions.
-3. **Close:** submissions stop at the epoch deadline.
-4. **Reveal:** validator reveals seed and salt; peers verify the commitment and regenerate rows.
-5. **Gate:** every candidate must parse, stay within the SQL policy, finish within resource limits, and exactly match the reference canonical result.
-6. **Rank:** correct artifacts compete on robust execution cost. Wrong artifacts receive exactly zero.
-7. **Emit:** normalized positive epoch aggregates become weights; a later implementation will set them through the Bittensor SDK.
+## Score and weight policy
 
-## Score v1
+The complete formula and defaults are in `SCORING.md` and executable in
+`planrace/scoring_v2.py`. Important invariants are:
 
-For a correct candidate:
+- absolute worker speed cannot create advantage because every timing is paired
+  with its baseline on that worker;
+- setup and storage can make a candidate lose at horizon 1 yet win at horizon
+  1000, and all four precommitted horizons retain weight;
+- wrong/constant results and malformed bundles cannot trade correctness for
+  speed;
+- timing outliers influence a winsorized center and a downside confidence bound;
+- one strategy digest receives one reward pool even when submitted by multiple
+  identities;
+- fewer than five distinct positive strategies, all-fail outcomes, or an
+  unsatisfiable 20% cap produce no update.
 
-```text
-amortized_ms = median_warm_ms + setup_ms / expected_reuses
-score = 100 / (1 + amortized_ms + explain_opcode_count / 1000)
-```
+## Gaming and validator analysis
 
-`expected_reuses = 100` in the local prototype. The value will be part of a public track policy before testnet and cannot change within an epoch.
-
-The formula deliberately uses no miner-reported time. Validators measure locally. The prototype reports plan complexity separately; production scoring will keep cold, warm, setup, memory, and robustness components observable rather than hiding them inside one timer.
-
-## Gaming analysis
-
-| Attack | v1 response | Remaining risk |
+| Attack | v2 response | Remaining risk |
 |---|---|---|
-| Return fewer/approximate rows | Exact canonical hash → zero | Canonicalization must define numeric and NULL semantics per engine |
-| Memorize public fixtures | Hidden committed seed and changing skew | Generator leakage or small curriculum |
-| Multi-statement mutation | Admission rejection | Parser/grammar mismatch |
-| Expensive denial query | Progress deadline and zero | In-process SQLite is not sufficient production isolation |
-| Optimize only warm cache | Separate warm metric | Need cold/IO tracks and calibrated images |
-| Index everything | Setup limit and amortized setup cost | Reuse assumption affects winner |
-| Validator favors one strategy | Revealable generator and peer replay | Validator-written curricula remain governance power |
-| Duplicate winner | Artifact hashing/deduplication planned | Attribution and incremental novelty need a policy |
+| Constant or fast wrong output | Exact hidden-holdout gate → zero | Holdout/generator leakage |
+| Claim fabricated timing | Validator-owned same-worker timing | Compromised validator worker |
+| Faster/slower validator hardware | Baseline-relative paired ratios | Architecture-specific query-plan changes |
+| First/second-run cache bias | Balanced randomized interleaving | Higher-order thermal/IO drift |
+| One extreme timing sample | Winsorized center + MAD lower bound | Coordinated nonstationary noise |
+| Optimize only warm cache | Separate cold/warm metrics and four horizons | Chosen horizon masses are governance policy |
+| Index everything | Setup + storage overhead | Storage proxy may not equal buyer cost |
+| Duplicate/Sybil identities | Canonical digest group splits fixed reward | Novel-looking collusive artifacts |
+| Validator curriculum skew | Fixed workload-family mass | Biased generator inside a family |
+| Every candidate fails | Explicit no-update | Liveness until honest candidates return |
 
-## Weight policy (planned testnet)
+## Evidence and limitations
 
-- Aggregate per-task scores with fixed workload-family masses.
-- Winsorize timing outliers only by a precommitted rule.
-- Require a minimum number of correct tasks before a miner receives non-dust weight.
-- Normalize eligible aggregates to the SDK's non-negative weight vector.
-- Do not promise Sybil resistance until identity-splitting simulations and live observations support it.
+`results/mechanism-v2/` contains 512 deterministic multi-epoch replications, 18
+miner profiles, eight validator conditions, CSV/JSON outputs, environment/lock
+hashes, and a source/seed manifest. See `MECHANISM_SIMULATION.md`.
 
-## Buyer path
-
-A buyer submits a query, sanitized schema, engine version, and statistics/distribution generator or private evaluation adapter. The returned artifact includes SQL, indexes, engine/version, result-evidence hashes, score components, and validator attestations. The initial hackathon demo uses generated data and makes no claim that customer data should be exposed to miners.
+Synthetic simulation validates implementation invariants and exposes policy
+sensitivity; it is not testnet evidence, proof of economic equilibrium, or proof
+against arbitrary collusion. Historical v1 evidence remains replayable and is
+not relabelled as v2.

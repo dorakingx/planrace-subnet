@@ -1,0 +1,111 @@
+{
+  "schema_version": "planrace/evidence/1",
+  "environment": "localnet",
+  "network": "local",
+  "netuid": 2,
+  "run_id": "localnet-v1-netuid-2-epoch-8",
+  "epoch": 8,
+  "git_commit": "e9f9661dfa98ebda9baddec3018690ee1a5b206a",
+  "container_digests": {
+    "subtensor-localnet": "966520a59b71931d81cf14b0a2ef18e74e8541bab03653b1857ed29b51be4a28"
+  },
+  "protocol_version": "planrace/1",
+  "validator_hotkeys": ["5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY"],
+  "miner_hotkeys": [
+    "5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty",
+    "5FLSigC9HGRKVhB9FiEo4Y3koPsNmBmLJbpXg2mp1hXcS59Y"
+  ],
+  "task_commitment": "0fd2e7847695e4f7443f6803bc5b1c3fd54569f0c99e9671e48192cff8b1646b",
+  "task_reveal": {
+    "task_id": "orders-v1-e8-20324183",
+    "seed": 20324183,
+    "salt": "b9746b277c1e1fb576b9d92567e739b8",
+    "reveal_digest": "ec95811e0306402bcc02fba0dd0640b06769071871cab6ae3fe08cbea95bbcaf",
+    "verified": true
+  },
+  "request_digests": [],
+  "response_digests": [],
+  "authentication": {
+    "authenticated_requests": 2,
+    "signed_responses": 0,
+    "request_protocol": "btauth/1",
+    "response_protocol": null
+  },
+  "scores": [
+    {
+      "uid": 1,
+      "miner_hotkey": "5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty",
+      "profile": "honest / indexed",
+      "accepted": true,
+      "correct": true,
+      "score": 9.083956420602034,
+      "failure_code": null,
+      "result_hash": "684756d875205ef7b42065242d025cb271435640f6de1cb400b60e108cd632e2",
+      "reference_hash": "684756d875205ef7b42065242d025cb271435640f6de1cb400b60e108cd632e2",
+      "median_warm_ms": 9.75925,
+      "setup_ms": 19.316917,
+      "plan_cost": 56,
+      "baseline_relative_speedup": null
+    },
+    {
+      "uid": 2,
+      "miner_hotkey": "5FLSigC9HGRKVhB9FiEo4Y3koPsNmBmLJbpXg2mp1hXcS59Y",
+      "profile": "gaming / widened filter",
+      "accepted": true,
+      "correct": false,
+      "score": 0.0,
+      "failure_code": "result_mismatch",
+      "result_hash": null,
+      "reference_hash": "684756d875205ef7b42065242d025cb271435640f6de1cb400b60e108cd632e2",
+      "median_warm_ms": null,
+      "setup_ms": null,
+      "plan_cost": null,
+      "baseline_relative_speedup": null
+    }
+  ],
+  "weight_plan": {
+    "uids": [1],
+    "weights": [1.0]
+  },
+  "extrinsics": [
+    {
+      "extrinsic_id": "1870-0002",
+      "block_hash": "04d1ed9f36009f55bd90e0115014b27561800ee10413c4f88a6a657f08c44e25",
+      "success": true,
+      "message": "Success",
+      "fee_tao": 0.0
+    }
+  ],
+  "readback": {
+    "validator_uid": 0,
+    "last_update": 1870,
+    "raw_weights": [[1, 65535]]
+  },
+  "timestamps": {
+    "observed_at": "2026-08-31T21:13:08+09:00",
+    "signed_at": "2026-09-01T06:15:00+09:00"
+  },
+  "known_limitations": [
+    "LOCALNET EVIDENCE only; no Bittensor testnet deployment or testnet weight evidence is claimed.",
+    "Protocol v1 exposed a deterministic seed in the task ID and used a deterministic salt; this run is historical evidence, not proof of v2 task secrecy.",
+    "Requests used receiver-bound btauth/1 authentication, but miner responses were not signed.",
+    "Raw HTTP request and response bytes were not retained, so their digests are unavailable in this reconstructed manifest.",
+    "The run used one validator identity and two miners with public local-development keys.",
+    "Exact result equality was checked on one unrevealed generated database; this is not universal SQL semantic-equivalence proof.",
+    "Baseline-relative performance was not recorded; the displayed score uses the historical v1 absolute formula.",
+    "The validator used Bittensor's public //Alice development key, so this legacy signature detects unsigned edits but cannot establish exclusive operator attribution.",
+    "The manifest was reconstructed and signed after the run from committed raw evidence rather than emitted in-band during epoch 8."
+  ],
+  "source_artifacts": [
+    {
+      "path": "results/localnet-epoch-8.json",
+      "sha256": "db72a272accbb7948fb234e181832345f1a1ddaaccc00dab6ab374d5b433804f"
+    }
+  ],
+  "validator_signature": {
+    "algorithm": "sr25519",
+    "signer_hotkey": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
+    "signed_payload_sha256": "bc104453b3a10f3028d72ce5f451bcf2933e1b6ac5564eb6a89ce6e144c63be0",
+    "signature_hex": "ee58c30617b0f30e9b540c922058072e1b24b9e447a692fd20c183586281dd77944fe9f8c515f40779146377dce3e372012aa18360229cf3918b768ddf73558a"
+  }
+}

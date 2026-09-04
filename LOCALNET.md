@@ -2,7 +2,7 @@
 
 PlanRace has completed an end-to-end run on a real local Subtensor node: subnet
 creation, activation, neuron registration, endpoint publication, receiver-bound
-HTTP authentication, hidden-workload scoring, and an on-chain weight update.
+request authentication, unrevealed-fixture scoring, and a local-chain weight update.
 This is local-chain evidence, not a testnet claim.
 
 ## Reproduce the data plane
@@ -34,13 +34,17 @@ script hard-codes network `local` and Bittensor's public `//Alice`, `//Bob`, and
 - Honest miner: Bob, UID `1`, endpoint `192.168.3.12:8091`
 - Gaming miner: Charlie, UID `2`, endpoint `192.168.3.12:8092`
 
-The signed epoch-8 request accepted both authenticated responses. Bob reproduced
-the reference hash and scored `9.083956420602034`; Charlie changed the result and
-was hard-gated to zero. The derived `[UID 1: 1.0]` plan was accepted at
+The validator delivered a receiver-bound signed request to each miner. The
+responses were not signed in protocol v1 and are not described as authenticated.
+Bob reproduced the reference hash and scored `9.083956420602034`; Charlie changed
+the result and was hard-gated to zero. The derived `[UID 1: 1.0]` plan was accepted at
 `1870-0002`, block hash
 `0x04d1ed9f36009f55bd90e0115014b27561800ee10413c4f88a6a657f08c44e25`.
 Readback showed raw weights `[(1, 65535)]` and `last_update=1870`.
-Machine-readable evidence is in [results/localnet-epoch-8.json](results/localnet-epoch-8.json).
+Machine-readable chain evidence is in
+[results/localnet-epoch-8.json](results/localnet-epoch-8.json). The independently
+verifiable signed envelope, including explicit v1 limitations, is
+[dashboard/evidence/localnet-v1-epoch-8.json](dashboard/evidence/localnet-v1-epoch-8.json).
 
 ## Local-only deviations
 

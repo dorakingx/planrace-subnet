@@ -1,6 +1,4 @@
 @import 'tailwindcss';
-@import 'tw-animate-css';
-@import 'shadcn/tailwind.css';
 
 @custom-variant dark (&:is(.dark *));
 
@@ -50,6 +48,16 @@
 
 body {
   font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  min-width: 20rem;
+}
+
+:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 3px;
+}
+
+.skip-link {
+  @apply fixed top-3 left-3 z-50 -translate-y-20 rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground transition-transform focus:translate-y-0;
 }
 
 :root {
@@ -107,10 +115,23 @@ body {
   @apply max-w-2xl text-3xl font-semibold tracking-[-0.04em] sm:text-4xl;
 }
 .cta-primary {
-  @apply inline-flex h-10 items-center rounded-md bg-primary px-4 text-sm font-semibold text-primary-foreground transition hover:brightness-110;
+  @apply inline-flex min-h-10 items-center rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground transition hover:brightness-110;
 }
 .cta-secondary {
-  @apply inline-flex h-10 items-center gap-2 rounded-md border border-white/15 px-4 text-sm font-medium transition hover:border-white/30 hover:bg-white/5;
+  @apply inline-flex min-h-10 items-center gap-2 rounded-md border border-white/15 px-4 py-2 text-sm font-medium transition hover:border-white/30 hover:bg-white/5;
+}
+.evidence-field {
+  @apply min-w-0 rounded-lg border border-white/10 bg-card/70 p-4;
+}
+.evidence-field dt,
+.field-label {
+  @apply font-mono text-[10px] uppercase tracking-widest text-muted-foreground;
+}
+.evidence-field dd {
+  @apply mt-2 break-all font-mono text-xs;
+}
+.hash-value {
+  @apply mt-1 block break-all font-mono text-xs leading-5 text-foreground;
 }
 
 .dark {
