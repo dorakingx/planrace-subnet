@@ -46,6 +46,16 @@ def test_all_public_profiles_are_behaviorally_exercisable() -> None:
     assert optimization_strategy_digest(bundles["constant-answer-attempt"]) == (
         optimization_strategy_digest(bundles["baseline"])
     )
+    robust_profiles = (
+        "selective-index",
+        "composite-index",
+        "covering-index",
+        "restricted-rewrite",
+        "hybrid",
+    )
+    assert len(
+        {optimization_strategy_digest(bundles[profile]) for profile in robust_profiles}
+    ) == len(robust_profiles)
 
 
 @pytest.mark.parametrize("family", [item.family_id for item in QUERY_FAMILIES])

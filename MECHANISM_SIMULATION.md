@@ -92,6 +92,9 @@ The publication command rejects fewer than 500 replications. It rewrites:
   every replication, and summary;
 - `results/mechanism-v2/summary.json` — review-sized metrics;
 - `results/mechanism-v2/replications.csv` — one row per replication;
+- `results/mechanism-v2/MECHANISM_SIMULATION.json` and
+  `MECHANISM_SIMULATION.csv` — publication-name byte-identical aliases of the
+  full JSON and replication CSV;
 - `results/mechanism-v2/profile-rewards.csv` — reward/weight/gate outcomes;
 - `results/mechanism-v2/manifest.json` — seed, environment, lock, source, and
   artifact hashes.

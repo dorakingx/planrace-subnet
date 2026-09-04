@@ -1,54 +1,61 @@
 # Status
 
-Updated: 2026-09-01 (Asia/Tokyo)
+Updated: 2026-09-05 (Asia/Tokyo)
 
-## Protocol v2 hardening phase
+Public claim: **LOCALNET EVIDENCE / TESTNET PENDING**.
 
-- Baseline audit completed on `hardening/protocol-v2`; see
-  [BASELINE_AUDIT.md](BASELINE_AUDIT.md).
-- The existing `planrace/1` implementation and local-chain evidence are being
-  preserved as historical v1 evidence.
-- P0 work now in progress: opaque CSPRNG task creation, true holdout
-  commit/reveal, structured optimization bundles, signed miner responses,
-  disposable sandbox workers, canonical exact-result semantics, and
-  baseline-relative scoring.
-- Public status remains **LOCALNET EVIDENCE / TESTNET PENDING**.
-- HackQuest still shows `QECForge` with no checkpoint. It will not be updated or
-  posted until every checkpoint P0 gate is evidenced and independently
-  reviewed.
-- No dedicated testnet wallet, testnet netuid, test TAO, or testnet deployment
-  exists yet.
-- Current Vercel production provenance is known-bad (`gitDirty=1`, stale Git
-  SHA) and must be replaced by a clean deployment after integration.
+## Complete and verified
 
-## Complete
+- Protocol v2 opaque OS-CSPRNG task creation and post-deadline commit/reveal.
+- Strict structured index artifacts and allowlisted read-only rewrite boundary.
+- Receiver-bound validator requests, miner-signed responses, and replay/expiry
+  rejection.
+- Disposable Docker evaluation with CPU, memory, network, query, and envelope
+  limits; sandbox failures are observations rather than validator crashes.
+- Canonical exact-result gate followed by baseline-relative cold/warm/setup/
+  storage scoring across reuse horizons.
+- Closed multi-family schedule, conservative multi-epoch aggregation, duplicate
+  strategy splitting, fail-safe no-update, and weight concentration cap.
+- 215 Python tests previously passed; Ruff and mypy clean. A final full rerun is
+  required after evidence/dashboard integration.
+- Seeded 512-replication v2 mechanism/adversary simulation with 0 false
+  acceptance, 100% all-fail no-update, and negligible duplicated-strategy
+  allocation gain (`results/mechanism-v2/`).
+- Official local Subtensor netuid 3 setup with three development validator
+  identities and ten heterogeneous miner identities; actual weight write/readback
+  smoke succeeded.
+- Required protocol, market, judging, evidence, and media drafts exist and state
+  their gaps explicitly.
 
-- repository created under `dorakingx` as public;
-- zero-base idea reselection and pivot decision;
-- protocol v1 models;
-- historical v1 commit/reveal fixture generation;
-- bounded SQL/index admission;
-- exact result oracle and scorer;
-- three reference miner profiles;
-- multi-epoch local simulation;
-- receiver-bound Bittensor v11 request authentication;
-- official Subtensor localnet with three registered neurons;
-- endpoint publication and verified local-chain weight update;
-- CI-enforced unit, integration, property, and branch-coverage checks;
-- public Vercel evidence dashboard and reproducible demo UI.
+## Active
 
-## In progress
+- The authoritative 30-epoch protocol v2 localnet run is executing. Its final
+  mechanism-derived weight extrinsic, readback, rank analysis, and signed
+  manifest are not claimed until verification passes.
 
-- Protocol v2 P0 hardening and adversarial verification.
-- Evidence-manifest-driven dashboard and clean deployment provenance.
-- Localnet v2 scale-out before any testnet claim.
-- HackQuest checkpoint package and testnet deployment after the P0 gates.
+## Next gates
+
+1. Verify all 30 localnet epoch records, signatures, sandbox outcomes,
+   aggregation, finalized extrinsic, readback, and manifest.
+2. Drive the dashboard from that signed v2 manifest and rerun Python/dashboard,
+   secret, dependency, browser, and public-link checks.
+3. Push a clean GitHub commit and deploy/promote the same SHA to Vercel with
+   `gitDirty=0`; record immutable provenance.
+4. Run the independent checkpoint reviews. Do not post while a P0/critical issue
+   is open.
+5. Request exactly one user action for a dedicated testnet wallet/faucet/signature
+   when local gates pass. Local public development keys must not be reused.
 
 ## Not complete
 
-- Bittensor testnet registration/funding/weights;
-- HackQuest checkpoint post;
-- clean Protocol v2 evidence-dashboard deployment/video;
-- final submission and release tag.
+- Dedicated Bittensor testnet wallet, funding, registration, miner/validator
+  interaction, scoring, weight transaction, and metagraph readback.
+- Independently operated validators or independent hardware calibration.
+- PostgreSQL/DuckDB and private customer-data adapters.
+- Clean protocol v2 Vercel deployment and immutable deployment record.
+- HackQuest rename/checkpoint post, real-testnet demo/pitch videos, final
+  submission, and release tag.
 
-The project is not presented as production-ready and the hackathon Goal is not complete yet.
+HackQuest still shows the earlier QECForge project with no checkpoint as last
+observed. Reconfirm the portal's exact fields, video constraints, deadline time,
+and timezone before any representational submission action.

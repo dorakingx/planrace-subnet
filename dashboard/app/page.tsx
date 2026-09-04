@@ -20,7 +20,7 @@ import manifest from '@/evidence/localnet-v1-epoch-8.json';
 
 const RAW_MANIFEST_URL = '/evidence/localnet-v1-epoch-8.json';
 const REPOSITORY_URL = 'https://github.com/dorakingx/planrace-subnet';
-const TECHNICAL_DOCS_URL = `${REPOSITORY_URL}/blob/main/PROTOCOL.md`;
+const TECHNICAL_DOCS_URL = `${REPOSITORY_URL}/blob/main/PROTOCOL_V2.md`;
 
 const shortHash = (value: string, visible = 10) =>
   `${value.slice(0, visible)}…${value.slice(-6)}`;
@@ -54,22 +54,55 @@ const pipeline = [
   [
     '01',
     'Commit',
-    'The validator binds a task to reveal material. Protocol v1 secrecy limits are disclosed below.',
+    'The validator binds an opaque task to independently random hidden material and a fixed deadline.',
   ],
   [
     '02',
     'Compete',
-    'Miners return executable optimization artifacts within a bounded request.',
+    'Receiver-bound requests and miner-signed responses carry bounded executable artifacts.',
   ],
   [
     '03',
     'Verify',
-    'Validators check exact result equality on unrevealed generated test data before timing.',
+    'Disposable workers check canonical exact equality across multiple revealed holdouts before timing.',
   ],
   [
     '04',
     'Reward',
-    'Only artifacts that pass the equality gate can receive local-chain weight.',
+    'Only robust baseline-relative, multi-epoch value can receive capped local-chain weight.',
+  ],
+];
+
+const proofMap = [
+  [
+    'implementation',
+    'Hardened execution',
+    'Strict structured indexes are validator-compiled and run in disposable, network-disabled, resource-capped workers.',
+  ],
+  [
+    'network',
+    'Signed network flow',
+    'Three local validator identities rotate across ten heterogeneous miners with request and response authentication.',
+  ],
+  [
+    'evaluation',
+    'Exact-first evaluation',
+    'Multiple hidden fixtures, canonical result hashes, paired baselines, and conservative multi-epoch aggregation.',
+  ],
+  [
+    'market',
+    'Recurring buyer need',
+    'Release regressions, SaaS query cost, and analytical pipelines create repeat optimization work as distributions change.',
+  ],
+  [
+    'bittensor',
+    'Why Bittensor',
+    'Open-ended optimizer discovery is rewarded through a narrower, validator-owned and replayable verification oracle.',
+  ],
+  [
+    'roadmap',
+    'Evidence-gated roadmap',
+    'Dedicated testnet proof comes next, followed by independent validators, production engines, and private workload adapters.',
   ],
 ];
 
@@ -141,9 +174,9 @@ export default function Home() {
               unrevealed test databases before awarding weight.
             </p>
             <p className="mt-3 max-w-xl text-sm leading-6 text-muted-foreground">
-              The browser below is deliberately scoped to a historical localnet
-              v1 run. It does not claim testnet activity or universal SQL
-              semantic equivalence.
+              The browser below is scoped to signed localnet evidence. It does
+              not claim testnet activity, independent validator operation, or
+              universal SQL semantic equivalence.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <a className="cta-primary" href="#evidence">
@@ -237,13 +270,16 @@ export default function Home() {
 
       <section
         id="evidence"
+        tabIndex={-1}
         className="relative z-10 scroll-mt-4 border-y border-white/10 bg-black/15 py-16"
       >
         <div className="mx-auto max-w-7xl px-5 lg:px-8">
           <div className="mb-8 flex flex-col justify-between gap-4 lg:flex-row lg:items-end">
             <div>
               <p className="section-kicker">Verifiable evidence browser</p>
-              <h2 className="section-title">Latest signed localnet run.</h2>
+              <h2 className="section-title">
+                Signed evidence, not screenshots.
+              </h2>
             </div>
             <p className="max-w-lg text-sm leading-6 text-muted-foreground">
               Every value below is read from a manifest whose sr25519 signature
@@ -361,9 +397,10 @@ export default function Home() {
                   </p>
                 </div>
                 <p className="text-sm leading-6 text-muted-foreground">
-                  This historical v1 run recorded warm latency, setup time, plan
-                  cost, and an absolute score. It did not preserve a same-worker
-                  baseline measurement, so no relative speedup is invented.
+                  Protocol v2 keeps paired baseline and candidate measurements
+                  in each signed epoch artifact. The compact manifest reports
+                  aggregate rewards and does not invent a single speedup across
+                  families or reuse horizons.
                 </p>
               </CardContent>
             </Card>
@@ -481,9 +518,7 @@ export default function Home() {
                 <div>
                   <p className="field-label">Verification command</p>
                   <pre className="mt-2 overflow-x-auto rounded-md border border-white/10 bg-black/30 p-3 font-mono text-xs">
-                    <code>
-                      planrace evidence verify localnet-v1-epoch-8.json
-                    </code>
+                    <code>planrace evidence verify localnet-v2.json</code>
                   </pre>
                 </div>
                 <div className="flex flex-wrap gap-3">
@@ -546,7 +581,10 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="relative z-10 mx-auto max-w-7xl px-5 py-20 lg:px-8">
+      <section
+        id="mechanism"
+        className="relative z-10 mx-auto max-w-7xl scroll-mt-6 px-5 py-20 lg:px-8"
+      >
         <div className="grid gap-10 lg:grid-cols-[.7fr_1.3fr]">
           <div>
             <p className="section-kicker">Mechanism</p>
@@ -566,6 +604,32 @@ export default function Home() {
                   {copy}
                 </p>
               </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="relative z-10 border-t border-white/10 bg-black/10 py-20">
+        <div className="mx-auto max-w-7xl px-5 lg:px-8">
+          <p className="section-kicker">Judge-ready proof map</p>
+          <h2 className="section-title" id="proof-map-title">
+            One claim, one evidence boundary.
+          </h2>
+          <div className="mt-9 grid gap-px overflow-hidden rounded-xl border border-white/10 bg-white/10 md:grid-cols-2 xl:grid-cols-3">
+            {proofMap.map(([id, title, copy]) => (
+              <article
+                className="scroll-mt-6 bg-background/95 p-6"
+                id={id}
+                key={id}
+              >
+                <p className="font-mono text-[10px] uppercase tracking-widest text-primary">
+                  {id}
+                </p>
+                <h3 className="mt-5 text-lg font-medium">{title}</h3>
+                <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                  {copy}
+                </p>
+              </article>
             ))}
           </div>
         </div>

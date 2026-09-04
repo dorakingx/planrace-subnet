@@ -1,6 +1,6 @@
 UV := .bootstrap/bin/uv
 
-.PHONY: bootstrap sync test lint typecheck audit verify demo local-epoch secrets
+.PHONY: bootstrap sync test lint typecheck audit verify demo local-epoch localnet-v2-audit mechanism-v2 secrets
 
 bootstrap:
 	./scripts/bootstrap.sh
@@ -31,3 +31,9 @@ demo:
 
 local-epoch:
 	@$(UV) run python scripts/run_local_epoch.py --epoch 8
+
+localnet-v2-audit:
+	@$(UV) run python scripts/audit_localnet_v2.py results/localnet-v2
+
+mechanism-v2:
+	@$(UV) run python scripts/run_mechanism_v2.py

@@ -62,6 +62,7 @@ from planrace.scoring_v2 import (
     allocate_weights,
     kendall_tau_b,
 )
+from planrace.taskgen_v2 import audit_task_reveal
 from planrace.validator_client_v2 import request_optimization_v2
 
 DEFAULT_PORT = 8190
@@ -309,6 +310,13 @@ def _evaluate_epoch(
             bytes.fromhex(task.reveal.secret_seed_hex),
             family_id=task.public.benchmark_family_id,
         )
+        reveal_verified = audit_task_reveal(
+            task.public,
+            task.reveal,
+            regenerate=lambda _seed: tuple(fixture.descriptor for fixture in fixtures),
+        )
+        if not reveal_verified:
+            raise RuntimeError(f"epoch {record['epoch']} commitment/reveal audit failed")
         for index, fixture in enumerate(fixtures):
             materialize_fixture(fixture, root / f"fixture-{index:03}.sqlite3")
         batch_items: list[tuple[str, SandboxRequestV2]] = []
@@ -395,7 +403,7 @@ def _evaluate_epoch(
     epoch_payload = {
         **record,
         "task_reveal": task.reveal.model_dump(mode="json"),
-        "reveal_verified": True,
+        "reveal_verified": reveal_verified,
         "strategy_evaluations": strategy_evaluations,
         "observations": [asdict(item) for item in sorted(observations, key=lambda x: x.miner_id)],
     }
@@ -457,9 +465,7 @@ def _submit_final_weights(
     allocation: Any, *, netuid: int, wallet_path: Path
 ) -> tuple[dict[str, Any] | None, dict[str, Any], list[tuple[int, int]]]:
     subtensor = bt.Subtensor("local")
-    wallet = bt.Wallet(
-        name="planrace-v2-dev", hotkey="validator0", path=str(wallet_path)
-    )
+    wallet = bt.Wallet(name="planrace-v2-dev", hotkey="validator0", path=str(wallet_path))
     planned = dict(allocation.weights)
     uid_weights = [
         (index + 3, planned.get(f"miner-{index:02}", 0.0)) for index in range(MINER_COUNT)
@@ -468,9 +474,7 @@ def _submit_final_weights(
     extrinsic: dict[str, Any] | None = None
     submitted: list[tuple[int, int]] = []
     if allocation.planned and positive:
-        uids, values = normalize(
-            [uid for uid, _ in positive], [weight for _, weight in positive]
-        )
+        uids, values = normalize([uid for uid, _ in positive], [weight for _, weight in positive])
         submitted = list(zip(uids, values, strict=True))
         result = subtensor.submit_call(  # type: ignore[no-untyped-call]
             calls.SubtensorModule.set_mechanism_weights(
@@ -632,8 +636,7 @@ def main() -> None:
         "observed_at": observed_at,
         "operator_model": "three test validator identities under one operator",
         "validators": [
-            {"uid": index, "hotkey": key.ss58_address}
-            for index, key in enumerate(validators)
+            {"uid": index, "hotkey": key.ss58_address} for index, key in enumerate(validators)
         ],
         "miners": [
             {"uid": index + 3, "hotkey": key.ss58_address, "profile": PROFILE_NAMES[index]}
@@ -736,9 +739,7 @@ def main() -> None:
         ),
         "weight_plan": {
             "uids": tuple(uid for uid, _ in submitted),
-            "weights": tuple(
-                (value / math.fsum(submitted_map.values())) for _, value in submitted
-            ),
+            "weights": tuple((value / math.fsum(submitted_map.values())) for _, value in submitted),
         },
         "extrinsics": (
             ()
@@ -760,11 +761,22 @@ def main() -> None:
         },
         "timestamps": {"observed_at": observed_at, "signed_at": _utc_now()},
         "known_limitations": tuple(summary["known_limitations"]),
-        "source_artifacts": (
-            {
-                "path": "summary.json",
-                "sha256": _sha256_bytes((arguments.output / "summary.json").read_bytes()),
-            },
+        "source_artifacts": tuple(
+            [
+                {
+                    "path": "summary.json",
+                    "sha256": _sha256_bytes((arguments.output / "summary.json").read_bytes()),
+                }
+            ]
+            + [
+                {
+                    "path": f"epochs/epoch-{epoch:03}.json",
+                    "sha256": _sha256_bytes(
+                        (arguments.output / "epochs" / f"epoch-{epoch:03}.json").read_bytes()
+                    ),
+                }
+                for epoch in range(arguments.epochs)
+            ]
         ),
     }
     signed = sign_manifest(manifest_unsigned, validators[0])

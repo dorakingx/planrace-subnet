@@ -21,9 +21,7 @@ from planrace.models_v2 import (
     PublicTaskV2,
 )
 
-MinerStrategyV2 = Callable[
-    [PublicTaskV2], OptimizationBundle | Awaitable[OptimizationBundle]
-]
+MinerStrategyV2 = Callable[[PublicTaskV2], OptimizationBundle | Awaitable[OptimizationBundle]]
 
 PROFILE_NAMES = (
     "baseline",
@@ -67,18 +65,16 @@ def bundle_for_profile(task: PublicTaskV2, profile: str) -> OptimizationBundle:
     if profile in {"baseline", "constant-answer-attempt"}:
         return _bundle(task, profile, ())
 
-    selective, composite, covering, partial, secondary = _family_indexes(
-        task.benchmark_family_id
-    )
+    selective, composite, covering, partial, secondary = _family_indexes(task.benchmark_family_id)
     indexes: tuple[IndexSpec, ...]
     if profile in {"selective-index", "copycat-sybil"}:
-        indexes = (selective,)
-    elif profile == "composite-index":
-        indexes = (composite,)
-    elif profile == "covering-index":
-        indexes = (covering,)
-    elif profile == "restricted-rewrite":
         indexes = (partial,)
+    elif profile == "composite-index":
+        indexes = (_direction_variant(partial, "leading-desc"),)
+    elif profile == "covering-index":
+        indexes = (_direction_variant(partial, "trailing-desc"),)
+    elif profile == "restricted-rewrite":
+        indexes = (_direction_variant(partial, "all-desc"),)
     elif profile == "hybrid":
         indexes = (composite, secondary)
     elif profile == "over-indexing":
@@ -88,9 +84,33 @@ def bundle_for_profile(task: PublicTaskV2, profile: str) -> OptimizationBundle:
     return _bundle(task, profile, indexes)
 
 
-def _bundle(
-    task: PublicTaskV2, profile: str, indexes: tuple[IndexSpec, ...]
-) -> OptimizationBundle:
+def _direction_variant(index: IndexSpec, variant: str) -> IndexSpec:
+    """Create optimizer-distinct, storage-equivalent robust index variants.
+
+    SQLite can traverse an index in either direction.  These variants exercise
+    distinct executable strategies without inflating the artifact footprint,
+    while retaining the family-specific robust key order selected above.
+    """
+
+    if variant == "leading-desc":
+        descending = {0}
+    elif variant == "trailing-desc":
+        descending = {len(index.key_columns) - 1}
+    elif variant == "all-desc":
+        descending = set(range(len(index.key_columns)))
+    else:
+        raise ValueError(f"unknown direction variant: {variant}")
+    return index.model_copy(
+        update={
+            "key_columns": tuple(
+                column.model_copy(update={"direction": "desc" if position in descending else "asc"})
+                for position, column in enumerate(index.key_columns)
+            )
+        }
+    )
+
+
+def _bundle(task: PublicTaskV2, profile: str, indexes: tuple[IndexSpec, ...]) -> OptimizationBundle:
     return OptimizationBundle.create(
         task_id=task.task_id,
         engine_image_digest=task.engine_image_digest,
@@ -195,11 +215,7 @@ def _family_indexes(
         )
     if family == "nullable-coupon":
         null_only = PredicateExpression(
-            atoms=(
-                PredicateAtom(
-                    column="coupon_code", operator="is_null", value=NullLiteral()
-                ),
-            )
+            atoms=(PredicateAtom(column="coupon_code", operator="is_null", value=NullLiteral()),)
         )
         return (
             _index("orders", "created_day"),

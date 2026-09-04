@@ -1,13 +1,45 @@
 # Results
 
-## Repeated mechanism spike
+## Protocol v2 mechanism simulation
+
+The committed seeded simulation contains 512 replications, 24 epochs per
+replication, 18 miner profiles, and eight named scenarios. Raw replication rows,
+profile rows, summary, and a signed manifest are under
+[`results/mechanism-v2/`](results/mechanism-v2/).
+
+- honest-winner rate: 1.000;
+- injected false-claim acceptance: 0 / 6,079 (false-acceptance rate 0.000);
+- all-fail scenario no-update rate: 1.000;
+- mean gaming weight: 0.000;
+- mean honest weight: 0.9187; mean duplicate/Sybil-profile weight: 0.0813;
+- mean duplicated-strategy allocation gain: approximately `1.36e-18`, maximum
+  absolute gain `5.55e-17`;
+- mean top-one share: 0.1358; observed maximum: 0.2000, equal to the cap;
+- mean HHI: 0.1116; mean Gini: 0.1536;
+- mean rank-stability Kendall tau-b: 0.5624; controlled hardware-only stability:
+  1.000;
+- mean cross-validator total-variation disagreement: 0.0971.
+
+These are simulated mechanism properties, not throughput, testnet, customer, or
+production-database results. The moderate cross-scenario rank statistic is kept
+visible rather than described as universal agreement.
+
+## Protocol v2 localnet
+
+The full 30-epoch run on netuid 3 is active. Do not infer its final miner scores,
+validator correlation, or derived chain weights until
+`results/localnet-v2/{summary,manifest}.json` exist and verify. A preliminary
+hand-selected weight-vector smoke did finalize and read back, but is not the
+mechanism result; see [LOCALNET_V2.md](LOCALNET_V2.md).
+
+## Historical protocol v1 repeated mechanism spike
 
 Across 20 repeated five-epoch simulations the honest indexed strategy beat the
 correct baseline in 20/20 runs, remained exact in every epoch, and achieved a
 score-ratio mean of 1.663 (range 1.640–1.682). The result-changing gaming profile
 scored zero.
 
-## Localnet E2E
+## Historical protocol v1 localnet E2E
 
 On local netuid 2, signed requests reached Bob UID 1 and Charlie UID 2. Bob's
 result hash equaled the reference and scored 9.083956; Charlie failed exactness
@@ -15,4 +47,5 @@ and scored zero. Weight `[UID 1 → 1.0]` finalized at extrinsic `1870-0002` and
 read back as raw `[(1, 65535)]`. See
 [`results/localnet-epoch-8.json`](results/localnet-epoch-8.json).
 
-These are generated-workload and local-chain results, not customer or testnet data.
+All results in this document use generated workloads. Nothing here is customer
+data, a production engine result, or Bittensor testnet evidence.

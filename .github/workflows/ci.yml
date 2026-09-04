@@ -31,7 +31,7 @@ jobs:
 
   dashboard:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 25
     defaults:
       run:
         working-directory: dashboard
@@ -49,4 +49,6 @@ jobs:
       - run: npm test
       - run: npm run build
       - run: npm run test:smoke
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:e2e
       - run: npm audit --audit-level=high

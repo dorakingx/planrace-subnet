@@ -42,12 +42,19 @@ mass so a validator cannot silently inflate a miner by over-sampling its best
 family. The aggregate is a winsorized family center minus a MAD uncertainty
 penalty, then multiplied by observed availability and compliance.
 
-Artifacts sharing a canonical strategy digest form one reward group. The group
-receives at most its best member's reward and identities split that fixed mass;
-duplicating an identity cannot create reward. Final canonical-strategy weights
-have a 20% cap and require five distinct positive strategies. If
-all candidates fail, diversity is insufficient, or the cap cannot be met, the
-validator emits a safe no-update instead of fabricating a winner.
+For each committed task, artifacts sharing a canonical executable-strategy
+digest are evaluated once. Every duplicate identity receives the same
+validator-owned evidence digest, and that task reward is divided across the
+duplicate group. Multi-epoch aggregation therefore starts from fixed group
+mass rather than identity count. At allocation time, identical full strategy
+portfolios are recombined before the concentration cap and divided back in
+proportion to their already-split rewards. Cloning a hotkey cannot create
+reward or bypass the cap.
+
+Final canonical-strategy weights have a 20% cap and require five distinct
+positive strategies. If all candidates fail, diversity is insufficient, or
+the cap cannot be met, the validator emits a safe no-update instead of
+fabricating a winner.
 
 Every allocation reports strategy-level Gini, HHI, top-one share, and effective
 strategy count.
@@ -56,7 +63,8 @@ Rank stability is measured with Kendall tau-b.
 ## Implementation boundary
 
 `score_benchmark` consumes validator-owned measurements; it does not execute SQL
-or weaken the sandbox. Result canonicalization, hidden holdout construction,
-and sandbox enforcement are protocol gates upstream of this mechanism. See
-`MECHANISM_SIMULATION.md` for deterministic adversarial evidence and its stated
-limits.
+or weaken the sandbox. Production flow is
+`signed response → evaluate-once cohort → aggregate_network → allocate_weights`.
+Result canonicalization, hidden holdout construction, and sandbox enforcement
+are protocol gates upstream of this mechanism. See `MECHANISM_SIMULATION.md`
+for deterministic adversarial evidence and its stated limits.

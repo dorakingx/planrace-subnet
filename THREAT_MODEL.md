@@ -21,13 +21,30 @@
 ## Current controls and honest limits
 
 - Strict Pydantic models forbid extra fields and bound payloads.
-- Candidate admission permits one SELECT/WITH statement; setup admits only bounded indexes on named tables.
-- Commit/reveal makes post-submission seed switching detectable.
+- Candidate admission permits one allowlisted SELECT; setup is a structured
+  index AST compiled by the validator and checked against task schema/budget.
+- Independent seed/salt commitment and hidden descriptor root make
+  post-submission switching detectable; the public task does not contain the
+  seed, salt, or a deterministic derivation of either.
+- Receiver-bound requests and miner-signed responses cover identity, task,
+  artifact, nonce, and freshness; replay stores reject reuse.
 - Exact result hashing precedes all performance reward.
-- SQLite progress handlers bound instruction time in the prototype.
+- Candidate/reference execution is isolated in a disposable, network-disabled,
+  non-root Docker worker with a read-only root, throwaway tmpfs, dropped
+  capabilities, no-new-privileges, and PID/file/CPU/memory/wall limits.
+- The worker additionally applies SQLite query deadlines and bounded canonical
+  result/output envelopes. Worker failure becomes unavailable/zero.
+- Duplicate executable strategies reuse one task evaluation and split/recombine
+  portfolio mass; this removes direct copy amplification but not general Sybil
+  or collusion.
 - Generated fixtures contain no customer data.
 
-The current process is **not** a hardened sandbox. SQL parsing is conservative text admission rather than an AST whitelist, execution is in-process, and wall-clock measurements are local. Before a public miner endpoint, run each candidate in a disposable container/VM with CPU, memory, filesystem, syscall, and network limits; use a real parser; and discard the worker after every task.
+The container boundary is not a formal proof against a kernel/runtime escape.
+The current engine and measurement evidence are local SQLite. Future-block
+entropy mixing, a public signed worker image, independent validator operators,
+production-engine semantics, and privacy-preserving buyer adapters remain open.
+Commit/reveal proves consistency with chosen material, not an unbiased curriculum.
+Exact finite fixtures do not prove universal SQL equivalence.
 
 ## Chain safety
 

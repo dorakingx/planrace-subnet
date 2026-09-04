@@ -84,3 +84,9 @@ def test_evidence_bundle_hashes_every_output(tmp_path) -> None:  # type: ignore[
     stored = json.loads((tmp_path / "simulation.json").read_text())
     assert stored["schema_version"] == "planrace-mechanism-simulation/2"
     assert (tmp_path / "replications.csv").read_text().count("\n") == 9
+    assert (tmp_path / "MECHANISM_SIMULATION.json").read_bytes() == (
+        tmp_path / "simulation.json"
+    ).read_bytes()
+    assert (tmp_path / "MECHANISM_SIMULATION.csv").read_bytes() == (
+        tmp_path / "replications.csv"
+    ).read_bytes()

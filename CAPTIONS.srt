@@ -1,0 +1,47 @@
+1
+00:00:00,000 --> 00:00:08,000
+Correct queries can become expensive as data and engines change.
+
+2
+00:00:08,000 --> 00:00:18,000
+PlanRace creates an opaque, precommitted optimization challenge.
+
+3
+00:00:18,000 --> 00:00:30,000
+Validators send receiver-bound signed requests to independent miners.
+
+4
+00:00:30,000 --> 00:00:40,000
+Miners return bounded executable artifacts and sign every response.
+
+5
+00:00:40,000 --> 00:00:52,000
+After the deadline, submissions are sealed and hidden holdouts are revealed.
+
+6
+00:00:52,000 --> 00:01:08,000
+Exact canonical equality is required; a wrong or constant answer scores zero.
+
+7
+00:01:08,000 --> 00:01:20,000
+Disposable workers contain timeouts, invalid SQL, and resource failures.
+
+8
+00:01:20,000 --> 00:01:35,000
+Eligible artifacts are scored relative to the baseline across reuse horizons.
+
+9
+00:01:35,000 --> 00:01:45,000
+Repeated validator judgments are aggregated; duplicates split and weights cap.
+
+10
+00:01:45,000 --> 00:01:55,000
+The finalized testnet transaction and metagraph readback prove the weight flow.
+
+11
+00:01:55,000 --> 00:02:05,000
+The signed raw manifest drives the public dashboard and verifies locally.
+
+12
+00:02:05,000 --> 00:02:15,000
+Private adapters, production engines, and independent validators remain next.

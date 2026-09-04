@@ -58,31 +58,67 @@ class MinerProfile:
 
 
 MINER_PROFILES: tuple[MinerProfile, ...] = (
-    MinerProfile("covering-join", "honest", "covering-join-v2", 2.20, 4.00, 1.50, 0.40,
-                 family_multipliers=(1.30, 0.90, 1.00, 0.90)),
-    MinerProfile("partial-index", "honest", "partial-index-v2", 1.80, 2.80, 0.80, 0.20,
-                 family_multipliers=(1.15, 0.95, 1.15, 0.85)),
-    MinerProfile("aggregate-rewrite", "honest", "aggregate-rewrite-v2", 2.00, 2.30, 0.05, 0.00,
-                 family_multipliers=(0.90, 1.35, 0.95, 0.90)),
+    MinerProfile(
+        "covering-join",
+        "honest",
+        "covering-join-v2",
+        2.20,
+        4.00,
+        1.50,
+        0.40,
+        family_multipliers=(1.30, 0.90, 1.00, 0.90),
+    ),
+    MinerProfile(
+        "partial-index",
+        "honest",
+        "partial-index-v2",
+        1.80,
+        2.80,
+        0.80,
+        0.20,
+        family_multipliers=(1.15, 0.95, 1.15, 0.85),
+    ),
+    MinerProfile(
+        "aggregate-rewrite",
+        "honest",
+        "aggregate-rewrite-v2",
+        2.00,
+        2.30,
+        0.05,
+        0.00,
+        family_multipliers=(0.90, 1.35, 0.95, 0.90),
+    ),
     MinerProfile("balanced-index", "honest", "balanced-index-v2", 1.70, 2.40, 0.50, 0.15),
     MinerProfile("cold-specialist", "honest", "cold-specialist-v2", 2.60, 1.15, 0.30, 0.10),
     MinerProfile("warm-specialist", "honest", "warm-specialist-v2", 1.15, 4.20, 1.00, 0.45),
     MinerProfile("low-storage", "honest", "low-storage-v2", 1.45, 1.70, 0.15, 0.03),
     MinerProfile("robust-generalist", "honest", "robust-generalist-v2", 1.65, 2.00, 0.35, 0.12),
-    MinerProfile("noisy-search", "honest", "noisy-search-v2", 2.10, 3.00, 0.90, 0.25,
-                 timing_noise=0.12),
+    MinerProfile(
+        "noisy-search", "honest", "noisy-search-v2", 2.10, 3.00, 0.90, 0.25, timing_noise=0.12
+    ),
     MinerProfile("conservative", "honest", "conservative-v2", 1.25, 1.35, 0.05, 0.01),
     MinerProfile("high-setup-star", "honest", "high-setup-star-v2", 1.80, 5.00, 3.00, 0.70),
-    MinerProfile("timeout-prone", "honest", "timeout-prone-v2", 2.50, 5.50, 0.70, 0.30,
-                 availability=0.94, timeout_probability=0.10),
-    MinerProfile("constant-answer", "gaming", "constant-answer-v2", 100.0, 100.0, 0.0, 0.0,
-                 correctness=0.0),
-    MinerProfile("wrong-fast", "gaming", "wrong-fast-v2", 20.0, 20.0, 0.0, 0.0,
-                 correctness=0.0),
-    MinerProfile("fixture-memorizer", "gaming", "fixture-memorizer-v2", 8.0, 12.0, 0.0, 0.0,
-                 correctness=0.0),
-    MinerProfile("malformed-bundle", "gaming", "malformed-bundle-v2", 5.0, 5.0, 0.0, 0.0,
-                 compliance=0.0),
+    MinerProfile(
+        "timeout-prone",
+        "honest",
+        "timeout-prone-v2",
+        2.50,
+        5.50,
+        0.70,
+        0.30,
+        availability=0.94,
+        timeout_probability=0.10,
+    ),
+    MinerProfile(
+        "constant-answer", "gaming", "constant-answer-v2", 100.0, 100.0, 0.0, 0.0, correctness=0.0
+    ),
+    MinerProfile("wrong-fast", "gaming", "wrong-fast-v2", 20.0, 20.0, 0.0, 0.0, correctness=0.0),
+    MinerProfile(
+        "fixture-memorizer", "gaming", "fixture-memorizer-v2", 8.0, 12.0, 0.0, 0.0, correctness=0.0
+    ),
+    MinerProfile(
+        "malformed-bundle", "gaming", "malformed-bundle-v2", 5.0, 5.0, 0.0, 0.0, compliance=0.0
+    ),
     MinerProfile("sybil-copy-a", "sybil", "shared-copy-v2", 1.65, 2.00, 0.35, 0.12),
     MinerProfile("sybil-copy-b", "sybil", "shared-copy-v2", 1.65, 2.00, 0.35, 0.12),
 )
@@ -217,10 +253,7 @@ def _make_trials(
                 worker_id=worker_id,
                 order=order,
                 baseline_cold_ms=(
-                    base_cold
-                    * baseline_order_multiplier
-                    * baseline_outlier
-                    * _noise(rng, 0.025)
+                    base_cold * baseline_order_multiplier * baseline_outlier * _noise(rng, 0.025)
                 ),
                 candidate_cold_ms=(
                     candidate_cold
@@ -229,10 +262,7 @@ def _make_trials(
                     * _noise(rng, profile.timing_noise)
                 ),
                 baseline_warm_ms=(
-                    base_warm
-                    * baseline_order_multiplier
-                    * baseline_outlier
-                    * _noise(rng, 0.025)
+                    base_warm * baseline_order_multiplier * baseline_outlier * _noise(rng, 0.025)
                 ),
                 candidate_warm_ms=(
                     candidate_warm
@@ -326,9 +356,7 @@ def _evaluate_strategy_epoch(
     available = not scenario.all_fail and rng.random() < profile.availability
     compliant = available and rng.random() < profile.compliance
     measured_correct = compliant and rng.random() < profile.correctness
-    miner_claimed_correct = available and (
-        scenario.false_accept_claim or measured_correct
-    )
+    miner_claimed_correct = available and (scenario.false_accept_claim or measured_correct)
     reward = 0.0
     false_acceptance = False
     trial_pairs = 0
@@ -396,9 +424,7 @@ def _duplicate_strategy_gains(
     for profile in MINER_PROFILES:
         profile_groups[profile.strategy_digest].append(profile.profile_id)
     duplicated = {
-        digest: sorted(members)
-        for digest, members in profile_groups.items()
-        if len(members) > 1
+        digest: sorted(members) for digest, members in profile_groups.items() if len(members) > 1
     }
     aggregate_by_id = {aggregate.miner_id: aggregate for aggregate in aggregates}
     observed_strategy_weights = dict(allocation.strategy_weights)
@@ -406,13 +432,9 @@ def _duplicate_strategy_gains(
     for _task_strategy_digest, members in sorted(duplicated.items()):
         representative = members[0]
         removed_ids = set(members[1:])
-        control_miner_ids = tuple(
-            miner_id for miner_id in miner_ids if miner_id not in removed_ids
-        )
+        control_miner_ids = tuple(miner_id for miner_id in miner_ids if miner_id not in removed_ids)
         control_observations = [
-            observation
-            for observation in observations
-            if observation.miner_id not in removed_ids
+            observation for observation in observations if observation.miner_id not in removed_ids
         ]
         control_aggregates = list(
             aggregate_network(
@@ -458,9 +480,7 @@ def run_mechanism_simulation(
     canonical_profiles: dict[str, MinerProfile] = {}
     for profile in MINER_PROFILES:
         representative = canonical_profiles.setdefault(profile.strategy_digest, profile)
-        if _profile_evaluation_signature(profile) != _profile_evaluation_signature(
-            representative
-        ):
+        if _profile_evaluation_signature(profile) != _profile_evaluation_signature(representative):
             raise ValueError(
                 "profiles sharing a strategy digest must share evaluation characteristics"
             )
@@ -517,9 +537,7 @@ def run_mechanism_simulation(
                     replication_trial_pairs += evaluation.trial_pairs
                     replication_invalid_attempts += int(evaluation.invalid)
                     replication_false_acceptances += int(evaluation.false_acceptance)
-                    replication_injected_false_claims += int(
-                        evaluation.injected_false_claim
-                    )
+                    replication_injected_false_claims += int(evaluation.injected_false_claim)
                     replication_accepted_injected_false_claims += int(
                         evaluation.accepted_injected_false_claim
                     )
@@ -617,9 +635,7 @@ def run_mechanism_simulation(
                 "duplicate_cache_hits": replication_duplicate_cache_hits,
                 "trial_pairs": replication_trial_pairs,
                 "injected_false_claims": replication_injected_false_claims,
-                "accepted_injected_false_claims": (
-                    replication_accepted_injected_false_claims
-                ),
+                "accepted_injected_false_claims": (replication_accepted_injected_false_claims),
                 "sybil_strategy_allocation_gain": (
                     _mean(list(duplicate_gains)) if duplicate_gains else None
                 ),
@@ -634,9 +650,7 @@ def run_mechanism_simulation(
         total_duplicate_cache_hits += replication_duplicate_cache_hits
         total_trial_pairs += replication_trial_pairs
         total_injected_false_claims += replication_injected_false_claims
-        total_accepted_injected_false_claims += (
-            replication_accepted_injected_false_claims
-        )
+        total_accepted_injected_false_claims += replication_accepted_injected_false_claims
 
     cohort_rows: dict[int, list[dict[str, Any]]] = defaultdict(list)
     for row in rows:
@@ -663,9 +677,7 @@ def run_mechanism_simulation(
                 row_disagreements[int(second["replication"])].append(disagreement)
         for row in planned:
             disagreements = row_disagreements[int(row["replication"])]
-            row["validator_disagreement_tv"] = (
-                _mean(disagreements) if disagreements else None
-            )
+            row["validator_disagreement_tv"] = _mean(disagreements) if disagreements else None
 
         by_scenario = {str(row["scenario"]): row for row in values}
         fast = by_scenario.get("fast-worker")
@@ -719,9 +731,7 @@ def run_mechanism_simulation(
             ),
             "mean_top1_share": _mean([float(row["top1_share"]) for row in values]),
             "mean_gaming_weight": _mean([float(row["gaming_weight"]) for row in values]),
-            "injected_false_claims": sum(
-                int(row["injected_false_claims"]) for row in values
-            ),
+            "injected_false_claims": sum(int(row["injected_false_claims"]) for row in values),
             "accepted_injected_false_claims": sum(
                 int(row["accepted_injected_false_claims"]) for row in values
             ),
@@ -759,25 +769,19 @@ def run_mechanism_simulation(
         "mean_hhi": _mean([float(row["hhi"]) for row in active_rows]),
         "mean_top1_share": _mean([float(row["top1_share"]) for row in active_rows]),
         "max_top1_share": max((float(row["top1_share"]) for row in active_rows), default=0.0),
-        "mean_rank_stability_tau_b": (
-            _mean(active_rank_values) if active_rank_values else None
-        ),
+        "mean_rank_stability_tau_b": (_mean(active_rank_values) if active_rank_values else None),
         "hardware_rank_stability_tau_b": (
             _mean(hardware_pair_taus) if hardware_pair_taus else None
         ),
         "hardware_rank_pair_count": len(hardware_pair_taus),
         "mean_validator_disagreement_tv": (
-            _mean(validator_pair_disagreements)
-            if validator_pair_disagreements
-            else None
+            _mean(validator_pair_disagreements) if validator_pair_disagreements else None
         ),
         "validator_disagreement_pair_count": len(validator_pair_disagreements),
         "mean_honest_weight": _mean([float(row["honest_weight"]) for row in active_rows]),
         "mean_gaming_weight": _mean([float(row["gaming_weight"]) for row in active_rows]),
         "mean_sybil_weight": _mean([float(row["sybil_weight"]) for row in active_rows]),
-        "sybil_strategy_allocation_gain": (
-            max(sybil_gain_values) if sybil_gain_values else None
-        ),
+        "sybil_strategy_allocation_gain": (max(sybil_gain_values) if sybil_gain_values else None),
         "mean_sybil_strategy_allocation_gain": (
             _mean(sybil_gain_values) if sybil_gain_values else None
         ),
@@ -795,8 +799,10 @@ def run_mechanism_simulation(
         "config": asdict(config),
         "benchmark_policy": asdict(benchmark_policy),
         "aggregation_policy": asdict(aggregation_policy),
-        "profiles": [asdict(profile) | {"strategy_digest": profile.strategy_digest}
-                     for profile in MINER_PROFILES],
+        "profiles": [
+            asdict(profile) | {"strategy_digest": profile.strategy_digest}
+            for profile in MINER_PROFILES
+        ],
         "validator_scenarios": [asdict(scenario) for scenario in VALIDATOR_SCENARIOS],
         "summary": summary,
         "replications": rows,
@@ -842,7 +848,11 @@ def write_evidence_bundle(report: dict[str, Any], output_dir: Path) -> dict[str,
     summary_path = output_dir / "summary.json"
     replications_path = output_dir / "replications.csv"
     profiles_path = output_dir / "profile-rewards.csv"
-    simulation_path.write_text(_canonical_json(report), encoding="utf-8")
+    publication_json_path = output_dir / "MECHANISM_SIMULATION.json"
+    publication_csv_path = output_dir / "MECHANISM_SIMULATION.csv"
+    simulation_payload = _canonical_json(report)
+    simulation_path.write_text(simulation_payload, encoding="utf-8")
+    publication_json_path.write_text(simulation_payload, encoding="utf-8")
     summary_path.write_text(_canonical_json(report["summary"]), encoding="utf-8")
 
     replication_fields = (
@@ -878,7 +888,9 @@ def write_evidence_bundle(report: dict[str, Any], output_dir: Path) -> dict[str,
     replication_writer.writeheader()
     for row in report["replications"]:
         replication_writer.writerow({field: row[field] for field in replication_fields})
-    replications_path.write_text(replication_buffer.getvalue(), encoding="utf-8")
+    replication_payload = replication_buffer.getvalue()
+    replications_path.write_text(replication_payload, encoding="utf-8")
+    publication_csv_path.write_text(replication_payload, encoding="utf-8")
 
     profile_buffer = io.StringIO(newline="")
     profile_fields = (
@@ -920,9 +932,7 @@ def write_evidence_bundle(report: dict[str, Any], output_dir: Path) -> dict[str,
         "config_sha256": hashlib.sha256(config_payload).hexdigest(),
         "source_git_base_commit": _git_commit(repo_root),
         "source_tree_dirty": _git_dirty(repo_root),
-        "source_files": {
-            str(path.relative_to(repo_root)): _sha256(path) for path in source_paths
-        },
+        "source_files": {str(path.relative_to(repo_root)): _sha256(path) for path in source_paths},
         "dependency_lock": {"path": "uv.lock", "sha256": _sha256(lock_path)},
         "environment": {
             "python": platform.python_version(),
@@ -933,7 +943,14 @@ def write_evidence_bundle(report: dict[str, Any], output_dir: Path) -> dict[str,
         },
         "artifacts": {
             path.name: _sha256(path)
-            for path in (simulation_path, summary_path, replications_path, profiles_path)
+            for path in (
+                simulation_path,
+                summary_path,
+                replications_path,
+                profiles_path,
+                publication_json_path,
+                publication_csv_path,
+            )
         },
     }
     (output_dir / "manifest.json").write_text(_canonical_json(manifest), encoding="utf-8")

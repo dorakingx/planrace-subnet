@@ -1,40 +1,61 @@
 # Architecture
 
-## Current executable slice
+## Protocol v2 executable slice
 
 ```text
-taskgen.py ── QueryTask + generated fixture ─┐
-                                            │
-miners.py ── OptimizationArtifact ──────────┼─ scoring.py ─ ScoreBreakdown
-                                            │
-sandbox.py ─ admission + deadline ─────────┘
-                         │
-simulation.py ─ multiple epochs + ranking
+taskgen_v2.py ── public commitment + private reveal ───────┐
+                                                           │
+auth_v2.py ─ signed request/response + replay ─ api_v2.py ─┤
+                                                           ▼
+models_v2.py ─ structured bundle ─ sandbox_v2.py ─ Docker worker
+                                                           │
+benchmark_v2.py ─ hidden fixtures ─ oracle_v2.py ──────────┤
+                                                           ▼
+evaluation_v2.py ─ exact gate + paired measurements ─ scoring_v2.py
+                                                           │
+                                                           ▼
+                                      multi-epoch allocation + evidence + chain
 ```
 
-- `models.py`: strict immutable versioned wire objects.
-- `taskgen.py`: historical v1 deterministic fixture, seed commitment, and reveal verification.
-- `miners.py`: reference strategies only; the protocol does not require their implementation.
-- `sandbox.py`: narrow SQL/DDL admission and query progress deadline.
-- `scoring.py`: reference execution, canonical hash, hard gate, and measured score.
-- `simulation.py`: epoch orchestration independent of a chain.
+- `models_v2.py`: strict immutable wire objects, structured `IndexSpec`, and
+  canonical domain-separated digests.
+- `taskgen_v2.py` / `benchmark_v2.py`: opaque CSPRNG task construction,
+  commitment/reveal audit, families, and hidden fixture generation.
+- `auth_v2.py`, `api_v2.py`, `validator_client_v2.py`: receiver-bound request
+  auth, miner-signed responses, expiry, and replay controls.
+- `sandbox_v2.py` / `sandbox_worker.py`: isolated batch orchestration,
+  validator-compiled artifacts, exact execution evidence, and bounded failures.
+- `evaluation_v2.py` / `scoring_v2.py`: exact-first evaluation,
+  baseline-relative fixture reward, robust aggregation, duplicate handling, and
+  weight planning.
+- Unsuffixed modules preserve the historical protocol v1 path.
 
 ## Bittensor data plane
 
-Bittensor v11 removed the historical application networking stack, so PlanRace owns its FastAPI/httpx data plane and uses `bittensor.http_auth.sign/verify` for receiver-bound request authentication. `ServeAxon` publishes endpoint metadata; it is not the HTTP server. This path has been exercised against registered localnet neurons; see [LOCALNET.md](LOCALNET.md).
+Bittensor v11 removed the historical application networking stack, so PlanRace
+owns its FastAPI/httpx data plane and uses `bittensor.http_auth.sign/verify` for
+receiver-bound request authentication. Protocol v2 adds its own signed miner
+response envelope. `ServeAxon` publishes endpoint metadata; it is not the HTTP
+server. Historical v1 is in [LOCALNET.md](LOCALNET.md); the ten-miner v2 run is
+tracked in [LOCALNET_V2.md](LOCALNET_V2.md).
 
 ```text
 subtensor local/test
   ├─ metagraph / registration / ServeAxon / set_weights
   └─ validator discovers miner endpoint
-       └─ signed HTTP QueryTask
-            └─ miner FastAPI → OptimizationArtifact
-                 └─ validator disposable DB worker → ScoreBreakdown
+       └─ signed HTTP PublicTaskV2
+            └─ miner FastAPI → SignedOptimizationResponse
+                 └─ validator disposable DB workers → exact evidence
+                      └─ robust multi-epoch allocation → chain + manifest
 ```
 
 ## Validator trust boundary
 
-Validators know generated rows after they choose a seed. Commit/reveal proves they did not change that seed after submissions; it does not prove the curriculum is unbiased. Production needs independently generated tasks, fixed workload-family masses, peer replay, and public score artifacts.
+Validators know generated rows after independently choosing secret material.
+Commit/reveal proves they did not change it after submissions; it does not prove
+the curriculum is unbiased. The current closed schedule and fixed family masses
+reduce discretion, while independent operators, peer replay, and future entropy
+mixing remain necessary.
 
 ## Planned tracks
 
