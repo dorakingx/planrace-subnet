@@ -17,6 +17,7 @@ import tempfile
 import time
 from collections import defaultdict
 from collections.abc import Awaitable, Callable
+from concurrent.futures import ThreadPoolExecutor
 from dataclasses import asdict
 from datetime import UTC, datetime
 from pathlib import Path
@@ -200,7 +201,7 @@ async def _dispatch_epochs(
             family = QUERY_FAMILIES[round_index % len(QUERY_FAMILIES)].family_id
             validator = validators[validator_index]
             now = time.time_ns() // 1_000_000
-            deadline = now + 30_000
+            deadline = now + 120_000
             latest_deadline = max(latest_deadline, deadline)
             task = create_benchmark_task_v2(
                 validator_hotkey=validator.ss58_address,
@@ -516,6 +517,7 @@ def main() -> None:
     parser.add_argument("--base-port", type=int, default=DEFAULT_PORT)
     parser.add_argument("--worker-image", required=True)
     parser.add_argument("--output", type=Path, default=Path("results/localnet-v2"))
+    parser.add_argument("--evaluation-workers", type=int, choices=range(1, 4), default=3)
     arguments = parser.parse_args()
     if arguments.epochs < 30:
         raise SystemExit("localnet v2 evidence requires at least 30 epochs")
@@ -542,17 +544,24 @@ def main() -> None:
     finally:
         _stop_miners(processes)
 
+    def evaluate(
+        pair: tuple[dict[str, Any], Any],
+    ) -> tuple[dict[str, Any], list[EpochObservation]]:
+        record, task = pair
+        return _evaluate_epoch(record, task, image_digest=arguments.worker_image)
+
+    with ThreadPoolExecutor(max_workers=arguments.evaluation_workers) as executor:
+        evaluated = list(executor.map(evaluate, zip(dispatches, tasks, strict=True)))
+
     all_observations: list[EpochObservation] = []
     epoch_payloads: list[dict[str, Any]] = []
-    for record, task in zip(dispatches, tasks, strict=True):
-        payload, observations = _evaluate_epoch(
-            record, task, image_digest=arguments.worker_image
-        )
+    for payload, observations in evaluated:
         epoch_payloads.append(payload)
         all_observations.extend(observations)
-        _write_json(arguments.output / "epochs" / f"epoch-{record['epoch']:03}.json", payload)
+        epoch = int(payload["epoch"])
+        _write_json(arguments.output / "epochs" / f"epoch-{epoch:03}.json", payload)
         print(
-            f"evaluate epoch={record['epoch']:02} unique={len(payload['strategy_evaluations'])}",
+            f"evaluate epoch={epoch:02} unique={len(payload['strategy_evaluations'])}",
             flush=True,
         )
 
