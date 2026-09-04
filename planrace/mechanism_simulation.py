@@ -15,7 +15,7 @@ import sys
 from collections import Counter, defaultdict
 from dataclasses import asdict, dataclass
 from pathlib import Path
-from typing import Any, Literal
+from typing import Any, Literal, cast
 
 from planrace.scoring_v2 import (
     AggregationPolicy,
@@ -968,7 +968,10 @@ def verify_evidence_bundle(
     """Verify every mechanism artifact, source, seed, and configuration hash."""
 
     root = repo_root or Path(__file__).resolve().parents[1]
-    manifest = json.loads((output_dir / "manifest.json").read_text(encoding="utf-8"))
+    manifest = cast(
+        dict[str, Any],
+        json.loads((output_dir / "manifest.json").read_text(encoding="utf-8")),
+    )
     if manifest.get("schema_version") != "planrace-mechanism-evidence/2":
         raise ValueError("unsupported mechanism evidence schema")
     if require_clean_source and manifest.get("source_tree_dirty") is not False:
@@ -978,7 +981,10 @@ def verify_evidence_bundle(
     if manifest.get("seed_commitment") != expected_seed:
         raise ValueError("mechanism seed commitment mismatch")
 
-    simulation = json.loads((output_dir / "simulation.json").read_text(encoding="utf-8"))
+    simulation = cast(
+        dict[str, Any],
+        json.loads((output_dir / "simulation.json").read_text(encoding="utf-8")),
+    )
     config_digest = hashlib.sha256(_canonical_json(simulation["config"]).encode()).hexdigest()
     if manifest.get("config_sha256") != config_digest:
         raise ValueError("mechanism configuration digest mismatch")
