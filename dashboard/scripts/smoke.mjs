@@ -55,7 +55,7 @@ try {
   );
   assert.match(html, /LOCALNET EVIDENCE/);
   assert.match(html, /TESTNET PENDING/);
-  assert.doesNotMatch(html, />TESTNET VERIFIED</);
+  assert.doesNotMatch(html, /TESTNET VERIFIED/);
   assert.equal(home.headers.get('x-content-type-options'), 'nosniff');
   assert.equal(home.headers.get('x-frame-options'), 'DENY');
   assert.match(

@@ -561,8 +561,8 @@ export default function Home() {
                   or metagraph readback is published yet.
                 </p>
                 <p>
-                  This panel changes to TESTNET VERIFIED only after a separate
-                  signed testnet manifest passes the same verifier.
+                  This panel changes only after a separate signed testnet
+                  manifest passes the same verifier.
                 </p>
               </CardContent>
             </Card>
