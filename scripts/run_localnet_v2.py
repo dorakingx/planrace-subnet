@@ -190,40 +190,39 @@ async def _dispatch_epochs(
     private_tasks: list[Any] = []
     metagraph = {index + 3: miner.ss58_address for index, miner in enumerate(miners)}
     latest_deadline = 0
-
-    for epoch in range(epochs):
-        validator_index = epoch % VALIDATOR_COUNT
-        round_index = epoch // VALIDATOR_COUNT
-        family = QUERY_FAMILIES[round_index % len(QUERY_FAMILIES)].family_id
-        validator = validators[validator_index]
-        now = time.time_ns() // 1_000_000
-        deadline = now + 20_000
-        latest_deadline = max(latest_deadline, deadline)
-        task = create_benchmark_task_v2(
-            validator_hotkey=validator.ss58_address,
-            engine_image_digest=image_digest,
-            family_id=family,
-            deadline_unix_ms=deadline,
-            artifact_budget=ArtifactBudget(max_indexes=3),
-        )
-        private_tasks.append(task)
-        epoch_outcomes: list[dict[str, Any]] = []
-        for miner_index, miner in enumerate(miners):
-            issued = time.time_ns() // 1_000_000
-            request = OptimizationRequestV2(
-                request_id=secrets.token_hex(16),
-                task=task.public,
+    captured: dict[str, str] = {}
+    async with httpx.AsyncClient(
+        trust_env=False, event_hooks={"request": [_auth_capture_hook(captured)]}
+    ) as client:
+        for epoch in range(epochs):
+            validator_index = epoch % VALIDATOR_COUNT
+            round_index = epoch // VALIDATOR_COUNT
+            family = QUERY_FAMILIES[round_index % len(QUERY_FAMILIES)].family_id
+            validator = validators[validator_index]
+            now = time.time_ns() // 1_000_000
+            deadline = now + 30_000
+            latest_deadline = max(latest_deadline, deadline)
+            task = create_benchmark_task_v2(
                 validator_hotkey=validator.ss58_address,
-                miner_hotkey=miner.ss58_address,
-                request_nonce=epoch * 100 + miner_index,
-                issued_at_unix_ms=issued,
-                expires_at_unix_ms=min(deadline, issued + 10_000),
+                engine_image_digest=image_digest,
+                family_id=family,
+                deadline_unix_ms=deadline,
+                artifact_budget=ArtifactBudget(max_indexes=3),
             )
-            captured: dict[str, str] = {}
-
-            async with httpx.AsyncClient(
-                trust_env=False, event_hooks={"request": [_auth_capture_hook(captured)]}
-            ) as client:
+            private_tasks.append(task)
+            epoch_outcomes: list[dict[str, Any]] = []
+            for miner_index, miner in enumerate(miners):
+                issued = time.time_ns() // 1_000_000
+                request = OptimizationRequestV2(
+                    request_id=secrets.token_hex(16),
+                    task=task.public,
+                    validator_hotkey=validator.ss58_address,
+                    miner_hotkey=miner.ss58_address,
+                    request_nonce=epoch * 100 + miner_index,
+                    issued_at_unix_ms=issued,
+                    expires_at_unix_ms=min(deadline, issued + 10_000),
+                )
+                captured.clear()
                 outcome = await request_optimization_v2(
                     client,
                     wallet=validator,
@@ -233,43 +232,43 @@ async def _dispatch_epochs(
                     expected_miner_uid=miner_index + 3,
                     metagraph_hotkeys=metagraph,
                     replay_store=replay,
-                    total_timeout_seconds=0.35,
+                    total_timeout_seconds=1.0,
                     allow_local_endpoint_for_tests=True,
                 )
-            epoch_outcomes.append(
+                epoch_outcomes.append(
+                    {
+                        "miner_id": f"miner-{miner_index:02}",
+                        "uid": miner_index + 3,
+                        "profile": PROFILE_NAMES[miner_index],
+                        "request": request.model_dump(mode="json"),
+                        "request_digest": optimization_request_digest(request),
+                        "validator_auth_headers": dict(captured),
+                        "accepted": outcome.accepted,
+                        "failure_code": outcome.failure_code,
+                        "status_code": outcome.status_code,
+                        "response": (
+                            outcome.response.model_dump(mode="json")
+                            if outcome.response is not None
+                            else None
+                        ),
+                    }
+                )
+            dispatch_records.append(
                 {
-                    "miner_id": f"miner-{miner_index:02}",
-                    "uid": miner_index + 3,
-                    "profile": PROFILE_NAMES[miner_index],
-                    "request": request.model_dump(mode="json"),
-                    "request_digest": optimization_request_digest(request),
-                    "validator_auth_headers": captured,
-                    "accepted": outcome.accepted,
-                    "failure_code": outcome.failure_code,
-                    "status_code": outcome.status_code,
-                    "response": (
-                        outcome.response.model_dump(mode="json")
-                        if outcome.response is not None
-                        else None
-                    ),
+                    "epoch": epoch,
+                    "validator_index": validator_index,
+                    "validator_hotkey": validator.ss58_address,
+                    "family": family,
+                    "task_public": task.public.model_dump(mode="json"),
+                    "outcomes": epoch_outcomes,
                 }
             )
-        dispatch_records.append(
-            {
-                "epoch": epoch,
-                "validator_index": validator_index,
-                "validator_hotkey": validator.ss58_address,
-                "family": family,
-                "task_public": task.public.model_dump(mode="json"),
-                "outcomes": epoch_outcomes,
-            }
-        )
-        accepted = sum(bool(item["accepted"]) for item in epoch_outcomes)
-        print(
-            f"dispatch epoch={epoch:02} validator={validator_index} "
-            f"family={family} accepted={accepted}/10",
-            flush=True,
-        )
+            accepted = sum(bool(item["accepted"]) for item in epoch_outcomes)
+            print(
+                f"dispatch epoch={epoch:02} validator={validator_index} "
+                f"family={family} accepted={accepted}/10",
+                flush=True,
+            )
 
     wait_seconds = max(0.0, (latest_deadline - time.time_ns() // 1_000_000) / 1000)
     if wait_seconds:
