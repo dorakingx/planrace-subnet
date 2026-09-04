@@ -33,7 +33,8 @@ PlanRace does **not** translate natural language to SQL and does not sell query 
 Protocol v2 includes 18 simulation profiles across honest, noisy, timeout,
 malformed, wrong-result, constant-answer, copycat/Sybil, validator-order, timing,
 and all-fail scenarios. A committed 512-replication run preserves raw rows and a
-signed manifest under [`results/mechanism-v2/`](results/mechanism-v2/). It
+source/lock/artifact hash manifest under
+[`results/mechanism-v2/`](results/mechanism-v2/). It
 recorded zero accepted injected false claims, zero gaming weight, fail-safe
 no-update in every all-fail replication, and no material allocation gain from
 duplicating a strategy.
@@ -41,9 +42,10 @@ duplicating a strategy.
 The official local Subtensor protocol v2 run uses three test validator
 identities under one operator, ten heterogeneous miners, 30 epochs, signed
 requests and responses, multiple hidden fixtures, disposable Docker evaluation,
-and an actual mechanism-derived weight write/readback. Its output is not claimed
-until the active run and signature verification complete; follow
-[STATUS.md](STATUS.md) and [LOCALNET_V2.md](LOCALNET_V2.md).
+and an actual mechanism-derived weight write/readback. The verified run contains
+300 authenticated requests, 270 signed responses, five capped strategy
+allocations, and finalized extrinsic `9062-0002`; follow [STATUS.md](STATUS.md)
+and [LOCALNET_V2.md](LOCALNET_V2.md).
 
 ```bash
 make bootstrap
@@ -111,7 +113,8 @@ weight to netuid 2. See [LOCALNET.md](LOCALNET.md) and the
 Implemented now: opaque commit/reveal, strict v2 wire types, bidirectional
 signatures and replay controls, exact/canonical result semantics, disposable
 Docker sandboxing, robust baseline-relative scoring, multi-epoch duplicate-aware
-weights, and adversarial mechanism simulation.
+weights, adversarial mechanism simulation, and a verified 30-epoch localnet v2
+weight submission/readback.
 
 Not yet claimed: Bittensor testnet registration/weights, independently operated
 validators, PostgreSQL/DuckDB or private customer-data adapters, a clean v2

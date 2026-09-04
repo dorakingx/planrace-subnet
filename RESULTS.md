@@ -4,7 +4,7 @@
 
 The committed seeded simulation contains 512 replications, 24 epochs per
 replication, 18 miner profiles, and eight named scenarios. Raw replication rows,
-profile rows, summary, and a signed manifest are under
+profile rows, summary, and a source/lock/artifact hash manifest are under
 [`results/mechanism-v2/`](results/mechanism-v2/).
 
 - honest-winner rate: 1.000;
@@ -26,11 +26,21 @@ visible rather than described as universal agreement.
 
 ## Protocol v2 localnet
 
-The full 30-epoch run on netuid 3 is active. Do not infer its final miner scores,
-validator correlation, or derived chain weights until
-`results/localnet-v2/{summary,manifest}.json` exist and verify. A preliminary
-hand-selected weight-vector smoke did finalize and read back, but is not the
-mechanism result; see [LOCALNET_V2.md](LOCALNET_V2.md).
+The verified run `localnet-v2-1788563665` completed 30 epochs on local netuid 3
+with three rotating validator identities, ten miner identities, six query
+families, 300 authenticated requests, and 270 signed responses. Every epoch
+contained seven unique executable-strategy evaluations over eight hidden
+fixtures.
+
+Six identities passed all closed-schedule gates, representing five distinct
+strategy portfolios. The per-strategy cap produced five 20% allocations; the
+selective/copycat duplicate pair split its group allocation into 10% each.
+The mechanism-derived vector finalized at extrinsic `9062-0002` and matched the
+Subtensor readback. Pairwise validator Kendall tau-b values were 0.5789, 0.6316,
+and 0.9474. These validators were three identities under one operator, so this
+is repeatability evidence, not independent consensus. See
+[LOCALNET_V2.md](LOCALNET_V2.md) and
+[`results/localnet-v2/`](results/localnet-v2/).
 
 ## Historical protocol v1 repeated mechanism spike
 

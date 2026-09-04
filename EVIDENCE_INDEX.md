@@ -9,29 +9,29 @@ localnet, and future testnet evidence. A missing artifact is marked pending.
 make bootstrap
 make sync
 make verify
-.venv/bin/python -m planrace evidence verify results/mechanism-v2/manifest.json
+.venv/bin/python scripts/verify_mechanism_v2.py --require-clean-source
 .venv/bin/python -m planrace evidence verify results/localnet-v2/manifest.json
 ```
 
-The second manifest command is valid only after the active v2 localnet run has
-completed. Every committed manifest is signed and references content hashes;
-signing does not make a localnet run a testnet run.
+The localnet manifest is validator-signed. The deterministic mechanism manifest
+is a seed/source/lock/artifact hash ledger rather than a validator signature.
+Neither form makes a localnet or simulation run a testnet run.
 
 ## Protocol v2 security and mechanism
 
 | Claim | Human-readable specification | Code | Tests | Machine evidence |
 |---|---|---|---|---|
-| Hidden commitment and post-deadline reveal | `PROTOCOL_V2.md`, `BENCHMARK_POLICY.md` | `planrace/taskgen_v2.py`, `benchmark_v2.py` | `tests/test_benchmark_v2.py`, `test_protocol_v2.py` | Localnet epoch `task_public` / `task_reveal` records (pending) |
-| Signed request and response; replay rejection | `PROTOCOL_V2.md`, `SECURITY.md` | `planrace/auth_v2.py`, `api_v2.py`, `validator_client_v2.py` | `tests/test_auth_v2.py` | Localnet request headers and response envelopes (pending) |
-| Exact-result oracle | `SCORING.md` | `planrace/oracle_v2.py`, `evaluation_v2.py` | `tests/test_oracle_v2.py`, `test_evaluation_v2.py` | Per-fixture hashes in epoch records (pending) |
-| Worker isolation and failure containment | `BENCHMARK_POLICY.md`, `THREAT_MODEL.md` | `planrace/sandbox_v2.py`, `sandbox_worker.py` | `tests/test_sandbox_v2.py` | Worker status/failure codes in epoch records (pending) |
+| Hidden commitment and post-deadline reveal | `PROTOCOL_V2.md`, `BENCHMARK_POLICY.md` | `planrace/taskgen_v2.py`, `benchmark_v2.py` | `tests/test_benchmark_v2.py`, `test_protocol_v2.py` | 30 localnet epoch `task_public` / `task_reveal` records |
+| Signed request and response; replay rejection | `PROTOCOL_V2.md`, `SECURITY.md` | `planrace/auth_v2.py`, `api_v2.py`, `validator_client_v2.py` | `tests/test_auth_v2.py` | 300 request digests and 270 response digests in the v2 manifest |
+| Exact-result oracle | `SCORING.md` | `planrace/oracle_v2.py`, `evaluation_v2.py` | `tests/test_oracle_v2.py`, `test_evaluation_v2.py` | Per-fixture hashes in 30 epoch records |
+| Worker isolation and failure containment | `BENCHMARK_POLICY.md`, `THREAT_MODEL.md` | `planrace/sandbox_v2.py`, `sandbox_worker.py` | `tests/test_sandbox_v2.py` | Worker status/failure codes in 30 epoch records |
 | Robust multi-epoch scoring | `SCORING.md`, `MECHANISM_SIMULATION.md` | `planrace/scoring_v2.py` | `tests/test_scoring_v2.py` | `results/mechanism-v2/summary.json`, `replications.csv` |
 
 ## Network evidence
 
 - Historical v1: `LOCALNET.md`, `results/localnet-epoch-8.json`.
 - Protocol v2 localnet: `LOCALNET_V2.md` and
-  `results/localnet-v2/{summary,manifest}.json` after completion.
+  `results/localnet-v2/{summary,manifest}.json` plus `epochs/`.
 - Protocol v2 testnet: **pending**; see `TESTNET.md`.
 
 ## Product, market, and deployment

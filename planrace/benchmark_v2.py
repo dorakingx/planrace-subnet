@@ -53,9 +53,15 @@ def benchmark_generator_source_digest() -> str:
     """Digest the exact generator source loaded by this worker."""
 
     source = Path(__file__).resolve().read_bytes()
-    return "sha256:" + hashlib.sha256(
-        b"planrace/2:benchmark-generator\x00" + GENERATOR_VERSION.encode("ascii") + b"\x00" + source
-    ).hexdigest()
+    return (
+        "sha256:"
+        + hashlib.sha256(
+            b"planrace/2:benchmark-generator\x00"
+            + GENERATOR_VERSION.encode("ascii")
+            + b"\x00"
+            + source
+        ).hexdigest()
+    )
 
 
 @dataclass(frozen=True, slots=True)
@@ -261,14 +267,11 @@ def describe_hidden_fixtures(
     secret_seed: bytes, *, family_id: str
 ) -> tuple[HiddenFixtureDescriptor, ...]:
     return tuple(
-        item.descriptor
-        for item in generate_hidden_fixtures(secret_seed, family_id=family_id)
+        item.descriptor for item in generate_hidden_fixtures(secret_seed, family_id=family_id)
     )
 
 
-def generate_hidden_fixtures(
-    secret_seed: bytes, *, family_id: str
-) -> tuple[GeneratedFixture, ...]:
+def generate_hidden_fixtures(secret_seed: bytes, *, family_id: str) -> tuple[GeneratedFixture, ...]:
     """Generate every hidden holdout for one PublicTask query family."""
 
     return generate_hidden_fixtures_for_family(secret_seed, family_id)
@@ -311,9 +314,7 @@ def generate_mixed_family_fixtures_for_testing(
 def generate_public_training_fixture(family_id: str) -> GeneratedFixture:
     """Generate the separately seeded public fixture for one query family."""
 
-    profile = FixtureProfile(
-        "training_public_v2", 180, 2_000, 2_500, 800, 500, 1_400, 4_000, 0
-    )
+    profile = FixtureProfile("training_public_v2", 180, 2_000, 2_500, 800, 500, 1_400, 4_000, 0)
     family = _query_family(family_id)
     return _generate_fixture(
         _derive_seed(PUBLIC_TRAINING_SEED, profile.fixture_id, family.family_id),
@@ -416,20 +417,16 @@ def _generate_fixture(
                 amount_cents = 0
             created_day = rng.randrange(3_651)
             coupon = (
-                None
-                if rng.randrange(10_000) < profile.null_bps
-                else f"C{rng.randrange(40):02d}"
+                None if rng.randrange(10_000) < profile.null_bps else f"C{rng.randrange(40):02d}"
             )
             previous_payload = (customer_id, amount_cents, status, channel, created_day, coupon)
-        orders.append(
-            (order_id, customer_id, amount_cents, status, channel, created_day, coupon)
-        )
+        orders.append((order_id, customer_id, amount_cents, status, channel, created_day, coupon))
 
     parameters = _parameters_for(family.family_id, rng)
     content_digest = logical_fixture_content_digest(customers, orders)
-    database_file_digest = "sha256:" + hashlib.sha256(
-        canonical_sqlite_database_bytes(customers, orders)
-    ).hexdigest()
+    database_file_digest = (
+        "sha256:" + hashlib.sha256(canonical_sqlite_database_bytes(customers, orders)).hexdigest()
+    )
     parameter_digest = fixture_parameter_set_digest(family.family_id, parameters)
     descriptor = HiddenFixtureDescriptor(
         fixture_id=profile.fixture_id,
@@ -516,9 +513,7 @@ def logical_fixture_content_digest_from_database(
         connection = database
         owns_connection = False
     else:
-        connection = sqlite3.connect(
-            database.resolve().as_uri() + "?mode=ro&immutable=1", uri=True
-        )
+        connection = sqlite3.connect(database.resolve().as_uri() + "?mode=ro&immutable=1", uri=True)
         owns_connection = True
     try:
         customers = tuple(

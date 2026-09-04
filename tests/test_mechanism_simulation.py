@@ -8,6 +8,7 @@ from planrace.mechanism_simulation import (
     VALIDATOR_SCENARIOS,
     SimulationConfig,
     run_mechanism_simulation,
+    verify_evidence_bundle,
     write_evidence_bundle,
 )
 
@@ -90,3 +91,13 @@ def test_evidence_bundle_hashes_every_output(tmp_path) -> None:  # type: ignore[
     assert (tmp_path / "MECHANISM_SIMULATION.csv").read_bytes() == (
         tmp_path / "replications.csv"
     ).read_bytes()
+    verified = verify_evidence_bundle(tmp_path)
+    assert verified["config_sha256"] == manifest["config_sha256"]
+
+
+def test_evidence_bundle_verifier_rejects_tampering(tmp_path) -> None:  # type: ignore[no-untyped-def]
+    report = run_mechanism_simulation(small_config())
+    write_evidence_bundle(report, tmp_path)
+    (tmp_path / "summary.json").write_text("{}\n", encoding="utf-8")
+    with pytest.raises(ValueError, match="artifact digest mismatch"):
+        verify_evidence_bundle(tmp_path)

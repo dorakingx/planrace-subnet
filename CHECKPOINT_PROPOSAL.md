@@ -26,9 +26,11 @@ relative to the unmodified baseline.
   multi-horizon, multi-epoch, and duplicate-strategy aware.
 - A seeded 512-replication adversarial simulation is committed under
   `results/mechanism-v2/`.
-- Protocol v2 localnet evidence is being generated with three test validator
-  identities under one operator, ten heterogeneous miners, and 30 epochs on an
-  official local Subtensor container. It is not testnet evidence.
+- Protocol v2 localnet evidence completed with three test validator identities
+  under one operator, ten heterogeneous miners, 30 epochs, 300 authenticated
+  requests, 270 signed responses, and a successful mechanism-derived weight
+  extrinsic/readback on an official local Subtensor container. It is not
+  testnet evidence.
 
 ## Current limits
 

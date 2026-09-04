@@ -1,6 +1,6 @@
 # Protocol v2 localnet evidence
 
-Status: **active evidence run; values below marked pending are not yet claims**.
+Status: **VERIFIED localnet evidence; TESTNET PENDING**.
 
 ## Topology
 
@@ -50,7 +50,7 @@ The authoritative command is:
   --evaluation-workers 3
 ```
 
-Expected evidence checks, not yet asserted as passed:
+Verified evidence checks:
 
 - exactly 30 epoch records and 300 signed validator requests;
 - exactly nine accepted miner responses per epoch (the timeout profile is the
@@ -64,12 +64,25 @@ Expected evidence checks, not yet asserted as passed:
 - `manifest.json` verifies under the included validator signature and binds the
   summary plus all 30 epoch files by SHA-256.
 
-When complete, `results/localnet-v2/summary.json`, `manifest.json`, and 30 files
-under `epochs/` are authoritative. Until then, the public status is
-**LOCALNET EVIDENCE / TESTNET PENDING**.
+The completed run is `localnet-v2-1788563665`, bound to Git commit
+`6c219170b8d99be0a2ec20157b22c1a81b9af250`. It produced 300 authenticated
+requests and 270 signed responses across six query families. Five distinct
+eligible strategy portfolios received a maximum 20% allocation each; the
+selective/copycat duplicate pair split one 20% strategy allocation into 10%
+per identity.
 
-After the run, the acceptance command is intentionally stricter than signature
-verification alone:
+The mechanism-derived vector finalized successfully at extrinsic `9062-0002`,
+block `0xb8a9b37661f48a50e84e79e6c132f377101831a5afff3cf0c058ba3b9046b98e`.
+The local Subtensor readback contained UID 4 and UID 12 at approximately 10%
+each and UIDs 5–8 at approximately 20% each. The signed manifest SHA-256 is
+`741b61e619054aa6a5b834938cd41f1a0eabe1ef9d1397a8913cd9dffc777001`.
+
+`results/localnet-v2/summary.json`, `manifest.json`, and the 30 files under
+`epochs/` are authoritative for this run. The public status remains **LOCALNET
+EVIDENCE / TESTNET PENDING** because local evidence is not testnet evidence.
+
+The acceptance command is intentionally stricter than signature verification
+alone:
 
 ```bash
 .venv/bin/python scripts/audit_localnet_v2.py \

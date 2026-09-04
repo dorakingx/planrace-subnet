@@ -86,9 +86,7 @@ def canonicalize_result(
     if projection_column_count is not None:
         _validate_projection_column_count(projection_column_count, policy)
         if cursor_column_count is not None and cursor_column_count != projection_column_count:
-            raise ResultOracleError(
-                "projection_column_count disagrees with cursor.description"
-            )
+            raise ResultOracleError("projection_column_count disagrees with cursor.description")
     else:
         projection_column_count = cursor_column_count
 
@@ -158,15 +156,18 @@ def exact_results_equal(
 ) -> bool:
     """Compare two results under one explicit engine/order/collation policy."""
 
-    return canonicalize_result(
-        reference_rows,
-        policy=policy,
-        projection_column_count=projection_column_count,
-    ).digest == canonicalize_result(
-        candidate_rows,
-        policy=policy,
-        projection_column_count=projection_column_count,
-    ).digest
+    return (
+        canonicalize_result(
+            reference_rows,
+            policy=policy,
+            projection_column_count=projection_column_count,
+        ).digest
+        == canonicalize_result(
+            candidate_rows,
+            policy=policy,
+            projection_column_count=projection_column_count,
+        ).digest
+    )
 
 
 def _projection_count_from_cursor(rows: object) -> int | None:
@@ -181,9 +182,7 @@ def _projection_count_from_cursor(rows: object) -> int | None:
     description = getattr(rows, "description", None)
     if description is None:
         return None
-    if not isinstance(description, Sequence) or isinstance(
-        description, str | bytes | bytearray
-    ):
+    if not isinstance(description, Sequence) or isinstance(description, str | bytes | bytearray):
         raise ResultOracleError("cursor.description must be a sequence")
     return len(description)
 

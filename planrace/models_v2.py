@@ -194,9 +194,7 @@ class IndexSpec(StrictV2Model):
 
 class BundleMetadata(StrictV2Model):
     strategy: Annotated[str, StringConstraints(min_length=1, max_length=128)]
-    estimated_intent: Literal[
-        "filter", "join", "order", "group", "covering", "mixed", "no_index"
-    ]
+    estimated_intent: Literal["filter", "join", "order", "group", "covering", "mixed", "no_index"]
     rationale: Annotated[str, StringConstraints(max_length=512)] = ""
 
 
@@ -295,7 +293,7 @@ def compile_index_sql(spec: IndexSpec) -> str:
 
     unique = "UNIQUE " if spec.unique else ""
     columns = [
-        f'{_quote_identifier(item.column)} {item.direction.upper()}' for item in spec.key_columns
+        f"{_quote_identifier(item.column)} {item.direction.upper()}" for item in spec.key_columns
     ]
     columns.extend(_quote_identifier(item) for item in spec.include_columns)
     sql = (
@@ -379,9 +377,7 @@ class ArtifactBudget(StrictV2Model):
     max_columns_per_index: Annotated[int, Field(ge=1, le=MAX_COLUMNS_PER_INDEX_V2)] = (
         MAX_COLUMNS_PER_INDEX_V2
     )
-    max_predicates_per_index: Annotated[int, Field(ge=0, le=MAX_PREDICATES_V2)] = (
-        MAX_PREDICATES_V2
-    )
+    max_predicates_per_index: Annotated[int, Field(ge=0, le=MAX_PREDICATES_V2)] = MAX_PREDICATES_V2
     # The signed HTTP response and worker input envelopes are bounded at the
     # transport layer; a task cannot advertise an artifact larger than the
     # production path can receive and verify.

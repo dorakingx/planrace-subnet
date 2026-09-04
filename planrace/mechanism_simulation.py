@@ -884,7 +884,9 @@ def write_evidence_bundle(report: dict[str, Any], output_dir: Path) -> dict[str,
         "sybil_strategy_allocation_gain",
     )
     replication_buffer = io.StringIO(newline="")
-    replication_writer = csv.DictWriter(replication_buffer, fieldnames=replication_fields)
+    replication_writer = csv.DictWriter(
+        replication_buffer, fieldnames=replication_fields, lineterminator="\n"
+    )
     replication_writer.writeheader()
     for row in report["replications"]:
         replication_writer.writerow({field: row[field] for field in replication_fields})
@@ -901,7 +903,7 @@ def write_evidence_bundle(report: dict[str, Any], output_dir: Path) -> dict[str,
         "mean_weight",
         "gate_failures_json",
     )
-    profile_writer = csv.DictWriter(profile_buffer, fieldnames=profile_fields)
+    profile_writer = csv.DictWriter(profile_buffer, fieldnames=profile_fields, lineterminator="\n")
     profile_writer.writeheader()
     for profile_id, metrics in report["summary"]["profile_metrics"].items():
         profile_writer.writerow(
@@ -954,4 +956,53 @@ def write_evidence_bundle(report: dict[str, Any], output_dir: Path) -> dict[str,
         },
     }
     (output_dir / "manifest.json").write_text(_canonical_json(manifest), encoding="utf-8")
+    return manifest
+
+
+def verify_evidence_bundle(
+    output_dir: Path,
+    *,
+    repo_root: Path | None = None,
+    require_clean_source: bool = False,
+) -> dict[str, Any]:
+    """Verify every mechanism artifact, source, seed, and configuration hash."""
+
+    root = repo_root or Path(__file__).resolve().parents[1]
+    manifest = json.loads((output_dir / "manifest.json").read_text(encoding="utf-8"))
+    if manifest.get("schema_version") != "planrace-mechanism-evidence/2":
+        raise ValueError("unsupported mechanism evidence schema")
+    if require_clean_source and manifest.get("source_tree_dirty") is not False:
+        raise ValueError("mechanism evidence was generated from a dirty source tree")
+    seed = int(manifest["root_seed"])
+    expected_seed = hashlib.sha256(f"planrace-mechanism-v2:{seed}".encode()).hexdigest()
+    if manifest.get("seed_commitment") != expected_seed:
+        raise ValueError("mechanism seed commitment mismatch")
+
+    simulation = json.loads((output_dir / "simulation.json").read_text(encoding="utf-8"))
+    config_digest = hashlib.sha256(_canonical_json(simulation["config"]).encode()).hexdigest()
+    if manifest.get("config_sha256") != config_digest:
+        raise ValueError("mechanism configuration digest mismatch")
+
+    for filename, expected in manifest["artifacts"].items():
+        path = output_dir / filename
+        if not path.is_file() or _sha256(path) != expected:
+            raise ValueError(f"mechanism artifact digest mismatch: {filename}")
+    for filename, expected in manifest["source_files"].items():
+        path = root / filename
+        if not path.is_file() or not path.resolve().is_relative_to(root.resolve()):
+            raise ValueError(f"unsafe or missing mechanism source path: {filename}")
+        if _sha256(path) != expected:
+            raise ValueError(f"mechanism source digest mismatch: {filename}")
+    lock = manifest["dependency_lock"]
+    lock_path = root / lock["path"]
+    if not lock_path.is_file() or _sha256(lock_path) != lock["sha256"]:
+        raise ValueError("mechanism dependency lock digest mismatch")
+    if (output_dir / "MECHANISM_SIMULATION.json").read_bytes() != (
+        output_dir / "simulation.json"
+    ).read_bytes():
+        raise ValueError("mechanism JSON publication alias mismatch")
+    if (output_dir / "MECHANISM_SIMULATION.csv").read_bytes() != (
+        output_dir / "replications.csv"
+    ).read_bytes():
+        raise ValueError("mechanism CSV publication alias mismatch")
     return manifest

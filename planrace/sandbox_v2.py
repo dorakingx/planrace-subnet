@@ -1136,9 +1136,7 @@ def run_docker_worker(
 
 
 class SandboxBatchItemV2(StrictSandboxModel):
-    database_name: Annotated[
-        str, StringConstraints(pattern=r"^fixture-[0-9]{3}\.sqlite3$")
-    ]
+    database_name: Annotated[str, StringConstraints(pattern=r"^fixture-[0-9]{3}\.sqlite3$")]
     request: SandboxRequestV2
 
 
@@ -1183,9 +1181,7 @@ def run_docker_batch_worker(
         batch_items.append(SandboxBatchItemV2(database_name=name, request=request))
     batch = SandboxBatchRequestV2(items=tuple(batch_items))
     command = [
-        *_docker_security_prefix(
-            policy, cpu_seconds=min(300, policy.cpu_seconds * len(items))
-        ),
+        *_docker_security_prefix(policy, cpu_seconds=min(300, policy.cpu_seconds * len(items))),
         "--volume",
         f"{root}:/input:ro",
         "--workdir",
@@ -1231,9 +1227,7 @@ def _worker_image_digest(image: str) -> str | None:
     return None
 
 
-def _docker_security_prefix(
-    policy: SandboxPolicy, *, cpu_seconds: int | None = None
-) -> list[str]:
+def _docker_security_prefix(policy: SandboxPolicy, *, cpu_seconds: int | None = None) -> list[str]:
     memory_mib = policy.memory_bytes // (1024 * 1024)
     tmpfs_mib = min(128, max(32, memory_mib // 2))
     return [

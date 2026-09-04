@@ -5,6 +5,7 @@
   "sortPackageJson": false,
   "ignorePatterns": [
     "package-lock.json",
+    "evidence/*.json",
     "pnpm-lock.yaml",
     "yarn.lock",
     "bun.lock",

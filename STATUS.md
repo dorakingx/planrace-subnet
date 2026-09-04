@@ -22,28 +22,23 @@ Public claim: **LOCALNET EVIDENCE / TESTNET PENDING**.
   acceptance, 100% all-fail no-update, and negligible duplicated-strategy
   allocation gain (`results/mechanism-v2/`).
 - Official local Subtensor netuid 3 setup with three development validator
-  identities and ten heterogeneous miner identities; actual weight write/readback
-  smoke succeeded.
+  identities and ten heterogeneous miner identities.
+- Verified 30-epoch protocol v2 localnet run: six query families, 300
+  authenticated requests, 270 signed responses, 30 post-deadline reveals, five
+  capped strategy allocations, finalized extrinsic `9062-0002`, matching
+  readback, and a signed 31-source manifest.
 - Required protocol, market, judging, evidence, and media drafts exist and state
   their gaps explicitly.
 
-## Active
-
-- The authoritative 30-epoch protocol v2 localnet run is executing. Its final
-  mechanism-derived weight extrinsic, readback, rank analysis, and signed
-  manifest are not claimed until verification passes.
-
 ## Next gates
 
-1. Verify all 30 localnet epoch records, signatures, sandbox outcomes,
-   aggregation, finalized extrinsic, readback, and manifest.
-2. Drive the dashboard from that signed v2 manifest and rerun Python/dashboard,
+1. Drive the dashboard from the signed v2 manifest and rerun Python/dashboard,
    secret, dependency, browser, and public-link checks.
-3. Push a clean GitHub commit and deploy/promote the same SHA to Vercel with
+2. Push a clean GitHub commit and deploy/promote the same SHA to Vercel with
    `gitDirty=0`; record immutable provenance.
-4. Run the independent checkpoint reviews. Do not post while a P0/critical issue
+3. Run the independent checkpoint reviews. Do not post while a P0/critical issue
    is open.
-5. Request exactly one user action for a dedicated testnet wallet/faucet/signature
+4. Request exactly one user action for a dedicated testnet wallet/faucet/signature
    when local gates pass. Local public development keys must not be reused.
 
 ## Not complete

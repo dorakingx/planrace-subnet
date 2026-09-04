@@ -16,9 +16,11 @@ import {
 
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import manifest from '@/evidence/localnet-v1-epoch-8.json';
+import manifest from '@/evidence/localnet-v2.json';
+import summary from '@/evidence/localnet-v2-summary.json';
 
-const RAW_MANIFEST_URL = '/evidence/localnet-v1-epoch-8.json';
+const RAW_MANIFEST_URL = '/evidence/localnet-v2.json';
+const RAW_SUMMARY_URL = '/evidence/localnet-v2-summary.json';
 const REPOSITORY_URL = 'https://github.com/dorakingx/planrace-subnet';
 const TECHNICAL_DOCS_URL = `${REPOSITORY_URL}/blob/main/PROTOCOL_V2.md`;
 
@@ -35,19 +37,19 @@ const correctnessPassed = manifest.scores.filter(
   (score) => score.correct,
 ).length;
 const correctnessFailed = manifest.scores.length - correctnessPassed;
-const baselineRelative = manifest.scores.find(
-  (score) => score.baseline_relative_speedup !== null,
-)?.baseline_relative_speedup;
 const latestExtrinsic = manifest.extrinsics.at(0);
+const validatorTau = summary.validator_rank_analysis.pairwise.map(
+  (pair) => pair.kendall_tau_b,
+);
 
 const headlineMetrics = [
-  [String(manifest.validator_hotkeys.length), 'validator identity'],
+  [String(manifest.validator_hotkeys.length), 'validator identities'],
   [String(manifest.miner_hotkeys.length), 'miner identities'],
   [
     String(manifest.authentication.authenticated_requests),
     'authenticated requests',
   ],
-  [String(manifest.weight_plan.uids.length), 'local-chain weight recipient'],
+  [String(manifest.weight_plan.uids.length), 'weight recipients'],
 ];
 
 const pipeline = [
@@ -314,13 +316,10 @@ export default function Home() {
                       Miner
                     </th>
                     <th className="px-4 py-3 font-medium" scope="col">
-                      Exact result
+                      Correctness gate
                     </th>
                     <th className="px-4 py-3 font-medium" scope="col">
-                      Warm / setup
-                    </th>
-                    <th className="px-4 py-3 font-medium" scope="col">
-                      Plan cost
+                      Eligibility
                     </th>
                     <th className="px-4 py-3 font-medium" scope="col">
                       Score
@@ -359,12 +358,9 @@ export default function Home() {
                           </span>
                         </td>
                         <td className="px-4 py-5 font-mono text-xs">
-                          {score.median_warm_ms === null
-                            ? '—'
-                            : `${score.median_warm_ms.toFixed(3)} / ${score.setup_ms?.toFixed(3)} ms`}
-                        </td>
-                        <td className="px-4 py-5 font-mono text-xs">
-                          {score.plan_cost ?? '—'}
+                          {score.accepted && score.score > 0
+                            ? 'ELIGIBLE'
+                            : (score.failure_code ?? 'NO REWARD')}
                         </td>
                         <td className="px-4 py-5 font-mono text-lg">
                           {score.score.toFixed(3)}
@@ -386,22 +382,31 @@ export default function Home() {
                 </p>
               </CardHeader>
               <CardContent className="space-y-4 px-5 py-5">
-                <div>
-                  <p className="text-sm text-muted-foreground">
-                    Baseline-relative speedup
-                  </p>
-                  <p className="mt-1 font-mono text-lg text-amber-200">
-                    {baselineRelative === undefined
-                      ? 'NOT RECORDED'
-                      : `${baselineRelative}×`}
-                  </p>
-                </div>
                 <p className="text-sm leading-6 text-muted-foreground">
                   Protocol v2 keeps paired baseline and candidate measurements
                   in each signed epoch artifact. The compact manifest reports
                   aggregate rewards and does not invent a single speedup across
                   families or reuse horizons.
                 </p>
+                <dl className="grid gap-3 border-t border-white/10 pt-4 text-sm">
+                  <div>
+                    <dt className="text-muted-foreground">Closed schedule</dt>
+                    <dd className="mt-1 font-mono">
+                      {summary.epoch_count} epochs · {summary.families.length}{' '}
+                      families
+                    </dd>
+                  </div>
+                  <div>
+                    <dt className="text-muted-foreground">
+                      Validator rank tau-b
+                    </dt>
+                    <dd className="mt-1 font-mono">
+                      {validatorTau
+                        .map((value) => value.toFixed(3))
+                        .join(' · ')}
+                    </dd>
+                  </div>
+                </dl>
               </CardContent>
             </Card>
           </div>
@@ -529,6 +534,9 @@ export default function Home() {
                   >
                     <Download className="size-4" aria-hidden="true" />
                     Raw manifest
+                  </a>
+                  <a className="cta-secondary" href={RAW_SUMMARY_URL} download>
+                    Run summary
                   </a>
                   <a
                     className="cta-secondary"

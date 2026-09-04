@@ -4,7 +4,7 @@ import { resolve } from 'node:path';
 import { verifyEvidence } from './evidence.mjs';
 
 const manifestPath = resolve(
-  process.env.PLANRACE_EVIDENCE_MANIFEST ?? 'evidence/localnet-v1-epoch-8.json',
+  process.env.PLANRACE_EVIDENCE_MANIFEST ?? 'evidence/localnet-v2.json',
 );
 const manifest = JSON.parse(await readFile(manifestPath, 'utf8'));
 const { digest } = await verifyEvidence(manifest);

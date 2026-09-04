@@ -10,7 +10,7 @@ import {
 } from './evidence.mjs';
 
 const manifest = JSON.parse(
-  await readFile(resolve('evidence/localnet-v1-epoch-8.json'), 'utf8'),
+  await readFile(resolve('evidence/localnet-v2.json'), 'utf8'),
 );
 
 void test('committed localnet manifest has a valid validator signature', async () => {

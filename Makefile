@@ -1,6 +1,6 @@
 UV := .bootstrap/bin/uv
 
-.PHONY: bootstrap sync test lint typecheck audit verify demo local-epoch localnet-v2-audit mechanism-v2 secrets
+.PHONY: bootstrap sync test lint typecheck audit verify demo local-epoch localnet-v2-audit mechanism-v2 mechanism-v2-audit secrets
 
 bootstrap:
 	./scripts/bootstrap.sh
@@ -37,3 +37,6 @@ localnet-v2-audit:
 
 mechanism-v2:
 	@$(UV) run python scripts/run_mechanism_v2.py
+
+mechanism-v2-audit:
+	@$(UV) run python scripts/verify_mechanism_v2.py --require-clean-source

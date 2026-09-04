@@ -208,9 +208,7 @@ def test_commitment_rejects_tampered_seed_salt_and_holdout() -> None:
     assert not audit_task_reveal(
         task.public, task.reveal.model_copy(update={"secret_seed_hex": "d" * 64})
     )
-    assert not audit_task_reveal(
-        task.public, task.reveal.model_copy(update={"salt_hex": "e" * 64})
-    )
+    assert not audit_task_reveal(task.public, task.reveal.model_copy(update={"salt_hex": "e" * 64}))
     fixtures = list(task.reveal.hidden_fixtures)
     fixtures[0] = fixtures[0].model_copy(update={"row_count": 999})
     assert not audit_task_reveal(
@@ -230,11 +228,7 @@ def test_commitment_binds_complete_public_workload_and_artifact_policy() -> None
                 update={"row_count": public.public_training_fixture.row_count + 1}
             )
         },
-        {
-            "parameter_ranges": (
-                public.parameter_ranges[0].model_copy(update={"maximum": 99_999}),
-            )
-        },
+        {"parameter_ranges": (public.parameter_ranges[0].model_copy(update={"maximum": 99_999}),)},
         {
             "published_statistics": public.published_statistics.model_copy(
                 update={"row_count_max": public.published_statistics.row_count_max + 1}
@@ -249,9 +243,7 @@ def test_commitment_binds_complete_public_workload_and_artifact_policy() -> None
 
 def test_reveal_audit_rejects_wrong_identity_count_root_and_regeneration() -> None:
     task = private_task()
-    assert not audit_task_reveal(
-        task.public, task.reveal.model_copy(update={"task_id": "f0" * 16})
-    )
+    assert not audit_task_reveal(task.public, task.reveal.model_copy(update={"task_id": "f0" * 16}))
     assert not audit_task_reveal(
         task.public.model_copy(update={"hidden_holdout_count": 2}), task.reveal
     )
@@ -302,7 +294,7 @@ def test_structured_index_compiles_only_validator_derived_sql() -> None:
     assert sql == (
         f'CREATE INDEX "{validator_index_name(spec)}" ON "orders" '
         '("customer_id" ASC, "cents" DESC, "status") '
-        "WHERE \"status\" = 'paid' AND \"cents\" >= 100"
+        'WHERE "status" = \'paid\' AND "cents" >= 100'
     )
     assert "candidate_sql" not in artifact.model_dump()
     assert "index_name" not in json.dumps(artifact.model_dump(mode="json"))
@@ -358,9 +350,7 @@ def test_strategy_digest_ignores_cosmetic_metadata_but_binds_executable_ast() ->
 
 
 def test_unique_and_null_predicates_compile_without_raw_expressions() -> None:
-    no_predicate = IndexSpec(
-        table="users", key_columns=(IndexColumn(column="email"),), unique=True
-    )
+    no_predicate = IndexSpec(table="users", key_columns=(IndexColumn(column="email"),), unique=True)
     assert compile_index_sql(no_predicate).startswith("CREATE UNIQUE INDEX")
     nulls = IndexSpec(
         table="users",
@@ -372,9 +362,7 @@ def test_unique_and_null_predicates_compile_without_raw_expressions() -> None:
             )
         ),
     )
-    assert compile_index_sql(nulls).endswith(
-        'WHERE "deleted_at" IS NULL AND "email" IS NOT NULL'
-    )
+    assert compile_index_sql(nulls).endswith('WHERE "deleted_at" IS NULL AND "email" IS NOT NULL')
 
 
 def test_predicate_text_is_literal_escaped_not_executable_sql() -> None:

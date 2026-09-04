@@ -93,8 +93,7 @@ def test_fixture_materialization_matches_logical_counts(tmp_path: Path) -> None:
         == training.descriptor.content_digest
     )
     assert (
-        logical_fixture_content_digest_from_database(database)
-        == training.descriptor.content_digest
+        logical_fixture_content_digest_from_database(database) == training.descriptor.content_digest
     )
     assert verify_logical_fixture_content_digest(database, training.descriptor.content_digest)
 
@@ -177,9 +176,10 @@ def test_parameter_distribution_labels_match_generators() -> None:
         "intentional-zero-result": ("categorical", "categorical"),
     }
     for family in QUERY_FAMILIES:
-        assert tuple(
-            item.distribution for item in published_parameter_ranges(family.family_id)
-        ) == expected[family.family_id]
+        assert (
+            tuple(item.distribution for item in published_parameter_ranges(family.family_id))
+            == expected[family.family_id]
+        )
 
 
 def test_unknown_family_fails_closed() -> None:

@@ -1,7 +1,9 @@
 {
   "artifacts": {
-    "profile-rewards.csv": "e5e8818c943c52a72a8750d402ef510b97e99c3492211d3ce3aac11ffb573d51",
-    "replications.csv": "858efb1df979ebdaec0ed9efb2915991170f9ccace7f40e35b454960c8f80d64",
+    "MECHANISM_SIMULATION.csv": "6fd5b7fbbdf6a1394900745f010ce7cddc42217bf30780a3d57bea79eeb3d4be",
+    "MECHANISM_SIMULATION.json": "8c31b86d65dcdc696386a9d2611ccf9f2270071405cf23d133fb9bde3f982209",
+    "profile-rewards.csv": "3d47ce6ee098f1b664745b9731ae7196d0ee355f85951f24b0e9bf04f9df2eed",
+    "replications.csv": "6fd5b7fbbdf6a1394900745f010ce7cddc42217bf30780a3d57bea79eeb3d4be",
     "simulation.json": "8c31b86d65dcdc696386a9d2611ccf9f2270071405cf23d133fb9bde3f982209",
     "summary.json": "6edee4f0102b410574d619a27de6733cdf8209cfaf3ede8d0a1f06c4e758454d"
   },
@@ -22,10 +24,10 @@
   "schema_version": "planrace-mechanism-evidence/2",
   "seed_commitment": "d79f0f7af9d5ecf1a066a7ccdf87919809186d61fed121832f38e42e98652b78",
   "source_files": {
-    "planrace/mechanism_simulation.py": "3c720f38c35b66a11f4264194bdf5a226a3f93a8674156d317567e7c4eec441f",
-    "planrace/scoring_v2.py": "a1e5233a47ec9d7c6fcf981a1b8578ac06092b2cbc69aa5c268d5f46acefa881",
+    "planrace/mechanism_simulation.py": "841f74df71c44bfaca72e4e6a6f808e4c97f8464a0f553ba6f2a1dd744aa3ada",
+    "planrace/scoring_v2.py": "cb0c609968fc6823acab083f96bd3fe5b98869d3716e27e3cabaae1ed9c06515",
     "scripts/run_mechanism_v2.py": "e66a27e4de7c7909201439f1eaf8e6507173a56cdbadef57192ddb7b3ac8909b"
   },
-  "source_git_base_commit": "3bf091901c4867725f2013cff2d2a64d84801861",
+  "source_git_base_commit": "6c219170b8d99be0a2ec20157b22c1a81b9af250",
   "source_tree_dirty": true
 }

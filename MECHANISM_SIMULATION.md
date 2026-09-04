@@ -84,6 +84,7 @@ family quotas remain unchanged.
 
 ```bash
 uv run python scripts/run_mechanism_v2.py
+uv run python scripts/verify_mechanism_v2.py --require-clean-source
 ```
 
 The publication command rejects fewer than 500 replications. It rewrites:

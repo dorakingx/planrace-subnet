@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import math
 from collections import Counter
 from pathlib import Path
 from typing import Any
@@ -35,14 +36,21 @@ def _sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def _contains(value: Any, target: Any) -> bool:
-    if value == target:
-        return True
-    if isinstance(value, dict):
-        return any(_contains(item, target) for item in value.values())
-    if isinstance(value, list):
-        return any(_contains(item, target) for item in value)
-    return False
+def _readback_matches(
+    readback: dict[str, Any], submitted: list[list[int]], *, validator_uid: int = 0
+) -> bool:
+    validator_weights = readback.get(str(validator_uid), readback.get(validator_uid))
+    if not isinstance(validator_weights, dict) or not submitted:
+        return False
+    raw = {int(uid): int(weight) for uid, weight in submitted}
+    actual = {int(uid): float(weight) for uid, weight in validator_weights.items()}
+    if raw.keys() != actual.keys() or any(weight <= 0 for weight in raw.values()):
+        return False
+    total = math.fsum(raw.values())
+    tolerance = 2.0 / 65_535.0
+    return math.isclose(math.fsum(actual.values()), 1.0, abs_tol=tolerance) and all(
+        math.isclose(actual[uid], weight / total, abs_tol=tolerance) for uid, weight in raw.items()
+    )
 
 
 def _require(condition: bool, message: str) -> None:
@@ -70,6 +78,10 @@ def audit_bundle(bundle: Path) -> dict[str, Any]:
     )
     _require(summary["epoch_count"] >= 30, "fewer than 30 epochs")
     _require(len(epoch_paths) == summary["epoch_count"], "epoch file count mismatch")
+    _require(
+        len(manifest.source_artifacts) == len(epoch_paths) + 1,
+        "manifest must bind the summary and every epoch file",
+    )
     _require(len(summary["validators"]) == 3, "expected three validator identities")
     _require(len(summary["miners"]) == 10, "expected ten miner identities")
     _require(
@@ -204,11 +216,36 @@ def audit_bundle(bundle: Path) -> dict[str, Any]:
         "final chain extrinsic did not succeed",
     )
     _require(summary["allocation"]["planned"] is True, "allocation was not planned")
+    strategy_weights = dict(summary["allocation"]["strategy_weights"])
+    _require(len(strategy_weights) >= 5, "fewer than five eligible strategy portfolios")
+    _require(
+        math.isclose(math.fsum(strategy_weights.values()), 1.0, abs_tol=1e-12),
+        "strategy allocations do not sum to one",
+    )
+    _require(
+        max(strategy_weights.values()) <= 0.20 + 1e-12,
+        "strategy concentration cap exceeded",
+    )
+    duplicate_groups = summary["allocation"]["duplicate_groups"]
+    _require(
+        any(len(members) > 1 for _, members in duplicate_groups),
+        "duplicate/Sybil strategy was not exercised",
+    )
+    identity_weights = dict(summary["allocation"]["weights"])
+    for digest, members in duplicate_groups:
+        _require(
+            math.isclose(
+                math.fsum(identity_weights[member] for member in members),
+                strategy_weights[digest],
+                abs_tol=1e-12,
+            ),
+            "duplicate identity weights do not equal their strategy allocation",
+        )
     submitted = summary["submitted_u16_weights"]
     _require(bool(submitted), "empty submitted weight vector")
     _require(
-        _contains(summary["chain_readback"]["weights"], submitted),
-        "submitted vector is absent from actual chain weight readback",
+        _readback_matches(summary["chain_readback"]["weights"], submitted),
+        "submitted vector does not match normalized chain weight readback",
     )
     _require(
         list(manifest.readback.raw_weights) == [tuple(item) for item in submitted],

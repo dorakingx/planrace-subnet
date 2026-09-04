@@ -33,7 +33,8 @@ try {
     '/icon.svg',
     '/robots.txt',
     '/sitemap.xml',
-    '/evidence/localnet-v1-epoch-8.json',
+    '/evidence/localnet-v2.json',
+    '/evidence/localnet-v2-summary.json',
   ];
   const responses = await Promise.all(
     requiredRoutes.map(async (route) => ({
@@ -63,7 +64,7 @@ try {
   );
 
   const raw = responses.find(
-    ({ route }) => route === '/evidence/localnet-v1-epoch-8.json',
+    ({ route }) => route === '/evidence/localnet-v2.json',
   )?.response;
   assert(raw);
   assert.match(raw.headers.get('content-disposition') ?? '', /attachment/);
@@ -71,7 +72,7 @@ try {
   assert.equal(evidence.schema_version, 'planrace/evidence/1');
   assert.equal(
     evidence.validator_signature.signed_payload_sha256,
-    'bc104453b3a10f3028d72ce5f451bcf2933e1b6ac5564eb6a89ce6e144c63be0',
+    '741b61e619054aa6a5b834938cd41f1a0eabe1ef9d1397a8913cd9dffc777001',
   );
 
   process.stdout.write(
