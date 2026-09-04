@@ -20,6 +20,11 @@
   bounded failure observations instead of stopping the validator;
 - no secrets or real data in fixtures; CI secret scan and dependency audit.
 
+The gitleaks allowlist is field-scoped, not file-scoped. It permits only
+post-deadline `secret_seed_hex` fixture material, public SS58 `owner_coldkey`
+addresses, and deterministic simulation `strategy_key` labels in evidence.
+Wallet seeds, API tokens, and deployment credentials remain disallowed.
+
 ## Honest boundary
 
 Docker isolation materially improves the prototype but is not a formal sandbox

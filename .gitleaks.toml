@@ -1,0 +1,13 @@
+title = "PlanRace secret scanning"
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Public post-deadline and deterministic evidence fields"
+regexTarget = "match"
+regexes = [
+  '''secret_seed_hex["']?\s*:\s*["'][0-9a-f]{64}["']''',
+  '''owner_coldkey["']?\s*:\s*["'][1-9A-HJ-NP-Za-km-z]{32,64}["']''',
+  '''strategy_key["']?\s*:\s*["'][0-9A-Za-z:_-]{1,32}["']''',
+]
