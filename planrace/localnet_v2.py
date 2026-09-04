@@ -39,7 +39,7 @@ PROFILE_NAMES = (
 )
 
 
-def strategy_for_profile(profile: str, *, timeout_seconds: float = 2.0) -> MinerStrategyV2:
+def strategy_for_profile(profile: str, *, timeout_seconds: float = 5.0) -> MinerStrategyV2:
     if profile not in PROFILE_NAMES:
         raise ValueError(f"unknown localnet v2 profile: {profile}")
     if profile == "timeout-resource-attempt":

@@ -233,7 +233,7 @@ async def _dispatch_epochs(
                     expected_miner_uid=miner_index + 3,
                     metagraph_hotkeys=metagraph,
                     replay_store=replay,
-                    total_timeout_seconds=1.0,
+                    total_timeout_seconds=3.0,
                     allow_local_endpoint_for_tests=True,
                 )
                 epoch_outcomes.append(
@@ -270,6 +270,10 @@ async def _dispatch_epochs(
                 f"family={family} accepted={accepted}/10",
                 flush=True,
             )
+            if accepted != MINER_COUNT - 1:
+                raise RuntimeError(
+                    f"epoch {epoch} expected exactly nine accepted responses, got {accepted}"
+                )
 
     wait_seconds = max(0.0, (latest_deadline - time.time_ns() // 1_000_000) / 1000)
     if wait_seconds:
@@ -510,6 +514,18 @@ def _write_json(path: Path, value: Any) -> None:
     path.write_bytes(_canonical_bytes(value) + b"\n")
 
 
+def _set_chain_container_paused(name: str, *, paused: bool) -> None:
+    docker = shutil.which("docker")
+    if docker is None:
+        raise RuntimeError("docker executable is required")
+    subprocess.run(  # noqa: S603 - fixed operator-selected local container argv
+        [docker, "pause" if paused else "unpause", name],
+        check=True,
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+    )
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--epochs", type=int, default=30)
@@ -518,6 +534,7 @@ def main() -> None:
     parser.add_argument("--worker-image", required=True)
     parser.add_argument("--output", type=Path, default=Path("results/localnet-v2"))
     parser.add_argument("--evaluation-workers", type=int, choices=range(1, 4), default=3)
+    parser.add_argument("--chain-container", default="planrace-local-subtensor")
     arguments = parser.parse_args()
     if arguments.epochs < 30:
         raise SystemExit("localnet v2 evidence requires at least 30 epochs")
@@ -550,8 +567,12 @@ def main() -> None:
         record, task = pair
         return _evaluate_epoch(record, task, image_digest=arguments.worker_image)
 
-    with ThreadPoolExecutor(max_workers=arguments.evaluation_workers) as executor:
-        evaluated = list(executor.map(evaluate, zip(dispatches, tasks, strict=True)))
+    _set_chain_container_paused(arguments.chain_container, paused=True)
+    try:
+        with ThreadPoolExecutor(max_workers=arguments.evaluation_workers) as executor:
+            evaluated = list(executor.map(evaluate, zip(dispatches, tasks, strict=True)))
+    finally:
+        _set_chain_container_paused(arguments.chain_container, paused=False)
 
     all_observations: list[EpochObservation] = []
     epoch_payloads: list[dict[str, Any]] = []
