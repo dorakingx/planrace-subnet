@@ -233,7 +233,7 @@ async def _dispatch_epochs(
                     expected_miner_uid=miner_index + 3,
                     metagraph_hotkeys=metagraph,
                     replay_store=replay,
-                    total_timeout_seconds=3.0,
+                    total_timeout_seconds=10.0,
                     allow_local_endpoint_for_tests=True,
                 )
                 epoch_outcomes.append(
