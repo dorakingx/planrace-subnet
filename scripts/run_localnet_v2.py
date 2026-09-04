@@ -119,7 +119,7 @@ def _auth_capture_hook(
 
 
 async def _wait_for_miners(base_port: int, processes: list[subprocess.Popen[bytes]]) -> None:
-    deadline = time.monotonic() + 30.0
+    deadline = time.monotonic() + 120.0
     async with httpx.AsyncClient(trust_env=False) as client:
         while time.monotonic() < deadline:
             if any(process.poll() is not None for process in processes):
