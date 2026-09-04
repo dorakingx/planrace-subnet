@@ -29,7 +29,7 @@ jobs:
       - run: uv run python scripts/verify_mechanism_v2.py --require-clean-source
       - run: uv run pip-audit --format cyclonedx-json --output sbom.cdx.json
       - run: uv build
-      - run: uv run detect-secrets scan --all-files --exclude-files '(^uv\.lock$|^\.git/)' >/dev/null
+      - run: uv run detect-secrets scan --all-files --exclude-files '(^uv\.lock$|^\.git/|^\.venv/|^\.bootstrap/|^\.localnet-state/|^dashboard/node_modules/|^dashboard/\.next/|^dist/)' >/dev/null
 
   dashboard:
     runs-on: ubuntu-latest

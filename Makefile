@@ -22,7 +22,7 @@ audit:
 	$(UV) run pip-audit
 
 secrets:
-	$(UV) run detect-secrets scan --all-files --exclude-files '(^uv\.lock$$|^\.git/|^dashboard/node_modules/|^dashboard/dist/)' >/dev/null
+	$(UV) run detect-secrets scan --all-files --exclude-files '(^uv\.lock$$|^\.git/|^\.venv/|^\.bootstrap/|^\.localnet-state/|^dashboard/node_modules/|^dashboard/\.next/|^dashboard/dist/|^dist/)' >/dev/null
 
 verify: lint typecheck test secrets
 
