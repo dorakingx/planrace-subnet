@@ -15,6 +15,7 @@ import subprocess
 import sys
 import tempfile
 from collections import Counter, defaultdict
+from collections.abc import Sequence
 from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Any, Literal, cast
@@ -856,9 +857,17 @@ def _git_commit(repo_root: Path) -> str:
     return result.stdout.strip()
 
 
-def _git_dirty(repo_root: Path) -> bool:
-    result = subprocess.run(
-        ["/usr/bin/git", "status", "--porcelain"],
+def _git_dirty(repo_root: Path, *, paths: Sequence[Path] | None = None) -> bool:
+    arguments = ["/usr/bin/git", "status", "--porcelain"]
+    if paths is not None:
+        arguments.extend(
+            [
+                "--",
+                *(str(path.resolve().relative_to(repo_root.resolve())) for path in paths),
+            ]
+        )
+    result = subprocess.run(  # noqa: S603 - fixed git binary and declared source paths
+        arguments,
         cwd=repo_root,
         check=True,
         capture_output=True,
@@ -872,6 +881,13 @@ def write_evidence_bundle(report: dict[str, Any], output_dir: Path) -> dict[str,
 
     output_dir.mkdir(parents=True, exist_ok=True)
     repo_root = Path(__file__).resolve().parents[1]
+    source_paths = (
+        repo_root / "planrace" / "scoring_v2.py",
+        repo_root / "planrace" / "mechanism_simulation.py",
+        repo_root / "scripts" / "run_mechanism_v2.py",
+    )
+    lock_path = repo_root / "uv.lock"
+    source_tree_dirty = _git_dirty(repo_root, paths=(*source_paths, lock_path))
     simulation_path = output_dir / "simulation.json"
     summary_path = output_dir / "summary.json"
     replications_path = output_dir / "replications.csv"
@@ -946,12 +962,6 @@ def write_evidence_bundle(report: dict[str, Any], output_dir: Path) -> dict[str,
         )
     profiles_path.write_text(profile_buffer.getvalue(), encoding="utf-8")
 
-    source_paths = (
-        repo_root / "planrace" / "scoring_v2.py",
-        repo_root / "planrace" / "mechanism_simulation.py",
-        repo_root / "scripts" / "run_mechanism_v2.py",
-    )
-    lock_path = repo_root / "uv.lock"
     config_payload = _canonical_json(report["config"]).encode()
     seed = int(report["config"]["root_seed"])
     manifest = {
@@ -961,7 +971,7 @@ def write_evidence_bundle(report: dict[str, Any], output_dir: Path) -> dict[str,
         "seed_commitment": hashlib.sha256(f"planrace-mechanism-v2:{seed}".encode()).hexdigest(),
         "config_sha256": hashlib.sha256(config_payload).hexdigest(),
         "source_git_base_commit": _git_commit(repo_root),
-        "source_tree_dirty": _git_dirty(repo_root),
+        "source_tree_dirty": source_tree_dirty,
         "source_files": {str(path.relative_to(repo_root)): _sha256(path) for path in source_paths},
         "dependency_lock": {"path": "uv.lock", "sha256": _sha256(lock_path)},
         "environment": {
@@ -1004,7 +1014,13 @@ def verify_evidence_bundle(
         raise ValueError("unsupported mechanism evidence schema")
     if require_clean_source and manifest.get("source_tree_dirty") is not False:
         raise ValueError("mechanism evidence was generated from a dirty source tree")
-    if require_clean_source and _git_dirty(root):
+    declared_sources = (
+        root / "planrace" / "scoring_v2.py",
+        root / "planrace" / "mechanism_simulation.py",
+        root / "scripts" / "run_mechanism_v2.py",
+        root / "uv.lock",
+    )
+    if require_clean_source and _git_dirty(root, paths=declared_sources):
         raise ValueError("current mechanism source tree is dirty")
     source_commit = str(manifest.get("source_git_base_commit", ""))
     if re.fullmatch(r"[0-9a-f]{40}", source_commit) is None:
