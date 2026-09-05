@@ -561,6 +561,14 @@ def main() -> None:
     parser.add_argument("--output", type=Path, default=Path("results/localnet-v2"))
     parser.add_argument("--evaluation-workers", type=int, choices=range(1, 4), default=3)
     parser.add_argument("--chain-container", default="planrace-local-subtensor")
+    parser.add_argument(
+        "--pause-chain-during-evaluation",
+        action="store_true",
+        help=(
+            "pause the local Subtensor container during worker timing; disabled by "
+            "default because pausing a busy container can destabilize Docker Desktop"
+        ),
+    )
     arguments = parser.parse_args()
     if arguments.epochs < 30:
         raise SystemExit("localnet v2 evidence requires at least 30 epochs")
@@ -593,12 +601,14 @@ def main() -> None:
         record, task = pair
         return _evaluate_epoch(record, task, image_digest=arguments.worker_image)
 
-    _set_chain_container_paused(arguments.chain_container, paused=True)
+    if arguments.pause_chain_during_evaluation:
+        _set_chain_container_paused(arguments.chain_container, paused=True)
     try:
         with ThreadPoolExecutor(max_workers=arguments.evaluation_workers) as executor:
             evaluated = list(executor.map(evaluate, zip(dispatches, tasks, strict=True)))
     finally:
-        _set_chain_container_paused(arguments.chain_container, paused=False)
+        if arguments.pause_chain_during_evaluation:
+            _set_chain_container_paused(arguments.chain_container, paused=False)
 
     all_observations: list[EpochObservation] = []
     epoch_payloads: list[dict[str, Any]] = []
@@ -665,6 +675,7 @@ def main() -> None:
             for index, key in enumerate(miners)
         ],
         "epoch_count": arguments.epochs,
+        "chain_paused_during_evaluation": arguments.pause_chain_during_evaluation,
         "families": list(families),
         "aggregates": [asdict(item) for item in aggregates],
         "allocation": asdict(allocation),
@@ -685,6 +696,17 @@ def main() -> None:
             (
                 "Future-block entropy mixing is deferred; tasks use independent OS CSPRNG "
                 "seeds and post-deadline reveal."
+            ),
+            *(
+                []
+                if arguments.pause_chain_during_evaluation
+                else [
+                    (
+                        "The local Subtensor remained active during measurement; paired "
+                        "same-worker baseline ratios reduce, but do not eliminate, shared "
+                        "host noise."
+                    )
+                ]
             ),
             "Testnet evidence remains pending and is not implied by this localnet run.",
         ],
