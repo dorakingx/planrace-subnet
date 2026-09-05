@@ -3,22 +3,21 @@
 ## Protocol v2 mechanism simulation
 
 The committed seeded simulation contains 512 replications, 24 epochs per
-replication, 18 miner profiles, and eight named scenarios. Raw replication rows,
+replication, 20 miner profiles, and eight named scenarios. Raw replication rows,
 profile rows, summary, and a source/lock/artifact hash manifest are under
 [`results/mechanism-v2/`](results/mechanism-v2/).
 
 - honest-winner rate: 1.000;
-- injected false-claim acceptance: 0 / 6,079 (false-acceptance rate 0.000);
-- all-fail scenario no-update rate: 1.000;
+- injected false-claim acceptance: 0 / 6,089 (false-acceptance rate 0.000);
+- all-fail scenario no-new-update rate: 1.000;
 - mean gaming weight: 0.000;
-- mean honest weight: 0.9187; mean duplicate/Sybil-profile weight: 0.0813;
-- mean duplicated-strategy allocation gain: approximately `1.36e-18`, maximum
-  absolute gain `5.55e-17`;
-- mean top-one share: 0.1358; observed maximum: 0.2000, equal to the cap;
-- mean HHI: 0.1116; mean Gini: 0.1536;
-- mean rank-stability Kendall tau-b: 0.5624; controlled hardware-only stability:
+- mean honest weight: 0.8023; mean exact/near-copy profile weight: 0.1977;
+- mean and maximum exact/near-copy behavior allocation gain: `0.0`;
+- mean top-one share: 0.1256; observed maximum: 0.2500, equal to the cap;
+- mean HHI: 0.1006; mean Gini: 0.1606;
+- mean rank-stability Kendall tau-b: 0.5635; controlled hardware-only stability:
   1.000;
-- mean cross-validator total-variation disagreement: 0.0971.
+- mean cross-validator total-variation disagreement: 0.1427.
 
 These are simulated mechanism properties, not throughput, testnet, customer, or
 production-database results. The moderate cross-scenario rank statistic is kept

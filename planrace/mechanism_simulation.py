@@ -769,6 +769,7 @@ def run_mechanism_simulation(
         profile.profile_id: {
             "category": profile.category,
             "strategy_digest": profile.strategy_digest,
+            "behavior_digest": profile.behavior_digest,
             "mean_aggregate_reward": _mean(profile_reward_values[profile.profile_id]),
             "mean_weight": _mean(profile_weight_values[profile.profile_id]),
             "gate_failures": dict(sorted(profile_failures[profile.profile_id].items())),
@@ -779,6 +780,8 @@ def run_mechanism_simulation(
         "replications": config.replications,
         "epochs_per_replication": config.epochs,
         "miner_profile_count": len(MINER_PROFILES),
+        "exact_strategy_count": len({profile.strategy_digest for profile in MINER_PROFILES}),
+        "behavior_group_count": len({profile.behavior_digest for profile in MINER_PROFILES}),
         "validator_scenario_count": len(VALIDATOR_SCENARIOS),
         "invalid_attempts": total_invalid_attempts,
         "false_acceptances": total_false_acceptances,
@@ -829,7 +832,11 @@ def run_mechanism_simulation(
         "benchmark_policy": asdict(benchmark_policy),
         "aggregation_policy": asdict(aggregation_policy),
         "profiles": [
-            asdict(profile) | {"strategy_digest": profile.strategy_digest}
+            asdict(profile)
+            | {
+                "strategy_digest": profile.strategy_digest,
+                "behavior_digest": profile.behavior_digest,
+            }
             for profile in MINER_PROFILES
         ],
         "validator_scenarios": [asdict(scenario) for scenario in VALIDATOR_SCENARIOS],

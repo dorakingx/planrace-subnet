@@ -91,6 +91,8 @@ def test_evidence_bundle_hashes_every_output(tmp_path) -> None:  # type: ignore[
         assert hashlib.sha256((tmp_path / filename).read_bytes()).hexdigest() == digest
     stored = json.loads((tmp_path / "simulation.json").read_text())
     assert stored["schema_version"] == "planrace-mechanism-simulation/2"
+    assert stored["summary"]["exact_strategy_count"] == 19
+    assert stored["summary"]["behavior_group_count"] == 18
     assert (tmp_path / "replications.csv").read_text().count("\n") == 9
     assert (tmp_path / "MECHANISM_SIMULATION.json").read_bytes() == (
         tmp_path / "simulation.json"
