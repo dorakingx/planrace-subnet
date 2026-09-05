@@ -539,7 +539,7 @@ def _set_chain_container_paused(name: str, *, paused: bool) -> None:
         status, paused_text = inspection.split()
     except ValueError as error:
         raise RuntimeError("unexpected local chain container state") from error
-    if status != "running":
+    if status not in {"running", "paused"}:
         raise RuntimeError(f"local chain container is not running: {status}")
     currently_paused = paused_text == "true"
     if currently_paused == paused:
