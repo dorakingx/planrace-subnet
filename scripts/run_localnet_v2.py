@@ -610,6 +610,15 @@ def main() -> None:
         if arguments.pause_chain_during_evaluation:
             _set_chain_container_paused(arguments.chain_container, paused=False)
 
+    failed_batches = [
+        (int(payload["epoch"]), str(payload["batch_failure"]))
+        for payload, _ in evaluated
+        if "batch_failure" in payload
+    ]
+    if failed_batches:
+        failures = ", ".join(f"epoch {epoch}: {failure}" for epoch, failure in failed_batches)
+        raise RuntimeError(f"refusing partial evidence after sandbox failure: {failures}")
+
     all_observations: list[EpochObservation] = []
     epoch_payloads: list[dict[str, Any]] = []
     for payload, observations in evaluated:
@@ -675,6 +684,7 @@ def main() -> None:
             for index, key in enumerate(miners)
         ],
         "epoch_count": arguments.epochs,
+        "evaluation_workers": arguments.evaluation_workers,
         "chain_paused_during_evaluation": arguments.pause_chain_during_evaluation,
         "families": list(families),
         "aggregates": [asdict(item) for item in aggregates],
