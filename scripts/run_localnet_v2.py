@@ -529,6 +529,21 @@ def _set_chain_container_paused(name: str, *, paused: bool) -> None:
     docker = shutil.which("docker")
     if docker is None:
         raise RuntimeError("docker executable is required")
+    inspection = subprocess.run(  # noqa: S603 - fixed local Docker inspection argv
+        [docker, "inspect", "--format", "{{.State.Status}} {{.State.Paused}}", name],
+        check=True,
+        capture_output=True,
+        text=True,
+    ).stdout.strip()
+    try:
+        status, paused_text = inspection.split()
+    except ValueError as error:
+        raise RuntimeError("unexpected local chain container state") from error
+    if status != "running":
+        raise RuntimeError(f"local chain container is not running: {status}")
+    currently_paused = paused_text == "true"
+    if currently_paused == paused:
+        return
     subprocess.run(  # noqa: S603 - fixed operator-selected local container argv
         [docker, "pause" if paused else "unpause", name],
         check=True,
