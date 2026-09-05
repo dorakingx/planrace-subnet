@@ -2,22 +2,26 @@
 
 The production evidence site is https://planrace-subnet.vercel.app.
 
-## Required production record
+## Verified production record (2026-09-05)
 
 | Field | Value |
 |---|---|
 | GitHub repository | `dorakingx/planrace-subnet` |
-| Branch / commit | Pending clean protocol v2 integration commit |
-| Vercel deployment ID / URL | Pending |
-| Production promotion time (UTC) | Pending |
-| `gitDirty` | Must be `0` |
-| Build command and Node version | Pending final deployment log |
-| Evidence manifest SHA-256 | Pending localnet v2 completion |
-| Logged-out HTTP verification | Pending |
+| Branch / commit | `main` / `50e378281a2deffb906d368302c264d44497c92a` |
+| Preview deployment | `dpl_5UKpTxYdNhskbUH85VrWponn7j4a` / `planrace-subnet-2tal729bu-doraking.vercel.app` |
+| Production deployment | `dpl_6CxN3ZqYYm7sArcfEwWNDHQDpuYD` / `planrace-subnet-4fm0teujb-doraking.vercel.app` |
+| Canonical production URL | `https://planrace-subnet.vercel.app` |
+| Production promotion time (UTC) | `2026-09-05T00:00:45Z` |
+| `gitDirty` | `0` before the preview build |
+| Build command and Node version | `npm run build:vercel`; Node.js `24.x` |
+| Evidence manifest file SHA-256 | `0d4eb50214326c035fc0d9e82513ff0a58f0f867549fbe27d783f5cdcf09fc25` |
+| Signed payload SHA-256 | `741b61e619054aa6a5b834938cd41f1a0eabe1ef9d1397a8913cd9dffc777001` |
+| Logged-out HTTP verification | Passed for `/`, v2 manifest/summary, robots, sitemap, icons, and OG image |
 
-The previously deployed production was built from a stale dirty tree and is not
-accepted as protocol v2 provenance. It must be replaced only after a preview
-deployment passes and the exact GitHub SHA is public.
+The record above replaced the earlier stale deployment. The clean preview was
+verified first, then that same build artifact was promoted to production. The
+Vercel Git integration root directory is `dashboard`; subsequent pushes must
+also complete as Git-linked deployments before they replace this baseline.
 
 ## Public acceptance checklist
 
@@ -31,5 +35,5 @@ deployment passes and the exact GitHub SHA is public.
   committed;
 - GitHub commit equals deployment metadata and the source tree is clean.
 
-Append the final immutable deployment information here; do not overwrite
-historical records when later previews or productions are created.
+Append later immutable deployment information here; do not overwrite historical
+records when later previews or productions are created.

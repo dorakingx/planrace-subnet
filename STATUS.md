@@ -16,8 +16,8 @@ Public claim: **LOCALNET EVIDENCE / TESTNET PENDING**.
   storage scoring across reuse horizons.
 - Closed multi-family schedule, conservative multi-epoch aggregation, duplicate
   strategy splitting, fail-safe no-update, and weight concentration cap.
-- 215 Python tests previously passed; Ruff and mypy clean. A final full rerun is
-  required after evidence/dashboard integration.
+- Final clean Python gate: 218 tests passed, Ruff and mypy clean, and 87.49%
+  branch coverage against the 85% threshold.
 - Seeded 512-replication v2 mechanism/adversary simulation with 0 false
   acceptance, 100% all-fail no-update, and negligible duplicated-strategy
   allocation gain (`results/mechanism-v2/`).
@@ -29,16 +29,21 @@ Public claim: **LOCALNET EVIDENCE / TESTNET PENDING**.
   readback, and a signed 31-source manifest.
 - Required protocol, market, judging, evidence, and media drafts exist and state
   their gaps explicitly.
+- The signed v2 evidence drives the public dashboard. Dashboard format,
+  typecheck, lint, build, evidence tests, route smoke tests, browser flows,
+  accessibility, responsive layout, dependency audit, and public-link checks
+  passed.
+- Clean protocol v2 preview `dpl_5UKpTxYdNhskbUH85VrWponn7j4a` was verified
+  and its artifact promoted as production `dpl_6CxN3ZqYYm7sArcfEwWNDHQDpuYD`.
+  The Vercel Git integration root directory is now `dashboard`.
 
 ## Next gates
 
-1. Drive the dashboard from the signed v2 manifest and rerun Python/dashboard,
-   secret, dependency, browser, and public-link checks.
-2. Push a clean GitHub commit and deploy/promote the same SHA to Vercel with
-   `gitDirty=0`; record immutable provenance.
-3. Run the independent checkpoint reviews. Do not post while a P0/critical issue
+1. Confirm that the corrected Vercel Git integration automatically deploys this
+   status/provenance commit and that GitHub Actions is green.
+2. Run the independent checkpoint reviews. Do not post while a P0/critical issue
    is open.
-4. Request exactly one user action for a dedicated testnet wallet/faucet/signature
+3. Request exactly one user action for a dedicated testnet wallet/faucet/signature
    when local gates pass. Local public development keys must not be reused.
 
 ## Not complete
@@ -47,7 +52,6 @@ Public claim: **LOCALNET EVIDENCE / TESTNET PENDING**.
   interaction, scoring, weight transaction, and metagraph readback.
 - Independently operated validators or independent hardware calibration.
 - PostgreSQL/DuckDB and private customer-data adapters.
-- Clean protocol v2 Vercel deployment and immutable deployment record.
 - HackQuest rename/checkpoint post, real-testnet demo/pitch videos, final
   submission, and release tag.
 
