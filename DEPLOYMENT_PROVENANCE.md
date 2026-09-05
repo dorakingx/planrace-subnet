@@ -37,3 +37,21 @@ also complete as Git-linked deployments before they replace this baseline.
 
 Append later immutable deployment information here; do not overwrite historical
 records when later previews or productions are created.
+
+## Git-linked production record (2026-09-05)
+
+After correcting the Vercel project root directory to `dashboard`, the GitHub
+integration built and deployed the following clean checkout without a manual
+promotion step.
+
+| Field | Value |
+|---|---|
+| Branch / commit | `main` / `d5ce868c1204f1cb63ebbf56af040e9044837bff` |
+| Production deployment | `dpl_3JB3i2sG3kyHFAznCQwSh4iukqie` / `planrace-subnet-6o98x9opd-doraking.vercel.app` |
+| Canonical production URL | `https://planrace-subnet.vercel.app` |
+| Deployment creation time (UTC) | `2026-09-05T00:17:01Z` |
+| Git source metadata | GitHub repository `dorakingx/planrace-subnet`, branch `main`, matching full SHA |
+| `gitDirty` | Not emitted for the provider-controlled Git checkout; Vercel cloned the exact SHA |
+| Vercel project root | `dashboard` |
+| Build result | Ready; evidence verification passed; build log had no warning, error, or failure |
+| Logged-out HTTP verification | Eight public routes passed with expected headers and signed v2 values |

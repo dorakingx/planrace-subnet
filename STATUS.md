@@ -35,15 +35,17 @@ Public claim: **LOCALNET EVIDENCE / TESTNET PENDING**.
   passed.
 - Clean protocol v2 preview `dpl_5UKpTxYdNhskbUH85VrWponn7j4a` was verified
   and its artifact promoted as production `dpl_6CxN3ZqYYm7sArcfEwWNDHQDpuYD`.
-  The Vercel Git integration root directory is now `dashboard`.
+  The corrected `dashboard` project root then produced Git-linked production
+  `dpl_3JB3i2sG3kyHFAznCQwSh4iukqie` from exact GitHub SHA `d5ce868` with a clean
+  build log and passing public checks.
+- GitHub Actions passed both Python verification and the complete dashboard
+  job after the cross-platform evidence-audit correction.
 
 ## Next gates
 
-1. Confirm that the corrected Vercel Git integration automatically deploys this
-   status/provenance commit and that GitHub Actions is green.
-2. Run the independent checkpoint reviews. Do not post while a P0/critical issue
+1. Run the independent checkpoint reviews. Do not post while a P0/critical issue
    is open.
-3. Request exactly one user action for a dedicated testnet wallet/faucet/signature
+2. Request exactly one user action for a dedicated testnet wallet/faucet/signature
    when local gates pass. Local public development keys must not be reused.
 
 ## Not complete
