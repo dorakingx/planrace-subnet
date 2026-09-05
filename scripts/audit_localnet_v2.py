@@ -313,7 +313,8 @@ def audit_bundle(bundle: Path) -> dict[str, Any]:
         minimum_compliance=0.95,
         minimum_correctness=0.95,
         maximum_weight=0.25,
-        minimum_distinct_strategies=5,
+        # Four independent groups are the minimum compatible with the 25% cap.
+        minimum_distinct_strategies=4,
     )
     miner_ids = [f"miner-{index:02}" for index in range(10)]
     recomputed_aggregates = aggregate_network(
