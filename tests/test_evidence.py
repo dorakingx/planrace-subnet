@@ -1,3 +1,4 @@
+import hashlib
 import json
 from pathlib import Path
 
@@ -12,6 +13,7 @@ from planrace.evidence import (
     EvidenceVerificationError,
     canonical_manifest_bytes,
     sign_manifest,
+    signature_payload,
     summarize_manifest,
     verify_manifest,
     verify_manifest_file,
@@ -113,6 +115,24 @@ def test_signed_manifest_verifies_and_summarizes() -> None:
     assert summary["correctness_passed"] == 1
     assert summary["correctness_failed"] == 1
     assert summary["payload_sha256"] == digest
+
+
+def test_file_verifier_preserves_legacy_v1_signed_shape(tmp_path: Path) -> None:
+    data = unsigned_manifest()
+    payload = signature_payload(data)
+    data["validator_signature"] = {
+        "algorithm": "sr25519",
+        "signer_hotkey": ALICE.ss58_address,
+        "signed_payload_sha256": hashlib.sha256(payload).hexdigest(),
+        "signature_hex": ALICE.sign(payload).hex(),
+    }
+    path = tmp_path / "legacy-v1.json"
+    path.write_text(json.dumps(data, separators=(",", ":")) + "\n")
+
+    manifest, digest = verify_manifest_file(path)
+
+    assert manifest.schema_version == "planrace/evidence/1"
+    assert digest == data["validator_signature"]["signed_payload_sha256"]  # type: ignore[index]
 
 
 def test_evidence_v2_uses_explicit_strategy_and_schedule_digests() -> None:

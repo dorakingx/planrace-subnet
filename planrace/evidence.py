@@ -250,18 +250,19 @@ def sign_manifest(data: Mapping[str, Any], keypair: bt.Keypair) -> EvidenceManif
     return manifest
 
 
-def verify_manifest(manifest: EvidenceManifest, *, expected_signer: str | None = None) -> str:
-    """Verify the signer binding, payload digest, and sr25519 signature.
-
-    Returns the signed payload's SHA-256 digest when verification succeeds.
-    """
-
+def _verify_signature(
+    signed_data: EvidenceManifest | Mapping[str, Any],
+    manifest: EvidenceManifest,
+    *,
+    expected_signer: str | None = None,
+) -> str:
+    """Verify a validated manifest without changing its signed JSON shape."""
     signature = manifest.validator_signature
     if expected_signer is not None and signature.signer_hotkey != expected_signer:
         raise EvidenceVerificationError("manifest signer does not match expected signer")
     if signature.signer_hotkey not in manifest.validator_hotkeys:
         raise EvidenceVerificationError("manifest signer is not a declared validator hotkey")
-    payload = signature_payload(manifest)
+    payload = signature_payload(signed_data)
     digest = hashlib.sha256(payload).hexdigest()
     if digest != signature.signed_payload_sha256:
         raise EvidenceVerificationError("signed payload digest mismatch")
@@ -273,6 +274,15 @@ def verify_manifest(manifest: EvidenceManifest, *, expected_signer: str | None =
     if not verified:
         raise EvidenceVerificationError("validator signature verification failed")
     return digest
+
+
+def verify_manifest(manifest: EvidenceManifest, *, expected_signer: str | None = None) -> str:
+    """Verify the signer binding, payload digest, and sr25519 signature.
+
+    Returns the signed payload's SHA-256 digest when verification succeeds.
+    """
+
+    return _verify_signature(manifest, manifest, expected_signer=expected_signer)
 
 
 def load_manifest(path: Path) -> EvidenceManifest:
@@ -291,8 +301,19 @@ def load_manifest(path: Path) -> EvidenceManifest:
 def verify_manifest_file(
     path: Path, *, expected_signer: str | None = None
 ) -> tuple[EvidenceManifest, str]:
-    manifest = load_manifest(path)
-    return manifest, verify_manifest(manifest, expected_signer=expected_signer)
+    try:
+        raw = path.read_bytes()
+    except OSError as error:
+        raise EvidenceVerificationError(f"cannot read manifest: {error}") from error
+    try:
+        signed_data = json.loads(raw)
+        if not isinstance(signed_data, dict):
+            raise TypeError("manifest root must be an object")
+        manifest = EvidenceManifest.model_validate_json(raw)
+    except (ValueError, TypeError) as error:
+        raise EvidenceVerificationError(f"manifest schema validation failed: {error}") from error
+    digest = _verify_signature(signed_data, manifest, expected_signer=expected_signer)
+    return manifest, digest
 
 
 def summarize_manifest(manifest: EvidenceManifest, digest: str | None = None) -> dict[str, Any]:
