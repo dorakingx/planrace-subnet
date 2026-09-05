@@ -25,11 +25,14 @@ def test_adversarial_simulation_is_deterministic_and_fail_closed() -> None:
     assert len(VALIDATOR_SCENARIOS) >= 7
     assert first["summary"]["false_acceptance_rate"] == 0.0
     assert first["summary"]["all_fail_safe_no_update_rate"] == 1.0
-    assert first["summary"]["max_top1_share"] <= 0.20 + 1e-12
+    assert first["summary"]["max_top1_share"] <= 0.25 + 1e-12
     assert first["summary"]["mean_gaming_weight"] == 0.0
     assert first["summary"]["sybil_strategy_allocation_gain"] == 0.0
     assert first["summary"]["max_abs_sybil_strategy_allocation_gain"] == 0.0
     assert first["summary"]["sybil_allocation_comparison_count"] == 7
+    near_copies = [profile for profile in MINER_PROFILES if "near-copy" in profile.profile_id]
+    assert len({profile.strategy_digest for profile in near_copies}) == 2
+    assert len({profile.behavior_digest for profile in near_copies}) == 1
 
 
 def test_duplicate_strategies_are_evaluated_once_and_share_exact_scores() -> None:
@@ -60,6 +63,10 @@ def test_validator_metrics_are_paired_actual_outputs_and_skip_no_update() -> Non
     assert by_scenario["all-fail"]["validator_disagreement_tv"] is None
     assert by_scenario["all-fail"]["hardware_pair_tau_b"] is None
     assert by_scenario["all-fail"]["sybil_strategy_allocation_gain"] is None
+    assert (
+        by_scenario["candidate-measurement-bias"]["aggregate_rewards"]
+        != by_scenario["honest"]["aggregate_rewards"]
+    )
 
 
 def test_false_correctness_claim_is_injected_but_not_scored() -> None:

@@ -6,7 +6,7 @@ Database-native optimizers and vendor advisors are strong, but they expose one
 vendor's search space and evidence. PlanRace creates a recurring open market for
 executable query improvements.
 
-The digital commodity is a bounded SQL rewrite and structured index plan for an
+The current digital commodity is a bounded structured index plan for an
 already-correct query—not natural-language-to-SQL, not a generated answer, not
 GPU rental, and not merely a benchmark rank. Miners remain free to use rules,
 program search, learned systems, or specialized engine knowledge. The winner is
@@ -43,6 +43,6 @@ no private customer adapter, no production-engine result, and testnet pending.
 The roadmap is dedicated testnet proof, independent validators, DuckDB and
 PostgreSQL tracks, privacy-preserving buyer adapters, and distributed benchmark
 capacity. If validator cost approaches miner discovery cost or honest optimizers
-cannot win across families, the scope narrows to structured indexes and approved
-AST transformations. PlanRace earns ecosystem value only if verification remains
+cannot win across families, the roadmap for approved AST transformations is deferred.
+PlanRace earns ecosystem value only if verification remains
 objective, cheaper, and continuously useful.

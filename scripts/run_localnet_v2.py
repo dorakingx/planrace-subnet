@@ -35,6 +35,7 @@ from planrace.benchmark_v2 import (
     materialize_fixture,
 )
 from planrace.evaluation_v2 import (
+    DEFAULT_MAX_UNIQUE_STRATEGIES_PER_TASK,
     create_benchmark_task_v2,
     evaluate_bundle_from_sandbox_results,
     holdout_evidence_digest,
@@ -301,6 +302,8 @@ def _evaluate_epoch(
     by_strategy: dict[str, list[tuple[str, Any]]] = defaultdict(list)
     for miner_id, bundle in submissions.items():
         by_strategy[optimization_strategy_digest(bundle)].append((miner_id, bundle))
+    if len(by_strategy) > DEFAULT_MAX_UNIQUE_STRATEGIES_PER_TASK:
+        raise RuntimeError("unique strategy budget exceeded before worker dispatch")
 
     strategy_evaluations: dict[str, Any] = {}
     observations: list[EpochObservation] = []
@@ -374,6 +377,7 @@ def _evaluate_epoch(
                         correct=evaluation.exact_passed,
                         compliant=evaluation.compliant,
                         strategy_digest=digest,
+                        behavior_digest=evaluation.behavior_digest,
                     )
                 )
     observed_miners = {item.miner_id for item in observations}
@@ -397,6 +401,9 @@ def _evaluate_epoch(
                     compliant=False,
                     strategy_digest=domain_separated_digest(
                         "planrace/2:unavailable-strategy", {"miner": miner_id}
+                    ),
+                    behavior_digest=domain_separated_digest(
+                        "planrace/2:unavailable-behavior", {"miner": miner_id}
                     ),
                 )
             )
@@ -608,7 +615,7 @@ def main() -> None:
         minimum_availability=0.75,
         minimum_compliance=0.95,
         minimum_correctness=0.95,
-        maximum_weight=0.20,
+        maximum_weight=0.25,
         minimum_distinct_strategies=5,
     )
     miner_ids = [f"miner-{index:02}" for index in range(MINER_COUNT)]
@@ -690,7 +697,7 @@ def main() -> None:
     )
     submitted_map = dict(submitted)
     manifest_unsigned = {
-        "schema_version": "planrace/evidence/1",
+        "schema_version": "planrace/evidence/2",
         "environment": "localnet",
         "network": "local",
         "netuid": arguments.netuid,
@@ -728,8 +735,10 @@ def main() -> None:
                 "correct": aggregate.correctness >= 0.95,
                 "score": aggregate.reward,
                 "failure_code": aggregate.failure_code,
-                "result_hash": aggregate.strategy_digest.removeprefix("sha256:"),
-                "reference_hash": schedule_digest,
+                "result_hash": None,
+                "reference_hash": None,
+                "strategy_digest": aggregate.strategy_digest.removeprefix("sha256:"),
+                "schedule_digest": schedule_digest,
                 "median_warm_ms": None,
                 "setup_ms": None,
                 "plan_cost": None,

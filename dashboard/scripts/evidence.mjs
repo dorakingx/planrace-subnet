@@ -2,10 +2,16 @@ import { createHash } from 'node:crypto';
 
 import { cryptoWaitReady, signatureVerify } from '@polkadot/util-crypto';
 
-export const EVIDENCE_SIGNATURE_DOMAIN = Buffer.from(
-  'planrace-evidence-manifest/v1\0',
-  'utf8',
-);
+export const EVIDENCE_SIGNATURE_DOMAINS = new Map([
+  [
+    'planrace/evidence/1',
+    Buffer.from('planrace-evidence-manifest/v1\0', 'utf8'),
+  ],
+  [
+    'planrace/evidence/2',
+    Buffer.from('planrace-evidence-manifest/v2\0', 'utf8'),
+  ],
+]);
 
 function assert(condition, message) {
   if (!condition) {
@@ -36,15 +42,14 @@ export function canonicalManifestBytes(manifest) {
 }
 
 export function signaturePayload(manifest) {
-  return Buffer.concat([
-    EVIDENCE_SIGNATURE_DOMAIN,
-    canonicalManifestBytes(manifest),
-  ]);
+  const domain = EVIDENCE_SIGNATURE_DOMAINS.get(manifest.schema_version);
+  assert(domain, 'unsupported evidence schema');
+  return Buffer.concat([domain, canonicalManifestBytes(manifest)]);
 }
 
 function validateHeadlineSchema(manifest) {
   assert(
-    manifest.schema_version === 'planrace/evidence/1',
+    EVIDENCE_SIGNATURE_DOMAINS.has(manifest.schema_version),
     'unsupported evidence schema',
   );
   assert(
@@ -71,6 +76,18 @@ function validateHeadlineSchema(manifest) {
     typeof manifest.validator_signature?.signature_hex === 'string',
     'validator signature is missing',
   );
+  if (manifest.schema_version === 'planrace/evidence/2') {
+    assert(
+      manifest.scores.every(
+        (score) =>
+          score.result_hash === null &&
+          score.reference_hash === null &&
+          typeof score.strategy_digest === 'string' &&
+          typeof score.schedule_digest === 'string',
+      ),
+      'v2 scores must use explicit strategy and schedule digests',
+    );
+  }
 }
 
 export async function verifyEvidence(manifest) {

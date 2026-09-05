@@ -1,6 +1,13 @@
 import pytest
 
-from planrace.weights import WeightPlan, plan_weights, submit_weight_plan
+from planrace.weights import (
+    FinalizedMetagraphSnapshot,
+    WeightPlan,
+    plan_hotkey_weights,
+    plan_weights,
+    resolve_hotkey_weight_plan,
+    submit_weight_plan,
+)
 
 
 def test_scores_normalize_in_uid_order_and_drop_zero() -> None:
@@ -75,3 +82,24 @@ def test_explicit_local_submission_uses_v11_shape() -> None:
             {"uids": [1, 3], "wallet": "validator", "hotkey": "default", "network": "local"},
         )
     ]
+
+
+def test_hotkey_plan_resolves_only_against_recorded_finalized_snapshot() -> None:
+    plan = plan_hotkey_weights({"miner-b": 3.0, "miner-a": 1.0})
+    snapshot = FinalizedMetagraphSnapshot(
+        block_hash="0x" + "1" * 64,
+        uid_by_hotkey={"miner-a": 9, "miner-b": 2},
+    )
+    resolved = resolve_hotkey_weight_plan(plan, snapshot=snapshot)
+    assert resolved.uids == (2, 9)
+    assert resolved.weights == (0.75, 0.25)
+
+
+def test_hotkey_plan_fails_if_scored_identity_churned_before_submission() -> None:
+    plan = plan_hotkey_weights({"miner-a": 1.0, "miner-b": 1.0})
+    snapshot = FinalizedMetagraphSnapshot(
+        block_hash="0x" + "2" * 64,
+        uid_by_hotkey={"miner-a": 4, "replacement": 7},
+    )
+    with pytest.raises(ValueError, match="miner-b"):
+        resolve_hotkey_weight_plan(plan, snapshot=snapshot)

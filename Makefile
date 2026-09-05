@@ -27,7 +27,7 @@ secrets:
 verify: lint typecheck test secrets
 
 demo:
-	@$(UV) run planrace simulate --epochs 5
+	@$(UV) run planrace simulate-v2
 
 local-epoch:
 	@$(UV) run python scripts/run_local_epoch.py --epoch 8

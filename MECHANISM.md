@@ -30,7 +30,7 @@ evidence over a precommitted hidden holdout and pinned engine.
 7. **Aggregate:** apply fixed family quotas, robust centers, uncertainty,
    availability, compliance, and canonical duplicate grouping.
 8. **Allocate:** cap concentration, publish metrics, and produce either a
-   non-negative vector or an explicit safe no-update.
+   non-negative vector or an explicit no-new-update decision.
 
 ## Score and weight policy
 
@@ -46,8 +46,10 @@ The complete formula and defaults are in `SCORING.md` and executable in
 - timing outliers influence a winsorized center and a downside confidence bound;
 - one strategy digest receives one reward pool even when submitted by multiple
   identities;
-- fewer than five distinct positive strategies, all-fail outcomes, or an
-  unsatisfiable 20% cap produce no update.
+- fewer than five distinct positive behaviors, all-fail outcomes, or an
+  unsatisfiable 25% cap produce no new update. A prior on-chain vector is not
+  cleared automatically and must be monitored through `last_update` and the
+  activity cutoff.
 
 ## Gaming and validator analysis
 

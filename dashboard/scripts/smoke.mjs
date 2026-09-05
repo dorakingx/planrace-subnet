@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import { spawn } from 'node:child_process';
+import { readFile } from 'node:fs/promises';
 
 const port = 4317;
 const origin = `http://127.0.0.1:${port}`;
@@ -68,11 +69,18 @@ try {
   )?.response;
   assert(raw);
   assert.match(raw.headers.get('content-disposition') ?? '', /attachment/);
-  const evidence = await raw.json();
-  assert.equal(evidence.schema_version, 'planrace/evidence/1');
+  const rawManifest = await raw.text();
+  const sourceManifest = await readFile('evidence/localnet-v2.json', 'utf8');
   assert.equal(
+    rawManifest,
+    sourceManifest,
+    'downloaded signed manifest must preserve the committed UTF-8 bytes',
+  );
+  const evidence = JSON.parse(rawManifest);
+  assert.match(evidence.schema_version, /^planrace\/evidence\/[12]$/);
+  assert.match(
     evidence.validator_signature.signed_payload_sha256,
-    '741b61e619054aa6a5b834938cd41f1a0eabe1ef9d1397a8913cd9dffc777001',
+    /^[0-9a-f]{64}$/,
   );
 
   process.stdout.write(

@@ -16,11 +16,10 @@ Status: **VERIFIED localnet evidence; TESTNET PENDING**.
 These development identities use no valuable secret and must never be reused on
 testnet or mainnet.
 
-The profile named `restricted-rewrite` is intentionally narrowed to a structured
-partial-index transformation in this track. Protocol v2 follows the brief's
-first safety preference—fixed reference SQL plus structured index selection—and
-does not pretend that raw or arbitrary rewrite safety has been established. The
-constant-answer attempt likewise has no result field to exploit and collapses to
+The profile named `partial-index` exercises the strict structured index track.
+Protocol v2 follows the brief's first safety preference—fixed validator-owned
+reference SQL plus structured index selection—and does not claim rewrite safety.
+The constant-answer attempt likewise has no result field to exploit and collapses to
 the no-index executable strategy; it is still distinguishable in the signed
 response metadata but receives no special correctness shortcut.
 

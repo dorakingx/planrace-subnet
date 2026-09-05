@@ -3,11 +3,25 @@ title = "PlanRace secret scanning"
 [extend]
 useDefault = true
 
-[allowlist]
-description = "Public post-deadline and deterministic evidence fields"
-regexTarget = "match"
+[[allowlists]]
+description = "Public post-deadline localnet evidence fields only"
+condition = "AND"
+regexTarget = "line"
+paths = [
+  '''^(results/localnet-v2|dashboard/evidence)/.*\.json$''',
+]
 regexes = [
   '''secret_seed_hex["']?\s*:\s*["'][0-9a-f]{64}["']''',
   '''owner_coldkey["']?\s*:\s*["'][1-9A-HJ-NP-Za-km-z]{32,64}["']''',
+]
+
+[[allowlists]]
+description = "Deterministic public simulation profile labels only"
+condition = "AND"
+regexTarget = "line"
+paths = [
+  '''^results/mechanism-v2/(simulation|MECHANISM_SIMULATION)\.json$''',
+]
+regexes = [
   '''strategy_key["']?\s*:\s*["'][0-9A-Za-z:_-]{1,32}["']''',
 ]

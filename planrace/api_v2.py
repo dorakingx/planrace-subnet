@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import asyncio
 import inspect
 import time
 from collections.abc import Awaitable, Callable
@@ -23,6 +24,8 @@ from planrace.models_v2 import (
 
 MAX_V2_REQUEST_BYTES = 256 * 1024
 MAX_REQUEST_LIFETIME_MS = 120_000
+DEFAULT_MAX_CONCURRENT_STRATEGIES = 4
+DEFAULT_MAX_PENDING_STRATEGIES = 16
 
 V2Strategy = Callable[[PublicTaskV2], OptimizationBundle | Awaitable[OptimizationBundle]]
 
@@ -49,10 +52,50 @@ def create_miner_app_v2(
     strategy: V2Strategy = no_index_strategy,
     authorize_hotkey: AuthorizationHook | None = None,
     clock_unix_ms: Callable[[], int] = lambda: time.time_ns() // 1_000_000,
+    max_concurrent_strategies: int = DEFAULT_MAX_CONCURRENT_STRATEGIES,
+    max_pending_strategies: int = DEFAULT_MAX_PENDING_STRATEGIES,
 ) -> FastAPI:
+    if authorize_hotkey is None:
+        raise ValueError("authorize_hotkey is required for a fail-closed miner service")
+    if max_concurrent_strategies < 1:
+        raise ValueError("max_concurrent_strategies must be positive")
+    if max_pending_strategies < max_concurrent_strategies:
+        raise ValueError("max_pending_strategies must cover concurrent strategies")
     signer = resolve_response_signer(miner_wallet_or_signer)
     self_hotkey_ss58 = signer.ss58_address
     app = FastAPI(title="PlanRace v2 Miner", version="0.2.0")
+    strategy_slots = asyncio.Semaphore(max_concurrent_strategies)
+    pending_lock = asyncio.Lock()
+    pending_strategies = 0
+
+    async def execute_strategy(task: PublicTaskV2, deadline_unix_ms: int) -> OptimizationBundle:
+        nonlocal pending_strategies
+        async with pending_lock:
+            if pending_strategies >= max_pending_strategies:
+                raise HTTPException(status_code=503, detail={"code": "strategy_queue_full"})
+            pending_strategies += 1
+        try:
+            remaining = (deadline_unix_ms - clock_unix_ms()) / 1_000
+            if remaining <= 0:
+                raise HTTPException(status_code=408, detail={"code": "request_expired"})
+            try:
+                async with asyncio.timeout(remaining):
+                    async with strategy_slots:
+                        artifact_result: OptimizationBundle | Awaitable[OptimizationBundle]
+                        if inspect.iscoroutinefunction(strategy):
+                            artifact_result = await strategy(task)
+                        else:
+                            artifact_result = await asyncio.to_thread(strategy, task)
+                        if inspect.isawaitable(artifact_result):
+                            return await artifact_result
+                        return artifact_result
+            except TimeoutError:
+                raise HTTPException(
+                    status_code=408, detail={"code": "strategy_deadline_elapsed"}
+                ) from None
+        finally:
+            async with pending_lock:
+                pending_strategies -= 1
 
     @app.get("/health")
     async def health() -> dict[str, str]:
@@ -89,10 +132,18 @@ def create_miner_app_v2(
             raise HTTPException(status_code=422, detail={"code": "request_lifetime_too_long"})
         if now >= request_model.task.deadline_unix_ms:
             raise HTTPException(status_code=408, detail={"code": "task_deadline_elapsed"})
-        artifact_result = strategy(request_model.task)
-        artifact = (
-            await artifact_result if inspect.isawaitable(artifact_result) else artifact_result
+        execution_deadline = min(
+            request_model.expires_at_unix_ms,
+            request_model.task.deadline_unix_ms,
         )
+        artifact = await execute_strategy(request_model.task, execution_deadline)
+        completed_at = clock_unix_ms()
+        if completed_at >= request_model.expires_at_unix_ms:
+            raise HTTPException(status_code=408, detail={"code": "request_expired_after_strategy"})
+        if completed_at >= request_model.task.deadline_unix_ms:
+            raise HTTPException(
+                status_code=408, detail={"code": "task_deadline_elapsed_after_strategy"}
+            )
         if artifact.task_id != request_model.task.task_id:
             raise HTTPException(status_code=500, detail={"code": "strategy_wrong_task"})
         if artifact.engine_image_digest != request_model.task.engine_image_digest:
@@ -104,7 +155,7 @@ def create_miner_app_v2(
             request=request_model,
             artifact=artifact,
             miner_signer=signer,
-            issued_at_unix_ms=now,
+            issued_at_unix_ms=completed_at,
             expires_at_unix_ms=request_model.expires_at_unix_ms,
         )
 

@@ -11,6 +11,7 @@ import re
 import shutil
 import subprocess
 from collections import Counter
+from dataclasses import asdict
 from pathlib import Path
 from typing import Any
 
@@ -27,6 +28,13 @@ from planrace.models_v2 import (
     domain_separated_digest,
     optimization_request_digest,
     optimization_strategy_digest,
+)
+from planrace.scoring_v2 import (
+    AggregationPolicy,
+    EpochObservation,
+    ScheduledTask,
+    aggregate_network,
+    allocate_weights,
 )
 from planrace.taskgen_v2 import audit_task_reveal
 
@@ -110,10 +118,15 @@ def _audit_portable_fixture_regeneration(
 
 
 def audit_bundle(bundle: Path) -> dict[str, Any]:
+    bundle = bundle.resolve()
     manifest_path = bundle / "manifest.json"
     manifest, original_digest = verify_manifest_file(manifest_path)
     for artifact in manifest.source_artifacts:
-        artifact_path = bundle / artifact.path
+        artifact_path = (bundle / artifact.path).resolve()
+        _require(
+            artifact_path.is_relative_to(bundle),
+            f"signed source artifact escapes evidence bundle: {artifact.path}",
+        )
         _require(
             artifact_path.is_file() and _sha256(artifact_path) == artifact.sha256,
             f"signed source artifact mismatch: {artifact.path}",
@@ -122,6 +135,7 @@ def audit_bundle(bundle: Path) -> dict[str, Any]:
     epoch_paths = sorted((bundle / "epochs").glob("epoch-*.json"))
 
     _require(summary["protocol_version"] == "planrace/2", "wrong protocol")
+    _require(manifest.schema_version == "planrace/evidence/2", "wrong evidence schema")
     _require(summary["environment"] == "localnet", "wrong environment")
     _require(
         summary["operator_model"] == "three test validator identities under one operator",
@@ -160,6 +174,8 @@ def audit_bundle(bundle: Path) -> dict[str, Any]:
     families: set[str] = set()
     generator_digests: set[str] = set()
     accepted_responses = 0
+    all_observations: list[EpochObservation] = []
+    schedule: list[ScheduledTask] = []
     for expected_epoch, path in enumerate(epoch_paths):
         epoch = _load(path)
         _require(epoch["epoch"] == expected_epoch, f"epoch ordering mismatch: {path}")
@@ -209,6 +225,16 @@ def audit_bundle(bundle: Path) -> dict[str, Any]:
             f"strategy evaluation grouping mismatch: {path}",
         )
         _require(len(epoch["observations"]) == 10, f"observation count mismatch: {path}")
+        observations = [EpochObservation(**item) for item in epoch["observations"]]
+        all_observations.extend(observations)
+        schedule.append(
+            ScheduledTask(
+                epoch=epoch["epoch"],
+                family=epoch["family"],
+                task_id=epoch["task_public"]["task_id"],
+                task_commitment=epoch["task_public"]["commitment"],
+            )
+        )
         accepted_responses += len(accepted)
 
         for outcome in outcomes:
@@ -267,6 +293,43 @@ def audit_bundle(bundle: Path) -> dict[str, Any]:
         manifest.authentication.signed_responses == accepted_responses,
         "manifest response count mismatch",
     )
+    _require(
+        all(
+            score.result_hash is None
+            and score.reference_hash is None
+            and score.strategy_digest is not None
+            and score.schedule_digest == manifest.task_commitment
+            for score in manifest.scores
+        ),
+        "v2 score semantics are not explicit",
+    )
+
+    aggregation_policy = AggregationPolicy(
+        required_families=tuple(summary["families"]),
+        task_schedule=tuple(schedule),
+        minimum_tasks=24,
+        minimum_tasks_per_family=3,
+        minimum_availability=0.75,
+        minimum_compliance=0.95,
+        minimum_correctness=0.95,
+        maximum_weight=0.25,
+        minimum_distinct_strategies=5,
+    )
+    miner_ids = [f"miner-{index:02}" for index in range(10)]
+    recomputed_aggregates = aggregate_network(
+        all_observations, miner_ids=miner_ids, policy=aggregation_policy
+    )
+    recomputed_allocation = allocate_weights(recomputed_aggregates, policy=aggregation_policy)
+    normalized_aggregates = json.loads(json.dumps([asdict(item) for item in recomputed_aggregates]))
+    normalized_allocation = json.loads(json.dumps(asdict(recomputed_allocation)))
+    _require(
+        normalized_aggregates == summary["aggregates"],
+        "stored aggregates do not match epoch observations",
+    )
+    _require(
+        normalized_allocation == summary["allocation"],
+        "stored behavior-group allocation does not recompute",
+    )
 
     extrinsic = summary["chain_extrinsic"]
     _require(
@@ -281,7 +344,7 @@ def audit_bundle(bundle: Path) -> dict[str, Any]:
         "strategy allocations do not sum to one",
     )
     _require(
-        max(strategy_weights.values()) <= 0.20 + 1e-12,
+        max(strategy_weights.values()) <= 0.25 + 1e-12,
         "strategy concentration cap exceeded",
     )
     duplicate_groups = summary["allocation"]["duplicate_groups"]

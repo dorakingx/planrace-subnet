@@ -48,7 +48,7 @@ Exact finite fixtures do not prove universal SQL equivalence.
 
 ## Chain safety
 
-Only `local` and `test` targets will be accepted. Mainnet aliases and arbitrary RPC URLs must fail closed. Wallet seed phrases are never logged or committed. Registration, faucet/test TAO, and signatures that require the user's wallet remain explicit user actions.
+Only `local` and `test` targets will be accepted. Mainnet aliases and arbitrary RPC URLs must fail closed. Wallet seed phrases are never logged or committed. Registration, test-TAO allocation, and signatures that require the user's wallet remain explicit user actions.
 
 ## Responsible disclosure
 

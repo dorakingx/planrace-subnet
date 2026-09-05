@@ -149,6 +149,19 @@ def test_winsorization_contains_one_timing_outlier() -> None:
     assert robust.reward == pytest.approx(clean.reward)
 
 
+def test_default_six_trials_cannot_win_from_one_extreme_sample() -> None:
+    baseline = list(trials(count=6, candidate_scale=1.0))
+    extreme = baseline[-1]
+    baseline[-1] = replace(
+        extreme,
+        baseline_cold_ms=extreme.baseline_cold_ms * 2**60,
+        baseline_warm_ms=extreme.baseline_warm_ms * 2**60,
+    )
+    score = score_benchmark(evidence(trial_values=tuple(baseline)))
+    assert score.reward == pytest.approx(0.0)
+    assert score.failure_code == "no_relative_improvement"
+
+
 def observations(
     miner_id: str,
     *,
@@ -173,6 +186,7 @@ def observations(
             compliant=compliant,
             correct=correct,
             strategy_digest=strategy_digest,
+            behavior_digest=strategy_digest,
         )
         for task in schedule
     ]
@@ -220,6 +234,7 @@ def aggregate(miner_id: str, reward: float, digest: str) -> MinerAggregate:
         task_count=12,
         family_scores=tuple((family, reward) for family in FAMILIES),
         strategy_digest=digest,
+        behavior_digest=digest,
         failure_code=None,
     )
 
@@ -289,6 +304,7 @@ def test_all_failed_is_safe_no_update() -> None:
         task_count=12,
         family_scores=(),
         strategy_digest="failed-strategy",
+        behavior_digest="failed-strategy",
         failure_code="availability_gate",
     )
     allocation = allocate_weights([failed], policy=aggregation_policy())
@@ -431,6 +447,7 @@ def test_epoch_observation_validation(kwargs: dict[str, Any]) -> None:
         "correct": True,
         "compliant": True,
         "strategy_digest": "digest",
+        "behavior_digest": "behavior",
     }
     values.update(kwargs)
     with pytest.raises(ValueError):
@@ -537,7 +554,7 @@ def test_concentration_and_allocation_edge_cases() -> None:
             required_families=FAMILIES,
             task_schedule=task_schedule(),
             minimum_distinct_strategies=1,
-            maximum_weight=0.20,
+            maximum_weight=0.25,
         ),
     )
     capped = allocate_weights(
@@ -550,8 +567,24 @@ def test_concentration_and_allocation_edge_cases() -> None:
     assert low_diversity.reason == "insufficient_strategy_diversity"
     assert impossible_cap.reason == "insufficient_recipients_for_cap"
     assert capped.planned
-    assert dict(capped.strategy_weights)["star"] == pytest.approx(0.20)
+    assert dict(capped.strategy_weights)["star"] == pytest.approx(0.25)
     assert math.fsum(dict(capped.strategy_weights).values()) == pytest.approx(1.0)
+
+
+def test_near_copy_behavior_cannot_satisfy_diversity_gate() -> None:
+    near_copies = [
+        replace(
+            aggregate(f"copy-{index}", 10.0, f"different-ast-{index}"),
+            behavior_digest="same-observed-plan",
+        )
+        for index in range(5)
+    ]
+    allocation = allocate_weights(near_copies, policy=aggregation_policy())
+    assert not allocation.planned
+    assert allocation.reason == "insufficient_strategy_diversity"
+    assert allocation.duplicate_groups == (
+        ("same-observed-plan", tuple(f"copy-{index}" for index in range(5))),
+    )
 
 
 def test_kendall_tau_validation_and_all_ties() -> None:

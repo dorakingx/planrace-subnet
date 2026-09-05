@@ -115,6 +115,31 @@ def test_signed_manifest_verifies_and_summarizes() -> None:
     assert summary["payload_sha256"] == digest
 
 
+def test_evidence_v2_uses_explicit_strategy_and_schedule_digests() -> None:
+    data = unsigned_manifest()
+    data["schema_version"] = "planrace/evidence/2"
+    data["protocol_version"] = "planrace/2"
+    for score in data["scores"]:  # type: ignore[union-attr]
+        score["result_hash"] = None
+        score["reference_hash"] = None
+        score["strategy_digest"] = "c" * 64
+        score["schedule_digest"] = "d" * 64
+    manifest = sign_manifest(data, ALICE)
+    assert verify_manifest(manifest) == manifest.validator_signature.signed_payload_sha256
+    assert all(score.strategy_digest == "c" * 64 for score in manifest.scores)
+
+
+def test_evidence_v2_rejects_overloaded_result_hash_fields() -> None:
+    data = unsigned_manifest()
+    data["schema_version"] = "planrace/evidence/2"
+    data["protocol_version"] = "planrace/2"
+    for score in data["scores"]:  # type: ignore[union-attr]
+        score["strategy_digest"] = "c" * 64
+        score["schedule_digest"] = "d" * 64
+    with pytest.raises(ValidationError, match="cannot overload SQL result hash"):
+        sign_manifest(data, ALICE)
+
+
 def test_canonical_payload_is_independent_of_mapping_order() -> None:
     original = unsigned_manifest()
     reversed_mapping = dict(reversed(list(original.items())))
@@ -158,7 +183,13 @@ def test_cli_verify_summarize_and_tamper_failure(tmp_path: Path) -> None:
     runner = CliRunner()
     verified = runner.invoke(app, ["evidence", "verify", str(path)])
     assert verified.exit_code == 0
-    assert "VERIFIED local-2-epoch-8" in verified.stdout
+    assert "SIGNATURE VALID; CLAIMS UNVERIFIED local-2-epoch-8" in verified.stdout
+    trusted = runner.invoke(
+        app,
+        ["evidence", "verify", str(path), "--expected-signer", ALICE.ss58_address],
+    )
+    assert trusted.exit_code == 0
+    assert "SIGNATURE VALID; EXPECTED SIGNER" in trusted.stdout
     summarized = runner.invoke(app, ["evidence", "summarize", str(path)])
     assert summarized.exit_code == 0
     assert json.loads(summarized.stdout)["authenticated_requests"] == 2

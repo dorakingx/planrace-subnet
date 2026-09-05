@@ -5,7 +5,6 @@ from __future__ import annotations
 import asyncio
 import ipaddress
 import math
-import socket
 import time
 from collections.abc import Callable
 from dataclasses import dataclass
@@ -199,37 +198,15 @@ async def _validate_endpoint(url: httpx.URL, *, allow_local_endpoint_for_tests: 
         raise EndpointInvalidError
     if allow_local_endpoint_for_tests:
         return
-    addresses = await _resolve_endpoint_addresses(url.host, url.port)
-    if any(_address_is_forbidden(address) for address in addresses):
+    # Metagraph Axon endpoints are numeric IP addresses. Requiring that form
+    # prevents a hostname from resolving once during validation and again to a
+    # private address inside HTTPX (DNS rebinding / TOCTOU).
+    try:
+        address = ipaddress.ip_address(url.host.split("%", 1)[0])
+    except ValueError as error:
+        raise EndpointForbiddenError from error
+    if _address_is_forbidden(address):
         raise EndpointForbiddenError
-
-
-async def _resolve_endpoint_addresses(
-    host: str, port: int | None
-) -> tuple[ipaddress.IPv4Address | ipaddress.IPv6Address, ...]:
-    try:
-        return (ipaddress.ip_address(host),)
-    except ValueError:
-        pass
-    try:
-        records = await asyncio.get_running_loop().getaddrinfo(
-            host,
-            port or 443,
-            family=socket.AF_UNSPEC,
-            type=socket.SOCK_STREAM,
-        )
-    except OSError as error:
-        raise EndpointResolutionError from error
-    addresses: set[ipaddress.IPv4Address | ipaddress.IPv6Address] = set()
-    for _family, _type, _protocol, _canonical_name, socket_address in records:
-        raw_address = str(socket_address[0]).split("%", 1)[0]
-        try:
-            addresses.add(ipaddress.ip_address(raw_address))
-        except ValueError as error:
-            raise EndpointResolutionError from error
-    if not addresses:
-        raise EndpointResolutionError
-    return tuple(addresses)
 
 
 def _address_is_forbidden(address: ipaddress.IPv4Address | ipaddress.IPv6Address) -> bool:

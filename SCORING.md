@@ -46,15 +46,16 @@ For each committed task, artifacts sharing a canonical executable-strategy
 digest are evaluated once. Every duplicate identity receives the same
 validator-owned evidence digest, and that task reward is divided across the
 duplicate group. Multi-epoch aggregation therefore starts from fixed group
-mass rather than identity count. At allocation time, identical full strategy
-portfolios are recombined before the concentration cap and divided back in
-proportion to their already-split rewards. Cloning a hotkey cannot create
-reward or bypass the cap.
+mass rather than identity count. At allocation time, full portfolios with the
+same observed hidden-fixture query-plan behavior are grouped before the
+concentration cap and divided back in proportion to their already-split
+rewards. Byte-distinct near copies therefore cannot create reward, satisfy
+diversity, or bypass the cap.
 
-Final canonical-strategy weights have a 20% cap and require five distinct
+Final observed-behavior weights have a 25% cap and require five distinct
 positive strategies. If all candidates fail, diversity is insufficient, or
-the cap cannot be met, the validator emits a safe no-update instead of
-fabricating a winner.
+the cap cannot be met, the validator emits a no-new-update decision instead of
+fabricating a winner. This does not erase a previously stored chain vector.
 
 Every allocation reports strategy-level Gini, HHI, top-one share, and effective
 strategy count.

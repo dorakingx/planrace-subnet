@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import math
+import re
 import statistics
 import tempfile
 from collections.abc import Callable, Mapping, Sequence
@@ -57,6 +58,7 @@ from planrace.taskgen_v2 import (
 )
 
 WorkerRunner = Callable[[Path, SandboxRequestV2], SandboxResultV2]
+DEFAULT_MAX_UNIQUE_STRATEGIES_PER_TASK = 64
 
 
 class EvaluationConfigurationError(ValueError):
@@ -76,6 +78,7 @@ class HoldoutEvaluationV2:
     task_commitment: str
     artifact_digest: str
     strategy_digest: str
+    behavior_digest: str
     family_id: str
     exact_passed: bool
     compliant: bool
@@ -315,6 +318,7 @@ def _finalize_holdout_evaluation(
         task_commitment=task.public.commitment,
         artifact_digest=bundle.artifact_digest,
         strategy_digest=optimization_strategy_digest(bundle),
+        behavior_digest=holdout_behavior_digest(evaluations),
         family_id=family_id,
         exact_passed=True,
         compliant=True,
@@ -335,6 +339,7 @@ def evaluate_task_cohort(
     benchmark_policy: BenchmarkPolicy = DEFAULT_BENCHMARK_POLICY,
     trial_count: int = 6,
     worker_runner: WorkerRunner | None = None,
+    max_unique_strategies: int = DEFAULT_MAX_UNIQUE_STRATEGIES_PER_TASK,
 ) -> CohortEvaluationV2:
     """Evaluate each canonical executable strategy exactly once for one task.
 
@@ -347,6 +352,8 @@ def evaluate_task_cohort(
         raise EvaluationConfigurationError("epoch must be non-negative")
     if not submissions:
         raise EvaluationConfigurationError("at least one submission is required")
+    if max_unique_strategies < 1:
+        raise EvaluationConfigurationError("max_unique_strategies must be positive")
     if any(not miner_id for miner_id in submissions):
         raise EvaluationConfigurationError("miner IDs must be non-empty")
 
@@ -358,6 +365,8 @@ def evaluate_task_cohort(
             raise EvaluationConfigurationError("bundle engine differs from task engine")
         digest = optimization_strategy_digest(bundle)
         by_strategy.setdefault(digest, []).append((miner_id, bundle))
+    if len(by_strategy) > max_unique_strategies:
+        raise EvaluationConfigurationError("unique strategy evaluation budget exceeded")
 
     evaluations: list[tuple[str, HoldoutEvaluationV2]] = []
     observations: list[EpochObservation] = []
@@ -390,6 +399,7 @@ def evaluate_task_cohort(
                     correct=evaluation.exact_passed,
                     compliant=evaluation.compliant,
                     strategy_digest=strategy_digest,
+                    behavior_digest=evaluation.behavior_digest,
                 )
             )
 
@@ -420,6 +430,7 @@ def holdout_evidence_digest(evaluation: HoldoutEvaluationV2) -> str:
         "task_id": evaluation.task_id,
         "task_commitment": evaluation.task_commitment,
         "strategy_digest": evaluation.strategy_digest,
+        "behavior_digest": evaluation.behavior_digest,
         "family_id": evaluation.family_id,
         "exact_passed": evaluation.exact_passed,
         "compliant": evaluation.compliant,
@@ -445,6 +456,26 @@ def _stringify_floats(value: Any) -> Any:
     if isinstance(value, list | tuple):
         return [_stringify_floats(item) for item in value]
     return value
+
+
+_VALIDATOR_INDEX_NAME = re.compile(r"\bplanrace_[0-9a-f]{20}\b")
+
+
+def holdout_behavior_digest(evaluations: Sequence[FixtureEvaluationV2]) -> str:
+    """Fingerprint observed plans while discarding validator-owned index names."""
+
+    plans = [
+        {
+            "fixture_id": item.fixture_id,
+            "candidate_plan": [
+                _VALIDATOR_INDEX_NAME.sub("planrace_<candidate>", detail)
+                for detail in item.result.candidate_plan
+            ],
+            "used_index_count": len(item.result.used_index_names),
+        }
+        for item in evaluations
+    ]
+    return domain_separated_digest("planrace/2:holdout-plan-behavior", {"plans": plans})
 
 
 def _validate_and_regenerate_task(task: PrivateTaskV2) -> QueryFamily:
@@ -528,6 +559,7 @@ def _failed(
         task_commitment=task.public.commitment,
         artifact_digest=bundle.artifact_digest,
         strategy_digest=optimization_strategy_digest(bundle),
+        behavior_digest=holdout_behavior_digest(evaluations),
         family_id=family_id,
         exact_passed=all(item.result.correct for item in evaluations),
         compliant=all(item.result.compliant for item in evaluations),

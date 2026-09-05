@@ -3,9 +3,11 @@ from __future__ import annotations
 from pathlib import Path
 
 import bittensor as bt
+import pytest
 from pydantic import ValidationError
 
 from planrace.evaluation_v2 import (
+    EvaluationConfigurationError,
     create_benchmark_task_v2,
     evaluate_bundle_on_committed_holdouts,
     evaluate_task_cohort,
@@ -192,3 +194,40 @@ def test_cohort_evaluates_duplicate_executable_strategy_once() -> None:
     assert len({item.evidence_digest for item in cohort.observations}) == 1
     assert len({item.reward for item in cohort.observations}) == 1
     assert cohort.observations[0].reward > 0.0
+
+
+def test_cohort_fails_closed_before_exceeding_unique_strategy_budget() -> None:
+    validator = bt.sp_core.Keypair.create_from_uri("//Alice")
+    task = create_benchmark_task_v2(
+        validator_hotkey=validator.ss58_address,
+        engine_image_digest="sha256:" + "1" * 64,
+        family_id="intentional-zero-result",
+        deadline_unix_ms=2_000_000,
+        entropy=FixedEntropy(),
+    )
+    bundles = {
+        "miner-a": OptimizationBundle.create(
+            task_id=task.public.task_id,
+            engine_image_digest=task.public.engine_image_digest,
+            indexes=(IndexSpec(table="orders", key_columns=(IndexColumn(column="status"),)),),
+            metadata=BundleMetadata(
+                strategy="a", estimated_intent="filter", rationale="budget test"
+            ),
+        ),
+        "miner-b": OptimizationBundle.create(
+            task_id=task.public.task_id,
+            engine_image_digest=task.public.engine_image_digest,
+            indexes=(IndexSpec(table="orders", key_columns=(IndexColumn(column="amount_cents"),)),),
+            metadata=BundleMetadata(
+                strategy="b", estimated_intent="filter", rationale="budget test"
+            ),
+        ),
+    }
+    with pytest.raises(EvaluationConfigurationError, match="evaluation budget exceeded"):
+        evaluate_task_cohort(
+            task,
+            bundles,
+            epoch=0,
+            worker_image="unused",
+            max_unique_strategies=1,
+        )

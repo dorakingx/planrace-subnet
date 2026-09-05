@@ -39,7 +39,7 @@ blocks the HackQuest checkpoint.
   collusion proxy, validator-order, timing-outlier, curriculum-skew, and all-fail
   scenarios.
 - Review family quotas, conservative uncertainty, duplicate portfolio split,
-  no-update, 20% cap, HHI/Gini, validator disagreement, and rank correlation.
+  no-new-update, 25% cap, HHI/Gini, validator disagreement, and rank correlation.
 - Status: 512-replication simulation complete; localnet rank evidence pending.
 
 ## Reviewer E — hackathon judge

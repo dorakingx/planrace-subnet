@@ -10,5 +10,5 @@ const manifest = JSON.parse(await readFile(manifestPath, 'utf8'));
 const { digest } = await verifyEvidence(manifest);
 
 process.stdout.write(
-  `VERIFIED ${manifest.run_id} sha256:${digest} signer:${manifest.validator_signature.signer_hotkey}\n`,
+  `SIGNATURE VALID; CLAIMS REQUIRE AUDIT ${manifest.run_id} sha256:${digest} signer:${manifest.validator_signature.signer_hotkey}\n`,
 );

@@ -173,6 +173,23 @@ def test_signed_response_validates_and_replay_fails() -> None:
         verify(response, request, store=store)
 
 
+def test_memory_response_replay_store_is_bounded() -> None:
+    store = MemoryResponseReplayStore(max_entries=2)
+    assert store.check_and_store(
+        miner_hotkey="a", request_nonce=1, request_id="one", expires_at_unix_ms=1
+    )
+    assert store.check_and_store(
+        miner_hotkey="a", request_nonce=2, request_id="two", expires_at_unix_ms=1
+    )
+    assert store.check_and_store(
+        miner_hotkey="a", request_nonce=3, request_id="three", expires_at_unix_ms=1
+    )
+    # The oldest demo-only entry is evicted; production uses SQLite retention.
+    assert store.check_and_store(
+        miner_hotkey="a", request_nonce=1, request_id="one", expires_at_unix_ms=1
+    )
+
+
 def test_lifecycle_accepts_only_verified_on_time_unique_responses() -> None:
     private = private_task_state()
     request = OptimizationRequestV2(
@@ -333,6 +350,11 @@ def test_response_signing_fails_closed_on_invalid_inputs() -> None:
     good_artifact = artifact(request)
     with pytest.raises(TypeError, match="signer"):
         resolve_response_signer(object())
+    ed25519_signer = bt.sp_core.Keypair.create_from_uri(
+        "//Bob", crypto_type=bt.sp_core.CRYPTO_ED25519
+    )
+    with pytest.raises(TypeError, match="sr25519"):
+        resolve_response_signer(ed25519_signer)
     with pytest.raises(ValueError, match="different task"):
         sign_optimization_response(
             request=request,
@@ -368,6 +390,7 @@ def test_response_signing_fails_closed_on_invalid_inputs() -> None:
 
     class BadSigner:
         ss58_address = BOB.ss58_address
+        crypto_type = bt.sp_core.CRYPTO_SR25519
 
         def sign(self, _message: bytes) -> bytes:
             return b"short"
@@ -423,20 +446,59 @@ def test_signed_response_model_rejects_broken_internal_links() -> None:
 
 def test_sqlite_response_replay_store_is_persistent(tmp_path: Path) -> None:
     path = tmp_path / "responses.sqlite3"
-    first = SQLiteResponseReplayStore(path)
+    first = SQLiteResponseReplayStore(path, clock_unix_ms=lambda: 1_000)
     assert first.check_and_store(
         miner_hotkey=BOB.ss58_address,
         request_nonce=1,
         request_id="a" * 32,
         expires_at_unix_ms=2_000,
     )
-    reopened = SQLiteResponseReplayStore(path)
+    reopened = SQLiteResponseReplayStore(path, clock_unix_ms=lambda: 1_000)
     assert not reopened.check_and_store(
         miner_hotkey=BOB.ss58_address,
         request_nonce=1,
         request_id="a" * 32,
         expires_at_unix_ms=2_000,
     )
+
+
+def test_miner_service_requires_explicit_authorizer(tmp_path: Path) -> None:
+    with pytest.raises(ValueError, match="authorize_hotkey"):
+        create_miner_app_v2(
+            miner_wallet_or_signer=BOB,
+            nonce_store=SQLiteNonceStore(tmp_path / "closed.sqlite3"),
+        )
+
+
+@pytest.mark.anyio
+async def test_miner_strategy_is_bounded_by_request_deadline(tmp_path: Path) -> None:
+    async def slow_strategy(public: PublicTaskV2) -> OptimizationBundle:
+        await asyncio.sleep(0.05)
+        return artifact(request_model(expires_at=NOW_MS + 1).model_copy(update={"task": public}))
+
+    app = create_miner_app_v2(
+        miner_wallet_or_signer=BOB,
+        nonce_store=SQLiteNonceStore(tmp_path / "deadline.sqlite3"),
+        strategy=slow_strategy,
+        authorize_hotkey=lambda _hotkey: True,
+        clock_unix_ms=lambda: NOW_MS,
+    )
+    request = request_model(expires_at=NOW_MS + 1)
+    body = request.model_dump_json().encode()
+    transport = httpx.ASGITransport(app=app)
+    async with httpx.AsyncClient(transport=transport, base_url="https://miner.test") as client:
+        signed = build_signed_request(
+            client,
+            wallet=ALICE,
+            method="POST",
+            url="/v2/optimize",
+            body=body,
+            receiver_ss58=BOB.ss58_address,
+            headers={"content-type": "application/json"},
+        )
+        response = await client.send(signed)
+    assert response.status_code == 408
+    assert response.json()["detail"]["code"] == "strategy_deadline_elapsed"
 
 
 @pytest.mark.anyio
@@ -489,6 +551,7 @@ async def test_miner_api_rejects_malformed_identity_and_time_windows(tmp_path: P
     app = create_miner_app_v2(
         miner_wallet_or_signer=BOB,
         nonce_store=SQLiteNonceStore(tmp_path / "api-branches.sqlite3"),
+        authorize_hotkey=lambda _hotkey: True,
         clock_unix_ms=lambda: NOW_MS,
     )
     base = request_model()
@@ -571,6 +634,7 @@ async def test_miner_rejects_body_validator_different_from_http_signer(tmp_path:
     app = create_miner_app_v2(
         miner_wallet_or_signer=BOB,
         nonce_store=SQLiteNonceStore(tmp_path / "nonces.sqlite3"),
+        authorize_hotkey=lambda _hotkey: True,
         clock_unix_ms=lambda: NOW_MS,
     )
     body = request_model().model_dump_json().encode()
@@ -767,6 +831,27 @@ async def test_validator_client_rejects_private_endpoint_without_test_opt_in() -
             client,
             wallet=ALICE,
             endpoint="http://127.0.0.1/v2/optimize",
+            receiver_ss58=BOB.ss58_address,
+            request_model=request,
+            expected_miner_uid=7,
+            metagraph_hotkeys={7: BOB.ss58_address},
+            replay_store=MemoryResponseReplayStore(),
+            clock_unix_ms=lambda: NOW_MS,
+        )
+    assert outcome.failure_code == "endpoint_forbidden"
+
+
+@pytest.mark.anyio
+async def test_validator_client_rejects_hostname_to_remove_dns_rebinding_window() -> None:
+    request = request_model()
+    async with httpx.AsyncClient(
+        transport=httpx.MockTransport(lambda _: httpx.Response(500)),
+        trust_env=False,
+    ) as client:
+        outcome = await request_optimization_v2(
+            client,
+            wallet=ALICE,
+            endpoint="https://miner.example/v2/optimize",
             receiver_ss58=BOB.ss58_address,
             request_model=request,
             expected_miner_uid=7,

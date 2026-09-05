@@ -15,7 +15,7 @@ Public claim: **LOCALNET EVIDENCE / TESTNET PENDING**.
 - Canonical exact-result gate followed by baseline-relative cold/warm/setup/
   storage scoring across reuse horizons.
 - Closed multi-family schedule, conservative multi-epoch aggregation, duplicate
-  strategy splitting, fail-safe no-update, and weight concentration cap.
+  strategy splitting, explicit no-new-update, and weight concentration cap.
 - Final clean Python gate: 218 tests passed, Ruff and mypy clean, and 87.49%
   branch coverage against the 85% threshold.
 - Seeded 512-replication v2 mechanism/adversary simulation with 0 false

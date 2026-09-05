@@ -5,7 +5,8 @@ from __future__ import annotations
 import hmac
 import sqlite3
 import threading
-from collections.abc import Mapping
+import time
+from collections.abc import Callable, Mapping
 from pathlib import Path
 from typing import Protocol
 
@@ -36,8 +37,11 @@ class ResponseReplayStore(Protocol):
 class MemoryResponseReplayStore:
     """Thread-safe replay protection for tests and single-process demos."""
 
-    def __init__(self) -> None:
-        self._keys: set[tuple[str, int, str]] = set()
+    def __init__(self, *, max_entries: int = 10_000) -> None:
+        if max_entries < 1:
+            raise ValueError("max_entries must be positive")
+        self._keys: dict[tuple[str, int, str], None] = {}
+        self._max_entries = max_entries
         self._lock = threading.Lock()
 
     def check_and_store(
@@ -48,16 +52,28 @@ class MemoryResponseReplayStore:
         with self._lock:
             if key in self._keys:
                 return False
-            self._keys.add(key)
+            self._keys[key] = None
+            if len(self._keys) > self._max_entries:
+                self._keys.pop(next(iter(self._keys)))
             return True
 
 
 class SQLiteResponseReplayStore:
     """Persistent atomic replay protection for validator processes."""
 
-    def __init__(self, path: str | Path) -> None:
+    def __init__(
+        self,
+        path: str | Path,
+        *,
+        clock_unix_ms: Callable[[], int] = lambda: time.time_ns() // 1_000_000,
+        max_entries: int = 100_000,
+    ) -> None:
+        if max_entries < 1:
+            raise ValueError("max_entries must be positive")
         self._path = str(path)
         self._lock = threading.Lock()
+        self._clock_unix_ms = clock_unix_ms
+        self._max_entries = max_entries
         with sqlite3.connect(self._path) as database:
             database.execute(
                 """
@@ -70,11 +86,19 @@ class SQLiteResponseReplayStore:
                 )
                 """
             )
+            database.execute(
+                """CREATE INDEX IF NOT EXISTS accepted_v2_responses_by_expiry
+                ON accepted_v2_responses(expires_at_unix_ms)"""
+            )
 
     def check_and_store(
         self, *, miner_hotkey: str, request_nonce: int, request_id: str, expires_at_unix_ms: int
     ) -> bool:
         with self._lock, sqlite3.connect(self._path) as database:
+            database.execute(
+                "DELETE FROM accepted_v2_responses WHERE expires_at_unix_ms <= ?",
+                (self._clock_unix_ms(),),
+            )
             try:
                 database.execute(
                     """
@@ -86,6 +110,17 @@ class SQLiteResponseReplayStore:
                 )
             except sqlite3.IntegrityError:
                 return False
+            database.execute(
+                """
+                DELETE FROM accepted_v2_responses
+                WHERE rowid IN (
+                    SELECT rowid FROM accepted_v2_responses
+                    ORDER BY expires_at_unix_ms ASC
+                    LIMIT MAX(0, (SELECT COUNT(*) FROM accepted_v2_responses) - ?)
+                )
+                """,
+                (self._max_entries,),
+            )
             return True
 
 
@@ -101,6 +136,8 @@ def resolve_response_signer(wallet_or_signer: object) -> ResponseSigner:
     candidate = getattr(wallet_or_signer, "hotkey", wallet_or_signer)
     if not hasattr(candidate, "ss58_address") or not callable(getattr(candidate, "sign", None)):
         raise TypeError("response signer must expose hotkey ss58_address and sign(bytes)")
+    if getattr(candidate, "crypto_type", None) != bt.sp_core.CRYPTO_SR25519:
+        raise TypeError("response signer must be an sr25519 hotkey")
     return candidate  # type: ignore[return-value]
 
 

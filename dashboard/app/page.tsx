@@ -36,7 +36,7 @@ const weightByUid = new Map(
 const correctnessPassed = manifest.scores.filter(
   (score) => score.correct,
 ).length;
-const correctnessFailed = manifest.scores.length - correctnessPassed;
+const gatedOutcomes = manifest.scores.length - correctnessPassed;
 const latestExtrinsic = manifest.extrinsics.at(0);
 const validatorTau = summary.validator_rank_analysis.pairwise.map(
   (pair) => pair.kendall_tau_b,
@@ -213,7 +213,7 @@ export default function Home() {
               </p>
               <p className="text-muted-foreground">
                 ↳ validator signature{' '}
-                <span className="text-primary">VERIFIED</span>
+                <span className="text-primary">VALID</span>
               </p>
               <p className="text-muted-foreground">
                 ↳ authenticated requests{' '}
@@ -235,8 +235,8 @@ export default function Home() {
                   <span className="text-primary">PASS {correctnessPassed}</span>
                 </p>
                 <p className="flex justify-between gap-3">
-                  <span>result mismatch</span>
-                  <span className="text-red-400">FAIL {correctnessFailed}</span>
+                  <span>correctness / policy gates</span>
+                  <span className="text-red-400">FAIL {gatedOutcomes}</span>
                 </p>
               </div>
               <p className="text-muted-foreground">

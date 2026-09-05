@@ -5,8 +5,8 @@
 [Live evidence dashboard](https://planrace-subnet.vercel.app) ·
 [GitHub](https://github.com/dorakingx/planrace-subnet)
 
-PlanRace is a Bittensor subnet prototype where miners return faster SQL rewrites
-and bounded index plans. Validators first require exact result equality on
+PlanRace is a Bittensor subnet prototype where miners return bounded structured
+index plans for validator-owned SQL. Validators first require exact result equality on
 unrevealed generated test databases; only correct artifacts compete on robust,
 baseline-relative cold/warm latency, storage, and amortized setup cost.
 
@@ -56,6 +56,15 @@ make demo
 
 Or without Make:
 
+```bash
+./scripts/bootstrap.sh
+.bootstrap/bin/uv sync --all-groups
+.bootstrap/bin/uv run ruff check .
+.bootstrap/bin/uv run mypy planrace
+.bootstrap/bin/uv run pytest
+.bootstrap/bin/uv run planrace simulate-v2
+```
+
 The bootstrap installs the security-fixed, pinned `uv==0.12.7` inside `.bootstrap`; it does not modify the system Python environment.
 
 ## Protocol v2
@@ -74,7 +83,7 @@ The bootstrap installs the security-fixed, pinned `uv==0.12.7` inside `.bootstra
 5. Exact and compliant strategies compete against the same-fixture baseline on
    cold/warm latency, setup/storage, and multiple reuse horizons.
 6. Conservative multi-epoch aggregation enforces availability, correctness,
-   compliance, family coverage, duplicate splitting, fail-safe no-update, and a
+   compliance, family coverage, duplicate splitting, explicit no-new-update, and a
    per-strategy weight cap before the chain update.
 
 See [PROTOCOL_V2.md](PROTOCOL_V2.md),
@@ -117,15 +126,24 @@ weights, adversarial mechanism simulation, and a verified 30-epoch localnet v2
 weight submission/readback.
 
 Not yet claimed: Bittensor testnet registration/weights, independently operated
-validators, PostgreSQL/DuckDB or private customer-data adapters, a clean v2
-evidence-dashboard deployment, the real-testnet demo, or HackQuest submission.
+validators, PostgreSQL/DuckDB or private customer-data adapters, the real-testnet
+demo, or HackQuest submission. The Git-linked v2 evidence dashboard is live.
+
+Dashboard verification requires Node.js `>=22.13 <25` (CI and Vercel use Node
+24) and npm 11:
+
+```bash
+cd dashboard
+npm ci
+npm run format:check && npm run typecheck && npm run lint && npm test && npm run build
+```
 
 Progress is tracked in [STATUS.md](STATUS.md). No mainnet or paid service is authorized.
 
 ## Safety boundary
 
 - Network targets are limited to localnet and testnet in the planned adapter.
-- Candidate SQL is read-only and setup artifacts are bounded index DDL.
+- The validator-owned SQL is read-only; miner artifacts are bounded `IndexSpec` ASTs.
 - Generated data avoids customer information.
 - Candidate execution is confined to disposable, resource-capped workers; the
   current worker remains a generated SQLite mechanism proof, not production

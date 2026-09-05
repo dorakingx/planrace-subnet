@@ -28,7 +28,7 @@ PROFILE_NAMES = (
     "selective-index",
     "composite-index",
     "covering-index",
-    "restricted-rewrite",
+    "partial-index",
     "hybrid",
     "over-indexing",
     "constant-answer-attempt",
@@ -68,13 +68,13 @@ def bundle_for_profile(task: PublicTaskV2, profile: str) -> OptimizationBundle:
     selective, composite, covering, partial, secondary = _family_indexes(task.benchmark_family_id)
     indexes: tuple[IndexSpec, ...]
     if profile in {"selective-index", "copycat-sybil"}:
-        indexes = (partial,)
+        indexes = (selective,)
     elif profile == "composite-index":
-        indexes = (_direction_variant(partial, "leading-desc"),)
+        indexes = (composite,)
     elif profile == "covering-index":
-        indexes = (_direction_variant(partial, "trailing-desc"),)
-    elif profile == "restricted-rewrite":
-        indexes = (_direction_variant(partial, "all-desc"),)
+        indexes = (covering,)
+    elif profile == "partial-index":
+        indexes = (partial,)
     elif profile == "hybrid":
         indexes = (composite, secondary)
     elif profile == "over-indexing":
@@ -82,32 +82,6 @@ def bundle_for_profile(task: PublicTaskV2, profile: str) -> OptimizationBundle:
     else:
         raise ValueError("timeout profile must be resolved through strategy_for_profile")
     return _bundle(task, profile, indexes)
-
-
-def _direction_variant(index: IndexSpec, variant: str) -> IndexSpec:
-    """Create optimizer-distinct, storage-equivalent robust index variants.
-
-    SQLite can traverse an index in either direction.  These variants exercise
-    distinct executable strategies without inflating the artifact footprint,
-    while retaining the family-specific robust key order selected above.
-    """
-
-    if variant == "leading-desc":
-        descending = {0}
-    elif variant == "trailing-desc":
-        descending = {len(index.key_columns) - 1}
-    elif variant == "all-desc":
-        descending = set(range(len(index.key_columns)))
-    else:
-        raise ValueError(f"unknown direction variant: {variant}")
-    return index.model_copy(
-        update={
-            "key_columns": tuple(
-                column.model_copy(update={"direction": "desc" if position in descending else "asc"})
-                for position, column in enumerate(index.key_columns)
-            )
-        }
-    )
 
 
 def _bundle(task: PublicTaskV2, profile: str, indexes: tuple[IndexSpec, ...]) -> OptimizationBundle:

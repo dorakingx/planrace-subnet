@@ -50,7 +50,7 @@ def test_all_public_profiles_are_behaviorally_exercisable() -> None:
         "selective-index",
         "composite-index",
         "covering-index",
-        "restricted-rewrite",
+        "partial-index",
         "hybrid",
     )
     assert len(

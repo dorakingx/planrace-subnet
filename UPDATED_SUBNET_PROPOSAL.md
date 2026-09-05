@@ -2,9 +2,8 @@
 
 ## Commodity
 
-An executable, bounded query-optimization artifact: a structured index plan and,
-where the track permits it, an approved SQL rewrite for an already-correct
-query. The deliverable is reusable and auditable; it is not a generated answer.
+An executable, bounded structured index plan for validator-owned, already-correct
+SQL. The current v2 deliverable is reusable and auditable; it is not a generated answer.
 
 ## Participants
 
@@ -43,8 +42,8 @@ validator judgment, and weight-based incentives instead of a single solver API.
 
 ## Safety scope
 
-Raw arbitrary SQL is not accepted. Protocol v2 admits one read-only SELECT and a
-strict structured `IndexSpec`; approved rewrites are parsed and allowlisted.
+Raw arbitrary SQL is not accepted. Protocol v2 keeps the read-only SELECT
+validator-owned and admits only a strict miner-supplied `IndexSpec`.
 Evaluation occurs outside the validator process with filesystem, network,
 memory, CPU, response-size, and query-time limits. Customer rows are not part of
 the current proof, and a privacy-preserving buyer adapter remains future work.
@@ -52,7 +51,7 @@ the current proof, and a privacy-preserving buyer adapter remains future work.
 ## Evidence and roadmap
 
 The committed mechanism simulation and localnet v2 evidence establish the
-SQLite mechanism. Next gates are a dedicated testnet wallet and faucet TAO,
+SQLite mechanism. Next gates are a dedicated testnet wallet and test-TAO allocation,
 testnet registration and signed multi-miner flow, clean public deployment, and
 independent validation. Subsequent tracks target DuckDB/PostgreSQL, validator
 diversity, workload adapters, and a distributed benchmark fleet.

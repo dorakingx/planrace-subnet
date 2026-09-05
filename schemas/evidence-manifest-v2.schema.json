@@ -1,0 +1,631 @@
+{
+  "$defs": {
+    "AuthenticationEvidence": {
+      "additionalProperties": false,
+      "properties": {
+        "authenticated_requests": {
+          "minimum": 0,
+          "title": "Authenticated Requests",
+          "type": "integer"
+        },
+        "request_protocol": {
+          "maxLength": 4096,
+          "minLength": 1,
+          "title": "Request Protocol",
+          "type": "string"
+        },
+        "response_protocol": {
+          "anyOf": [
+            {
+              "maxLength": 4096,
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Response Protocol"
+        },
+        "signed_responses": {
+          "minimum": 0,
+          "title": "Signed Responses",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "authenticated_requests",
+        "signed_responses",
+        "request_protocol",
+        "response_protocol"
+      ],
+      "title": "AuthenticationEvidence",
+      "type": "object"
+    },
+    "ExtrinsicEvidence": {
+      "additionalProperties": false,
+      "properties": {
+        "block_hash": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Block Hash",
+          "type": "string"
+        },
+        "extrinsic_id": {
+          "maxLength": 4096,
+          "minLength": 1,
+          "title": "Extrinsic Id",
+          "type": "string"
+        },
+        "fee_tao": {
+          "minimum": 0.0,
+          "title": "Fee Tao",
+          "type": "number"
+        },
+        "message": {
+          "maxLength": 4096,
+          "minLength": 1,
+          "title": "Message",
+          "type": "string"
+        },
+        "success": {
+          "title": "Success",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "extrinsic_id",
+        "block_hash",
+        "success",
+        "message",
+        "fee_tao"
+      ],
+      "title": "ExtrinsicEvidence",
+      "type": "object"
+    },
+    "ReadbackEvidence": {
+      "additionalProperties": false,
+      "properties": {
+        "last_update": {
+          "minimum": 0,
+          "title": "Last Update",
+          "type": "integer"
+        },
+        "raw_weights": {
+          "items": {
+            "maxItems": 2,
+            "minItems": 2,
+            "prefixItems": [
+              {
+                "minimum": 0,
+                "type": "integer"
+              },
+              {
+                "minimum": 0,
+                "type": "integer"
+              }
+            ],
+            "type": "array"
+          },
+          "title": "Raw Weights",
+          "type": "array"
+        },
+        "validator_uid": {
+          "minimum": 0,
+          "title": "Validator Uid",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "validator_uid",
+        "last_update",
+        "raw_weights"
+      ],
+      "title": "ReadbackEvidence",
+      "type": "object"
+    },
+    "ScoreEvidence": {
+      "additionalProperties": false,
+      "properties": {
+        "accepted": {
+          "title": "Accepted",
+          "type": "boolean"
+        },
+        "baseline_relative_speedup": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Baseline Relative Speedup"
+        },
+        "correct": {
+          "title": "Correct",
+          "type": "boolean"
+        },
+        "failure_code": {
+          "anyOf": [
+            {
+              "maxLength": 4096,
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Failure Code"
+        },
+        "median_warm_ms": {
+          "anyOf": [
+            {
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Median Warm Ms"
+        },
+        "miner_hotkey": {
+          "maxLength": 64,
+          "minLength": 40,
+          "title": "Miner Hotkey",
+          "type": "string"
+        },
+        "plan_cost": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Plan Cost"
+        },
+        "profile": {
+          "maxLength": 4096,
+          "minLength": 1,
+          "title": "Profile",
+          "type": "string"
+        },
+        "reference_hash": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Reference Hash"
+        },
+        "result_hash": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Result Hash"
+        },
+        "schedule_digest": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Schedule Digest"
+        },
+        "score": {
+          "minimum": 0.0,
+          "title": "Score",
+          "type": "number"
+        },
+        "setup_ms": {
+          "anyOf": [
+            {
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Setup Ms"
+        },
+        "strategy_digest": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Strategy Digest"
+        },
+        "uid": {
+          "minimum": 0,
+          "title": "Uid",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "uid",
+        "miner_hotkey",
+        "profile",
+        "accepted",
+        "correct",
+        "score",
+        "failure_code",
+        "result_hash",
+        "reference_hash",
+        "median_warm_ms",
+        "setup_ms",
+        "plan_cost",
+        "baseline_relative_speedup"
+      ],
+      "title": "ScoreEvidence",
+      "type": "object"
+    },
+    "SourceArtifactEvidence": {
+      "additionalProperties": false,
+      "properties": {
+        "path": {
+          "maxLength": 4096,
+          "minLength": 1,
+          "title": "Path",
+          "type": "string"
+        },
+        "sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Sha256",
+          "type": "string"
+        }
+      },
+      "required": [
+        "path",
+        "sha256"
+      ],
+      "title": "SourceArtifactEvidence",
+      "type": "object"
+    },
+    "TaskRevealEvidence": {
+      "additionalProperties": false,
+      "properties": {
+        "reveal_digest": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Reveal Digest",
+          "type": "string"
+        },
+        "salt": {
+          "anyOf": [
+            {
+              "maxLength": 4096,
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Salt"
+        },
+        "seed": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Seed"
+        },
+        "task_id": {
+          "maxLength": 4096,
+          "minLength": 1,
+          "title": "Task Id",
+          "type": "string"
+        },
+        "verified": {
+          "title": "Verified",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "task_id",
+        "seed",
+        "salt",
+        "reveal_digest",
+        "verified"
+      ],
+      "title": "TaskRevealEvidence",
+      "type": "object"
+    },
+    "TimestampEvidence": {
+      "additionalProperties": false,
+      "properties": {
+        "observed_at": {
+          "maxLength": 4096,
+          "minLength": 1,
+          "title": "Observed At",
+          "type": "string"
+        },
+        "signed_at": {
+          "maxLength": 4096,
+          "minLength": 1,
+          "title": "Signed At",
+          "type": "string"
+        }
+      },
+      "required": [
+        "observed_at",
+        "signed_at"
+      ],
+      "title": "TimestampEvidence",
+      "type": "object"
+    },
+    "ValidatorSignature": {
+      "additionalProperties": false,
+      "properties": {
+        "algorithm": {
+          "const": "sr25519",
+          "title": "Algorithm",
+          "type": "string"
+        },
+        "signature_hex": {
+          "pattern": "^[0-9a-f]{128}$",
+          "title": "Signature Hex",
+          "type": "string"
+        },
+        "signed_payload_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Signed Payload Sha256",
+          "type": "string"
+        },
+        "signer_hotkey": {
+          "maxLength": 64,
+          "minLength": 40,
+          "title": "Signer Hotkey",
+          "type": "string"
+        }
+      },
+      "required": [
+        "algorithm",
+        "signer_hotkey",
+        "signed_payload_sha256",
+        "signature_hex"
+      ],
+      "title": "ValidatorSignature",
+      "type": "object"
+    },
+    "WeightPlanEvidence": {
+      "additionalProperties": false,
+      "properties": {
+        "uids": {
+          "items": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "title": "Uids",
+          "type": "array"
+        },
+        "weights": {
+          "items": {
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "type": "number"
+          },
+          "title": "Weights",
+          "type": "array"
+        }
+      },
+      "required": [
+        "uids",
+        "weights"
+      ],
+      "title": "WeightPlanEvidence",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "Portable evidence for one completed validator run.\n\nThe signature covers every field except ``validator_signature`` using\n:data:`EVIDENCE_SIGNATURE_DOMAIN` followed by canonical UTF-8 JSON.",
+  "properties": {
+    "authentication": {
+      "$ref": "#/$defs/AuthenticationEvidence"
+    },
+    "container_digests": {
+      "additionalProperties": {
+        "pattern": "^[0-9a-f]{64}$",
+        "type": "string"
+      },
+      "propertyNames": {
+        "maxLength": 4096,
+        "minLength": 1
+      },
+      "title": "Container Digests",
+      "type": "object"
+    },
+    "environment": {
+      "enum": [
+        "localnet",
+        "testnet"
+      ],
+      "title": "Environment",
+      "type": "string"
+    },
+    "epoch": {
+      "minimum": 0,
+      "title": "Epoch",
+      "type": "integer"
+    },
+    "extrinsics": {
+      "items": {
+        "$ref": "#/$defs/ExtrinsicEvidence"
+      },
+      "title": "Extrinsics",
+      "type": "array"
+    },
+    "git_commit": {
+      "pattern": "^[0-9a-f]{40}$",
+      "title": "Git Commit",
+      "type": "string"
+    },
+    "known_limitations": {
+      "items": {
+        "maxLength": 4096,
+        "minLength": 1,
+        "type": "string"
+      },
+      "title": "Known Limitations",
+      "type": "array"
+    },
+    "miner_hotkeys": {
+      "items": {
+        "maxLength": 64,
+        "minLength": 40,
+        "type": "string"
+      },
+      "title": "Miner Hotkeys",
+      "type": "array"
+    },
+    "netuid": {
+      "minimum": 1,
+      "title": "Netuid",
+      "type": "integer"
+    },
+    "network": {
+      "maxLength": 4096,
+      "minLength": 1,
+      "title": "Network",
+      "type": "string"
+    },
+    "protocol_version": {
+      "maxLength": 4096,
+      "minLength": 1,
+      "title": "Protocol Version",
+      "type": "string"
+    },
+    "readback": {
+      "$ref": "#/$defs/ReadbackEvidence"
+    },
+    "request_digests": {
+      "items": {
+        "pattern": "^[0-9a-f]{64}$",
+        "type": "string"
+      },
+      "title": "Request Digests",
+      "type": "array"
+    },
+    "response_digests": {
+      "items": {
+        "pattern": "^[0-9a-f]{64}$",
+        "type": "string"
+      },
+      "title": "Response Digests",
+      "type": "array"
+    },
+    "run_id": {
+      "maxLength": 4096,
+      "minLength": 1,
+      "title": "Run Id",
+      "type": "string"
+    },
+    "schema_version": {
+      "default": "planrace/evidence/2",
+      "enum": [
+        "planrace/evidence/1",
+        "planrace/evidence/2"
+      ],
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "scores": {
+      "items": {
+        "$ref": "#/$defs/ScoreEvidence"
+      },
+      "title": "Scores",
+      "type": "array"
+    },
+    "source_artifacts": {
+      "items": {
+        "$ref": "#/$defs/SourceArtifactEvidence"
+      },
+      "title": "Source Artifacts",
+      "type": "array"
+    },
+    "task_commitment": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Task Commitment",
+      "type": "string"
+    },
+    "task_reveal": {
+      "$ref": "#/$defs/TaskRevealEvidence"
+    },
+    "timestamps": {
+      "$ref": "#/$defs/TimestampEvidence"
+    },
+    "validator_hotkeys": {
+      "items": {
+        "maxLength": 64,
+        "minLength": 40,
+        "type": "string"
+      },
+      "title": "Validator Hotkeys",
+      "type": "array"
+    },
+    "validator_signature": {
+      "$ref": "#/$defs/ValidatorSignature"
+    },
+    "weight_plan": {
+      "$ref": "#/$defs/WeightPlanEvidence"
+    }
+  },
+  "required": [
+    "environment",
+    "network",
+    "netuid",
+    "run_id",
+    "epoch",
+    "git_commit",
+    "container_digests",
+    "protocol_version",
+    "validator_hotkeys",
+    "miner_hotkeys",
+    "task_commitment",
+    "task_reveal",
+    "request_digests",
+    "response_digests",
+    "authentication",
+    "scores",
+    "weight_plan",
+    "extrinsics",
+    "readback",
+    "timestamps",
+    "known_limitations",
+    "source_artifacts",
+    "validator_signature"
+  ],
+  "title": "EvidenceManifest",
+  "type": "object"
+}

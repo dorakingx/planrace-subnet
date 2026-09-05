@@ -10,10 +10,20 @@ from pathlib import Path
 from typing import Annotated, Any, Final, Literal
 
 import bittensor as bt
-from pydantic import BaseModel, ConfigDict, Field, StringConstraints, field_validator
+from pydantic import (
+    BaseModel,
+    ConfigDict,
+    Field,
+    StringConstraints,
+    field_validator,
+    model_validator,
+)
 
-EVIDENCE_SCHEMA_VERSION: Final = "planrace/evidence/1"
-EVIDENCE_SIGNATURE_DOMAIN: Final = b"planrace-evidence-manifest/v1\x00"
+EVIDENCE_SCHEMA_VERSION: Final = "planrace/evidence/2"
+EVIDENCE_SIGNATURE_DOMAINS: Final = {
+    "planrace/evidence/1": b"planrace-evidence-manifest/v1\x00",
+    "planrace/evidence/2": b"planrace-evidence-manifest/v2\x00",
+}
 
 DigestHex = Annotated[str, StringConstraints(pattern=r"^[0-9a-f]{64}$")]
 GitCommit = Annotated[str, StringConstraints(pattern=r"^[0-9a-f]{40}$")]
@@ -57,6 +67,8 @@ class ScoreEvidence(EvidenceModel):
     failure_code: NonEmptyText | None
     result_hash: DigestHex | None
     reference_hash: DigestHex | None
+    strategy_digest: DigestHex | None = None
+    schedule_digest: DigestHex | None = None
     median_warm_ms: Annotated[float, Field(ge=0.0)] | None
     setup_ms: Annotated[float, Field(ge=0.0)] | None
     plan_cost: Annotated[int, Field(ge=0)] | None
@@ -113,7 +125,7 @@ class EvidenceManifest(EvidenceModel):
     :data:`EVIDENCE_SIGNATURE_DOMAIN` followed by canonical UTF-8 JSON.
     """
 
-    schema_version: Literal["planrace/evidence/1"] = EVIDENCE_SCHEMA_VERSION
+    schema_version: Literal["planrace/evidence/1", "planrace/evidence/2"] = EVIDENCE_SCHEMA_VERSION
     environment: Literal["localnet", "testnet"]
     network: NonEmptyText
     netuid: Annotated[int, Field(ge=1)]
@@ -146,6 +158,20 @@ class EvidenceManifest(EvidenceModel):
         if len(value) != len(set(value)):
             raise ValueError("identities must be unique")
         return value
+
+    @model_validator(mode="after")
+    def score_hashes_match_schema_semantics(self) -> EvidenceManifest:
+        for score in self.scores:
+            if self.schema_version == "planrace/evidence/2":
+                if self.protocol_version != "planrace/2":
+                    raise ValueError("evidence/2 is reserved for protocol v2")
+                if score.result_hash is not None or score.reference_hash is not None:
+                    raise ValueError("evidence/2 cannot overload SQL result hash fields")
+                if score.strategy_digest is None or score.schedule_digest is None:
+                    raise ValueError("evidence/2 scores require strategy and schedule digests")
+            elif score.strategy_digest is not None or score.schedule_digest is not None:
+                raise ValueError("evidence/1 scores cannot contain v2 strategy digest fields")
+        return self
 
 
 def canonical_manifest_bytes(data: EvidenceManifest | Mapping[str, Any]) -> bytes:
@@ -186,7 +212,13 @@ def _normalize_json_numbers(value: Any) -> Any:
 def signature_payload(data: EvidenceManifest | Mapping[str, Any]) -> bytes:
     """Return the domain-separated bytes signed by a validator."""
 
-    return EVIDENCE_SIGNATURE_DOMAIN + canonical_manifest_bytes(data)
+    schema_version = (
+        data.schema_version if isinstance(data, EvidenceManifest) else data.get("schema_version")
+    )
+    domain = EVIDENCE_SIGNATURE_DOMAINS.get(str(schema_version))
+    if domain is None:
+        raise EvidenceVerificationError("unsupported evidence signature domain")
+    return domain + canonical_manifest_bytes(data)
 
 
 def sign_manifest(data: Mapping[str, Any], keypair: bt.Keypair) -> EvidenceManifest:
@@ -218,13 +250,15 @@ def sign_manifest(data: Mapping[str, Any], keypair: bt.Keypair) -> EvidenceManif
     return manifest
 
 
-def verify_manifest(manifest: EvidenceManifest) -> str:
+def verify_manifest(manifest: EvidenceManifest, *, expected_signer: str | None = None) -> str:
     """Verify the signer binding, payload digest, and sr25519 signature.
 
     Returns the signed payload's SHA-256 digest when verification succeeds.
     """
 
     signature = manifest.validator_signature
+    if expected_signer is not None and signature.signer_hotkey != expected_signer:
+        raise EvidenceVerificationError("manifest signer does not match expected signer")
     if signature.signer_hotkey not in manifest.validator_hotkeys:
         raise EvidenceVerificationError("manifest signer is not a declared validator hotkey")
     payload = signature_payload(manifest)
@@ -254,9 +288,11 @@ def load_manifest(path: Path) -> EvidenceManifest:
         raise EvidenceVerificationError(f"manifest schema validation failed: {error}") from error
 
 
-def verify_manifest_file(path: Path) -> tuple[EvidenceManifest, str]:
+def verify_manifest_file(
+    path: Path, *, expected_signer: str | None = None
+) -> tuple[EvidenceManifest, str]:
     manifest = load_manifest(path)
-    return manifest, verify_manifest(manifest)
+    return manifest, verify_manifest(manifest, expected_signer=expected_signer)
 
 
 def summarize_manifest(manifest: EvidenceManifest, digest: str | None = None) -> dict[str, Any]:

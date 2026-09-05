@@ -26,15 +26,24 @@ def _require_finite_non_negative(name: str, value: float) -> None:
         raise ValueError(f"{name} must be finite and non-negative")
 
 
-def _winsorized_mean(values: Sequence[float], fraction: float) -> float:
-    """Return a deterministic winsorized mean without third-party numerics."""
+def _winsorized_mean(values: Sequence[float], fraction: float, *, minimum_width: int = 0) -> float:
+    """Return a deterministic finite-sample winsorized mean.
+
+    Benchmark callers set ``minimum_width=1`` so a positive policy fraction
+    protects at least one sample whenever the cohort is large enough to leave
+    a center observation. Aggregation callers retain the literal fractional
+    width so one unavailable epoch is not hidden in a small family bucket.
+    """
 
     if not values:
         raise ValueError("at least one value is required")
     if not 0.0 <= fraction < 0.5:
         raise ValueError("winsor fraction must be in [0, 0.5)")
+    if minimum_width < 0:
+        raise ValueError("minimum_width must be non-negative")
     ordered = sorted(values)
-    width = int(len(ordered) * fraction)
+    requested_width = max(int(len(ordered) * fraction), minimum_width if fraction else 0)
+    width = min(requested_width, (len(ordered) - 1) // 2)
     if width == 0:
         return statistics.fmean(ordered)
     lower = ordered[width]
@@ -295,7 +304,7 @@ def score_benchmark(
                 + (horizon - 1) * trial.candidate_warm_ms
             ) * storage_multiplier
             log_speedups.append(math.log2(baseline_total / candidate_total))
-        center = _winsorized_mean(log_speedups, policy.winsor_fraction)
+        center = _winsorized_mean(log_speedups, policy.winsor_fraction, minimum_width=1)
         lower_bound = center - policy.confidence_z * _robust_standard_error(log_speedups)
         relative_speedup = 2.0**center
         lower_confidence_speedup = 2.0**lower_bound
@@ -372,6 +381,7 @@ class EpochObservation:
     correct: bool
     compliant: bool
     strategy_digest: str
+    behavior_digest: str
     duplicate_group_size: int = 1
 
     def __post_init__(self) -> None:
@@ -383,6 +393,7 @@ class EpochObservation:
                 self.task_commitment,
                 self.evidence_digest,
                 self.strategy_digest,
+                self.behavior_digest,
             )
         ):
             raise ValueError("observation identity, task, evidence, and strategy are required")
@@ -418,7 +429,7 @@ class AggregationPolicy:
     minimum_correctness: float = 0.95
     winsor_fraction: float = 0.10
     confidence_z: float = 1.0
-    maximum_weight: float = 0.20
+    maximum_weight: float = 0.25
     minimum_distinct_strategies: int = 5
 
     def __post_init__(self) -> None:
@@ -479,6 +490,7 @@ class MinerAggregate:
     task_count: int
     family_scores: tuple[tuple[str, float], ...]
     strategy_digest: str
+    behavior_digest: str
     failure_code: str | None
 
 
@@ -606,8 +618,10 @@ def _aggregate_scheduled_miner(
         scheduled_observation = by_task.get(scheduled.task_id)
         gated_reward = 0.0
         strategy_digest = "missing"
+        behavior_digest = "missing"
         if scheduled_observation is not None:
             strategy_digest = scheduled_observation.strategy_digest
+            behavior_digest = scheduled_observation.behavior_digest
             if (
                 scheduled_observation.available
                 and scheduled_observation.compliant
@@ -620,6 +634,7 @@ def _aggregate_scheduled_miner(
                 "epoch": scheduled.epoch,
                 "task_commitment": scheduled.task_commitment,
                 "strategy_digest": strategy_digest,
+                "behavior_digest": behavior_digest,
             }
         )
 
@@ -645,6 +660,7 @@ def _aggregate_scheduled_miner(
     uncertainty = policy.confidence_z * _robust_standard_error(score_values)
     reward = max(0.0, center - uncertainty) * availability * compliance
     strategy_digest = domain_separated_digest("planrace/2:strategy-portfolio", {"history": history})
+    behavior_digest = domain_separated_digest("planrace/2:behavior-portfolio", {"history": history})
 
     failure_code: str | None = None
     if task_count < policy.minimum_tasks:
@@ -672,6 +688,7 @@ def _aggregate_scheduled_miner(
         task_count=task_count,
         family_scores=family_scores,
         strategy_digest=strategy_digest,
+        behavior_digest=behavior_digest,
         failure_code=failure_code,
     )
 
@@ -767,7 +784,7 @@ def allocate_weights(
 
     by_digest: dict[str, list[MinerAggregate]] = defaultdict(list)
     for aggregate in eligible:
-        by_digest[aggregate.strategy_digest].append(aggregate)
+        by_digest[aggregate.behavior_digest].append(aggregate)
     duplicate_groups = tuple(
         (digest, tuple(sorted(member.miner_id for member in members)))
         for digest, members in sorted(by_digest.items())
@@ -783,14 +800,20 @@ def allocate_weights(
             empty_metrics,
         )
 
-    # Task-level evaluate-once accounting has already split every duplicated
-    # executable strategy in ``aggregate_network``.  Recombine identical full
-    # portfolios here before applying the concentration cap, so cloning an
-    # identity neither creates reward nor bypasses the strategy-level cap.
-    raw_groups = {
-        digest: math.fsum(member.reward for member in members)
-        for digest, members in by_digest.items()
-    }
+    # Task-level evaluate-once accounting has already split exact executable
+    # duplicates in ``aggregate_network``. Recombine observed-equivalent full
+    # portfolios here before applying the concentration cap, so near-copy ASTs
+    # neither satisfy diversity nor bypass the strategy-level cap.
+    raw_groups: dict[str, float] = {}
+    for behavior_digest, members in by_digest.items():
+        exact_strategy_mass: dict[str, float] = defaultdict(float)
+        for member in members:
+            exact_strategy_mass[member.strategy_digest] += member.reward
+        # Exact identity copies were split during task accounting, so summing
+        # reconstructs one exact strategy's mass. Observed-equivalent but
+        # byte-distinct variants compete by their best mass rather than adding
+        # mass, preventing a coalition from minting reward via near copies.
+        raw_groups[behavior_digest] = max(exact_strategy_mass.values())
     try:
         normalized_groups = _capped_normalize(raw_groups, policy.maximum_weight)
     except ValueError:
@@ -804,9 +827,9 @@ def allocate_weights(
         )
     normalized: dict[str, float] = {}
     for digest, members in by_digest.items():
-        group_reward = raw_groups[digest]
+        member_reward = math.fsum(member.reward for member in members)
         for member in members:
-            normalized[member.miner_id] = normalized_groups[digest] * member.reward / group_reward
+            normalized[member.miner_id] = normalized_groups[digest] * member.reward / member_reward
     weights = tuple(sorted(normalized.items()))
     strategy_weights = tuple(sorted(normalized_groups.items()))
     return AllocationResult(

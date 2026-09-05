@@ -9,9 +9,11 @@ import json
 import math
 import platform
 import random
+import re
 import sqlite3
 import subprocess
 import sys
+import tempfile
 from collections import Counter, defaultdict
 from dataclasses import asdict, dataclass
 from pathlib import Path
@@ -51,10 +53,15 @@ class MinerProfile:
     timeout_probability: float = 0.0
     timing_noise: float = 0.04
     family_multipliers: tuple[float, float, float, float] = (1.0, 1.0, 1.0, 1.0)
+    behavior_key: str | None = None
 
     @property
     def strategy_digest(self) -> str:
         return hashlib.sha256(self.strategy_key.encode()).hexdigest()
+
+    @property
+    def behavior_digest(self) -> str:
+        return hashlib.sha256((self.behavior_key or self.strategy_key).encode()).hexdigest()
 
 
 MINER_PROFILES: tuple[MinerProfile, ...] = (
@@ -79,9 +86,9 @@ MINER_PROFILES: tuple[MinerProfile, ...] = (
         family_multipliers=(1.15, 0.95, 1.15, 0.85),
     ),
     MinerProfile(
-        "aggregate-rewrite",
+        "aggregate-advisor",
         "honest",
-        "aggregate-rewrite-v2",
+        "aggregate-advisor-v2",
         2.00,
         2.30,
         0.05,
@@ -121,6 +128,26 @@ MINER_PROFILES: tuple[MinerProfile, ...] = (
     ),
     MinerProfile("sybil-copy-a", "sybil", "shared-copy-v2", 1.65, 2.00, 0.35, 0.12),
     MinerProfile("sybil-copy-b", "sybil", "shared-copy-v2", 1.65, 2.00, 0.35, 0.12),
+    MinerProfile(
+        "sybil-near-copy-a",
+        "sybil",
+        "near-copy-asc-v2",
+        1.65,
+        2.00,
+        0.35,
+        0.12,
+        behavior_key="near-copy-equivalent-plan-v2",
+    ),
+    MinerProfile(
+        "sybil-near-copy-b",
+        "sybil",
+        "near-copy-desc-v2",
+        1.65,
+        2.00,
+        0.35,
+        0.12,
+        behavior_key="near-copy-equivalent-plan-v2",
+    ),
 )
 
 
@@ -130,7 +157,7 @@ class ValidatorScenario:
     hardware_scale: float = 1.0
     order_bias: float = 0.0
     outlier_probability: float = 0.0
-    curriculum_multipliers: tuple[float, float, float, float] = (1.0, 1.0, 1.0, 1.0)
+    candidate_bias_multipliers: tuple[float, float, float, float] = (1.0, 1.0, 1.0, 1.0)
     false_accept_claim: bool = False
     all_fail: bool = False
 
@@ -142,8 +169,8 @@ VALIDATOR_SCENARIOS: tuple[ValidatorScenario, ...] = (
     ValidatorScenario("order-bias", order_bias=0.16),
     ValidatorScenario("timing-outliers", outlier_probability=0.08),
     ValidatorScenario(
-        "curriculum-skew",
-        curriculum_multipliers=(0.60, 1.55, 0.75, 1.45),
+        "candidate-measurement-bias",
+        candidate_bias_multipliers=(0.60, 1.55, 0.75, 1.45),
     ),
     ValidatorScenario("false-accept-claim", false_accept_claim=True),
     ValidatorScenario("all-fail", all_fail=True),
@@ -224,12 +251,16 @@ def _make_trials(
     worker_id: str,
     trial_count: int,
 ) -> tuple[InterleavedTrial, ...]:
-    workload_scale = scenario.curriculum_multipliers[family_index]
-    base_cold = 80.0 * scenario.hardware_scale * workload_scale
-    base_warm = 24.0 * scenario.hardware_scale * workload_scale
+    base_cold = 80.0 * scenario.hardware_scale
+    base_warm = 24.0 * scenario.hardware_scale
     family_multiplier = profile.family_multipliers[family_index]
-    candidate_cold = base_cold / max(0.05, profile.cold_speedup * family_multiplier)
-    candidate_warm = base_warm / max(0.05, profile.warm_speedup * family_multiplier)
+    candidate_bias = scenario.candidate_bias_multipliers[family_index]
+    candidate_cold = (
+        base_cold / max(0.05, profile.cold_speedup * family_multiplier) * candidate_bias
+    )
+    candidate_warm = (
+        base_warm / max(0.05, profile.warm_speedup * family_multiplier) * candidate_bias
+    )
     start_with_baseline = rng.random() < 0.5
     trials = []
     for trial_index in range(trial_count):
@@ -299,6 +330,7 @@ def _profile_evaluation_signature(profile: MinerProfile) -> tuple[object, ...]:
         profile.timeout_probability,
         profile.timing_noise,
         profile.family_multipliers,
+        profile.behavior_key,
     )
 
 
@@ -361,12 +393,7 @@ def _evaluate_strategy_epoch(
     false_acceptance = False
     trial_pairs = 0
     if available:
-        setup_ms = (
-            80.0
-            * scenario.hardware_scale
-            * scenario.curriculum_multipliers[family_index]
-            * profile.setup_fraction
-        )
+        setup_ms = 80.0 * scenario.hardware_scale * profile.setup_fraction
         trials = _make_trials(
             rng=rng,
             profile=profile,
@@ -422,7 +449,7 @@ def _duplicate_strategy_gains(
         return ()
     profile_groups: dict[str, list[str]] = defaultdict(list)
     for profile in MINER_PROFILES:
-        profile_groups[profile.strategy_digest].append(profile.profile_id)
+        profile_groups[profile.behavior_digest].append(profile.profile_id)
     duplicated = {
         digest: sorted(members) for digest, members in profile_groups.items() if len(members) > 1
     }
@@ -446,11 +473,11 @@ def _duplicate_strategy_gains(
         control = allocate_weights(control_aggregates, policy=policy)
         if not control.planned:
             continue
-        portfolio_digest = aggregate_by_id[representative].strategy_digest
-        gains.append(
-            observed_strategy_weights.get(portfolio_digest, 0.0)
-            - dict(control.strategy_weights).get(portfolio_digest, 0.0)
-        )
+        portfolio_digest = aggregate_by_id[representative].behavior_digest
+        gain = observed_strategy_weights.get(portfolio_digest, 0.0) - dict(
+            control.strategy_weights
+        ).get(portfolio_digest, 0.0)
+        gains.append(0.0 if gain <= 1e-12 else gain)
     return tuple(gains)
 
 
@@ -469,7 +496,7 @@ def run_mechanism_simulation(
         required_families=WORKLOAD_FAMILIES,
         task_schedule=task_schedule,
         minimum_tasks=max(12, min(config.epochs, 24)),
-        maximum_weight=0.20,
+        maximum_weight=0.25,
         minimum_distinct_strategies=5,
     )
     expected_scores = {
@@ -560,6 +587,7 @@ def run_mechanism_simulation(
                             evaluation,
                         ),
                         strategy_digest=profile.strategy_digest,
+                        behavior_digest=profile.behavior_digest,
                     )
                 )
 
@@ -976,6 +1004,19 @@ def verify_evidence_bundle(
         raise ValueError("unsupported mechanism evidence schema")
     if require_clean_source and manifest.get("source_tree_dirty") is not False:
         raise ValueError("mechanism evidence was generated from a dirty source tree")
+    if require_clean_source and _git_dirty(root):
+        raise ValueError("current mechanism source tree is dirty")
+    source_commit = str(manifest.get("source_git_base_commit", ""))
+    if re.fullmatch(r"[0-9a-f]{40}", source_commit) is None:
+        raise ValueError("invalid mechanism source commit")
+    commit_check = subprocess.run(  # noqa: S603 - fixed git binary and validated full SHA
+        ["/usr/bin/git", "cat-file", "-e", f"{source_commit}^{{commit}}"],
+        cwd=root,
+        capture_output=True,
+        text=True,
+    )
+    if commit_check.returncode != 0:
+        raise ValueError("mechanism source commit is not present in repository history")
     seed = int(manifest["root_seed"])
     expected_seed = hashlib.sha256(f"planrace-mechanism-v2:{seed}".encode()).hexdigest()
     if manifest.get("seed_commitment") != expected_seed:
@@ -988,10 +1029,13 @@ def verify_evidence_bundle(
     config_digest = hashlib.sha256(_canonical_json(simulation["config"]).encode()).hexdigest()
     if manifest.get("config_sha256") != config_digest:
         raise ValueError("mechanism configuration digest mismatch")
-
     for filename, expected in manifest["artifacts"].items():
-        path = output_dir / filename
-        if not path.is_file() or _sha256(path) != expected:
+        path = (output_dir / filename).resolve()
+        if (
+            not path.is_relative_to(output_dir.resolve())
+            or not path.is_file()
+            or _sha256(path) != expected
+        ):
             raise ValueError(f"mechanism artifact digest mismatch: {filename}")
     for filename, expected in manifest["source_files"].items():
         path = root / filename
@@ -1000,8 +1044,12 @@ def verify_evidence_bundle(
         if _sha256(path) != expected:
             raise ValueError(f"mechanism source digest mismatch: {filename}")
     lock = manifest["dependency_lock"]
-    lock_path = root / lock["path"]
-    if not lock_path.is_file() or _sha256(lock_path) != lock["sha256"]:
+    lock_path = (root / lock["path"]).resolve()
+    if (
+        not lock_path.is_relative_to(root.resolve())
+        or not lock_path.is_file()
+        or _sha256(lock_path) != lock["sha256"]
+    ):
         raise ValueError("mechanism dependency lock digest mismatch")
     if (output_dir / "MECHANISM_SIMULATION.json").read_bytes() != (
         output_dir / "simulation.json"
@@ -1011,4 +1059,14 @@ def verify_evidence_bundle(
         output_dir / "replications.csv"
     ).read_bytes():
         raise ValueError("mechanism CSV publication alias mismatch")
+    config = SimulationConfig(**simulation["config"])
+    regenerated = run_mechanism_simulation(config)
+    with tempfile.TemporaryDirectory(prefix="planrace-mechanism-verify-") as directory:
+        regenerated_root = Path(directory)
+        regenerated_manifest = write_evidence_bundle(regenerated, regenerated_root)
+        for filename in regenerated_manifest["artifacts"]:
+            if (regenerated_root / filename).read_bytes() != (output_dir / filename).read_bytes():
+                raise ValueError(
+                    f"mechanism artifact does not reproduce from seed and config: {filename}"
+                )
     return manifest

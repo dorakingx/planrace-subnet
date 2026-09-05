@@ -62,7 +62,7 @@ is not a claim that digest grouping solves general Sybil identity or collusion.
 
 ## Profiles and attacks
 
-Honest profiles span covering/partial indexes, rewrites, cold and warm
+Honest profiles span covering/partial/aggregate index advisors, first-execution and warm
 specialists, low-storage and high-setup candidates, noisy search, and a
 timeout-prone candidate. Gaming profiles return constant, fast-wrong,
 fixture-memorized, or malformed artifacts. The false-accept scenario sets
@@ -83,8 +83,8 @@ family quotas remain unchanged.
 ## Reproduce
 
 ```bash
-uv run python scripts/run_mechanism_v2.py
-uv run python scripts/verify_mechanism_v2.py --require-clean-source
+.bootstrap/bin/uv run python scripts/run_mechanism_v2.py
+.bootstrap/bin/uv run python scripts/verify_mechanism_v2.py --require-clean-source
 ```
 
 The publication command rejects fewer than 500 replications. It rewrites:
