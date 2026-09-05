@@ -26,8 +26,8 @@ timings, or miner-selected index names.
    both hotkeys, request digest, request ID, nonce, task ID, artifact digest,
    and validity interval.
 6. The lifecycle seals submissions at the deadline before exposing
-   `TaskRevealV2`. Regenerated fixture descriptors and the Merkle root must
-   match the original commitment.
+   `TaskRevealV2`. Regenerated logical fixture digests, parameter digests, row
+   counts, identities, and the Merkle root must match the original commitment.
 7. A disposable worker validates the fixture, task, policy, engine, artifact,
    exact result, and relative performance. Only worker-authored evidence can
    reach scoring.
@@ -69,6 +69,16 @@ NULLs, integers, text, blobs, and bounded floats have canonical encodings.
 Result row, cell, and byte limits apply while streaming. A mismatch, timeout,
 invalid baseline, mixed worker identity, or policy mismatch cannot earn reward.
 
+The signed Merkle root also binds the exact SQLite database-file digest used by
+the worker, and the worker checks that digest before evaluation. SQLite binary
+serialization can differ across SQLite builds even when every logical row is
+identical. Cross-platform auditors therefore regenerate and compare the
+canonical logical content digest, parameter digest, row count, and fixture ID;
+byte-for-byte database reproduction requires the original SQLite materializer
+build. The localnet run binds its file hashes but did not preserve that host
+build as a portable image; future testnet evidence should materialize fixtures
+inside a published digest-pinned image.
+
 ## Known limitation: future-block entropy
 
 The implemented task seed is independent OS-CSPRNG entropy with a post-deadline
@@ -83,4 +93,3 @@ claim of validator-grinding resistance is made today.
 `planrace/1` remains only for replaying historical localnet evidence. New tasks,
 responses, commitments, strategy digests, worker evidence, and scores use
 domain-separated `planrace/2:*` encodings. A v1 artifact is not a v2 artifact.
-

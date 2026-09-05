@@ -50,6 +50,8 @@ Public claim: **LOCALNET EVIDENCE / TESTNET PENDING**.
 
 - Dedicated Bittensor testnet wallet, funding, registration, miner/validator
   interaction, scoring, weight transaction, and metagraph readback.
+- Published digest-pinned testnet worker/materializer image; the localnet run
+  records only a local Docker content ID and host-specific SQLite file hashes.
 - Independently operated validators or independent hardware calibration.
 - PostgreSQL/DuckDB and private customer-data adapters.
 - HackQuest rename/checkpoint post, real-testnet demo/pitch videos, final

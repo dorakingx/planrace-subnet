@@ -7,6 +7,9 @@ import argparse
 import hashlib
 import json
 import math
+import re
+import shutil
+import subprocess
 from collections import Counter
 from pathlib import Path
 from typing import Any
@@ -58,6 +61,54 @@ def _require(condition: bool, message: str) -> None:
         raise RuntimeError(message)
 
 
+def _committed_generator_digest(commit: str) -> str:
+    """Hash the exact generator source named by the signed evidence."""
+
+    _require(bool(re.fullmatch(r"[0-9a-f]{40}", commit)), "invalid evidence source commit")
+    git = shutil.which("git")
+    if git is None:
+        raise RuntimeError("git executable is required for source verification")
+    try:
+        source = subprocess.run(  # noqa: S603 - commit is restricted to a full hex SHA
+            [git, "show", f"{commit}:planrace/benchmark_v2.py"],
+            check=True,
+            capture_output=True,
+        ).stdout
+    except (FileNotFoundError, subprocess.CalledProcessError) as error:
+        raise RuntimeError(f"cannot read generator source from commit {commit}") from error
+    version_match = re.search(rb'^GENERATOR_VERSION: Final = "([^"\r\n]+)"$', source, re.MULTILINE)
+    if version_match is None:
+        raise RuntimeError("generator version missing from committed source")
+    payload = b"planrace/2:benchmark-generator\x00" + version_match.group(1) + b"\x00" + source
+    return "sha256:" + hashlib.sha256(payload).hexdigest()
+
+
+def _audit_portable_fixture_regeneration(
+    claimed: tuple[Any, ...], regenerated: tuple[Any, ...], path: Path
+) -> None:
+    """Compare logical fixture identity without assuming identical SQLite bytes.
+
+    SQLite database files are checked byte-for-byte by the pinned evaluation
+    worker. Their serialization is not stable across SQLite builds, so an
+    independent host regenerates and compares the canonical logical digest,
+    parameter digest, row count, and identity instead. The signed Merkle root
+    and task commitment still bind each run's original database-file digest.
+    """
+
+    _require(len(claimed) == len(regenerated), f"regenerated fixture count mismatch: {path}")
+    portable_fields = ("fixture_id", "content_digest", "parameter_set_digest", "row_count")
+    for expected, actual in zip(claimed, regenerated, strict=True):
+        _require(
+            expected.database_file_digest is not None,
+            f"committed database-file digest missing: {path}",
+        )
+        for field in portable_fields:
+            _require(
+                getattr(expected, field) == getattr(actual, field),
+                f"regenerated fixture {field} mismatch: {path}",
+            )
+
+
 def audit_bundle(bundle: Path) -> dict[str, Any]:
     manifest_path = bundle / "manifest.json"
     manifest, original_digest = verify_manifest_file(manifest_path)
@@ -107,6 +158,7 @@ def audit_bundle(bundle: Path) -> dict[str, Any]:
     response_digests: list[str] = []
     validator_counts: Counter[int] = Counter()
     families: set[str] = set()
+    generator_digests: set[str] = set()
     accepted_responses = 0
     for expected_epoch, path in enumerate(epoch_paths):
         epoch = _load(path)
@@ -119,15 +171,16 @@ def audit_bundle(bundle: Path) -> dict[str, Any]:
             bytes.fromhex(reveal.secret_seed_hex),
             family_id=public.benchmark_family_id,
         )
-        regenerated_descriptors = tuple(item.descriptor for item in regenerated)
         _require(
-            audit_task_reveal(
-                public,
-                reveal,
-                regenerate=lambda _seed, expected=regenerated_descriptors: expected,
-            ),
+            audit_task_reveal(public, reveal),
             f"commitment/reveal failed: {path}",
         )
+        _audit_portable_fixture_regeneration(
+            reveal.hidden_fixtures,
+            tuple(item.descriptor for item in regenerated),
+            path,
+        )
+        generator_digests.add(public.generator_source_digest)
         _require(epoch["reveal_verified"] is True, f"reveal flag false: {path}")
         outcomes = epoch["outcomes"]
         _require(len(outcomes) == 10, f"outcome count mismatch: {path}")
@@ -199,6 +252,11 @@ def audit_bundle(bundle: Path) -> dict[str, Any]:
 
     _require(validator_counts == Counter({0: 10, 1: 10, 2: 10}), "validator rotation mismatch")
     _require(len(families) >= 4, "insufficient query-family coverage")
+    _require(len(generator_digests) == 1, "multiple generator source digests in run")
+    _require(
+        generator_digests == {_committed_generator_digest(summary["git_commit"])},
+        "evidence generator digest does not match its recorded source commit",
+    )
     _require(request_digests == list(manifest.request_digests), "manifest request list mismatch")
     _require(response_digests == list(manifest.response_digests), "manifest response list mismatch")
     _require(
@@ -322,7 +380,7 @@ def main() -> None:
                 "families": result["family_count"],
                 "extrinsic_id": result["extrinsic_id"],
                 "manifest_sha256": digest,
-                "all_epoch_files_signed": args.seal_source_artifacts,
+                "all_epoch_files_signed": True,
             },
             sort_keys=True,
         )

@@ -20,8 +20,9 @@ evidence over a precommitted hidden holdout and pinned engine.
    without access to holdout fixtures.
 3. **Close:** seal accepted submissions at the deadline; reject late or replayed
    responses.
-4. **Reveal and audit:** reveal after close so peers can regenerate fixtures and
-   verify the commitment.
+4. **Reveal and audit:** reveal after close so peers can regenerate the logical
+   fixtures, verify the commitment, and check the exact generator source at the
+   run's recorded Git commit.
 5. **Gate:** enforce admission, isolation, resource limits, and exact result
    equality. Any gate failure is zero.
 6. **Benchmark:** interleave candidate and reference measurements on the same
