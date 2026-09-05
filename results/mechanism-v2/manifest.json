@@ -1,11 +1,11 @@
 {
   "artifacts": {
-    "MECHANISM_SIMULATION.csv": "6fd5b7fbbdf6a1394900745f010ce7cddc42217bf30780a3d57bea79eeb3d4be",
-    "MECHANISM_SIMULATION.json": "8c31b86d65dcdc696386a9d2611ccf9f2270071405cf23d133fb9bde3f982209",
-    "profile-rewards.csv": "3d47ce6ee098f1b664745b9731ae7196d0ee355f85951f24b0e9bf04f9df2eed",
-    "replications.csv": "6fd5b7fbbdf6a1394900745f010ce7cddc42217bf30780a3d57bea79eeb3d4be",
-    "simulation.json": "8c31b86d65dcdc696386a9d2611ccf9f2270071405cf23d133fb9bde3f982209",
-    "summary.json": "6edee4f0102b410574d619a27de6733cdf8209cfaf3ede8d0a1f06c4e758454d"
+    "MECHANISM_SIMULATION.csv": "918635a1d7cdfe9358764ff31e68265b8e5b4e2a28121439a810196944092c68",
+    "MECHANISM_SIMULATION.json": "8533e931d03c5b79620e032a9cdd91216af225d7f010c563eab9e41033db09ee",
+    "profile-rewards.csv": "662cc3f32694c38f4b21d6f9cef0cab194b45bdfb349cc832aa8e70c0ce1ec72",
+    "replications.csv": "918635a1d7cdfe9358764ff31e68265b8e5b4e2a28121439a810196944092c68",
+    "simulation.json": "8533e931d03c5b79620e032a9cdd91216af225d7f010c563eab9e41033db09ee",
+    "summary.json": "ad69e29763503e96f73c8364ad4e970cdca69067cc349f63cb932be6b35bf51d"
   },
   "config_sha256": "5bcf51d30323072739665ba2c823ef348b0f0a81b0639e13b2fd6bae226901d3",
   "dependency_lock": {
@@ -24,10 +24,10 @@
   "schema_version": "planrace-mechanism-evidence/2",
   "seed_commitment": "d79f0f7af9d5ecf1a066a7ccdf87919809186d61fed121832f38e42e98652b78",
   "source_files": {
-    "planrace/mechanism_simulation.py": "ccb8925fa9e8a81a4c5f9a6074855ee5dc0205aff2b8d51a40a5e016b2391af9",
-    "planrace/scoring_v2.py": "cb0c609968fc6823acab083f96bd3fe5b98869d3716e27e3cabaae1ed9c06515",
+    "planrace/mechanism_simulation.py": "309d71ff94f3e67dd1ab3940e3b92f87c84674e179a3cdcb27ee1e5a2f03cd6b",
+    "planrace/scoring_v2.py": "2f4ff07ff9860f2407ccde2aa1f060a7127523a0f343b4fb63516a6c3af36ff7",
     "scripts/run_mechanism_v2.py": "e66a27e4de7c7909201439f1eaf8e6507173a56cdbadef57192ddb7b3ac8909b"
   },
-  "source_git_base_commit": "8fc3ec80272c13c1acd908ea9318586bc9796788",
+  "source_git_base_commit": "6008a1748cc0a3f4ee5fff2863254e7b025cbada",
   "source_tree_dirty": false
 }
