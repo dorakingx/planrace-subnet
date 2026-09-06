@@ -436,23 +436,39 @@ def _evaluate_strategy_epoch(
     )
 
 
-def _duplicate_strategy_gains(
+def _duplicate_group_gains(
     observations: list[EpochObservation],
     miner_ids: tuple[str, ...],
     aggregates: list[MinerAggregate],
     *,
     allocation: AllocationResult,
     policy: AggregationPolicy,
+    group_by: Literal["strategy", "behavior"],
+    require_distinct_strategies: bool = False,
 ) -> tuple[float, ...]:
-    """Compare each duplicated strategy's mass with a single-identity control."""
+    """Compare a duplicate group's mass with a single-identity control."""
 
     if not allocation.planned:
         return ()
     profile_groups: dict[str, list[str]] = defaultdict(list)
     for profile in MINER_PROFILES:
-        profile_groups[profile.behavior_digest].append(profile.profile_id)
+        digest = profile.strategy_digest if group_by == "strategy" else profile.behavior_digest
+        profile_groups[digest].append(profile.profile_id)
     duplicated = {
-        digest: sorted(members) for digest, members in profile_groups.items() if len(members) > 1
+        digest: sorted(members)
+        for digest, members in profile_groups.items()
+        if len(members) > 1
+        and (
+            not require_distinct_strategies
+            or len(
+                {
+                    profile.strategy_digest
+                    for profile in MINER_PROFILES
+                    if profile.profile_id in members
+                }
+            )
+            > 1
+        )
     }
     aggregate_by_id = {aggregate.miner_id: aggregate for aggregate in aggregates}
     observed_strategy_weights = dict(allocation.strategy_weights)
@@ -605,12 +621,22 @@ def run_mechanism_simulation(
             )
         )
         allocation = allocate_weights(aggregates, policy=aggregation_policy)
-        duplicate_gains = _duplicate_strategy_gains(
+        duplicate_gains = _duplicate_group_gains(
             network_observations,
             miner_ids,
             aggregates,
             allocation=allocation,
             policy=aggregation_policy,
+            group_by="strategy",
+        )
+        behavior_replica_gains = _duplicate_group_gains(
+            network_observations,
+            miner_ids,
+            aggregates,
+            allocation=allocation,
+            policy=aggregation_policy,
+            group_by="behavior",
+            require_distinct_strategies=True,
         )
         aggregate_scores = {aggregate.miner_id: aggregate.reward for aggregate in aggregates}
         weights = dict(allocation.weights)
@@ -667,6 +693,9 @@ def run_mechanism_simulation(
                 "accepted_injected_false_claims": (replication_accepted_injected_false_claims),
                 "sybil_strategy_allocation_gain": (
                     _mean(list(duplicate_gains)) if duplicate_gains else None
+                ),
+                "behavior_equivalent_replica_allocation_gain": (
+                    _mean(list(behavior_replica_gains)) if behavior_replica_gains else None
                 ),
                 "weights": weights,
                 "strategy_weights": dict(allocation.strategy_weights),
@@ -731,6 +760,11 @@ def run_mechanism_simulation(
         float(row["sybil_strategy_allocation_gain"])
         for row in active_rows
         if row["sybil_strategy_allocation_gain"] is not None
+    ]
+    behavior_replica_gain_values = [
+        float(row["behavior_equivalent_replica_allocation_gain"])
+        for row in active_rows
+        if row["behavior_equivalent_replica_allocation_gain"] is not None
     ]
     scenario_rows: dict[str, list[dict[str, Any]]] = defaultdict(list)
     for row in rows:
@@ -823,6 +857,18 @@ def run_mechanism_simulation(
             else None
         ),
         "sybil_allocation_comparison_count": len(sybil_gain_values),
+        "behavior_equivalent_replica_allocation_gain": (
+            max(behavior_replica_gain_values) if behavior_replica_gain_values else None
+        ),
+        "mean_behavior_equivalent_replica_allocation_gain": (
+            _mean(behavior_replica_gain_values) if behavior_replica_gain_values else None
+        ),
+        "max_abs_behavior_equivalent_replica_allocation_gain": (
+            max((abs(value) for value in behavior_replica_gain_values), default=0.0)
+            if behavior_replica_gain_values
+            else None
+        ),
+        "behavior_equivalent_replica_comparison_count": len(behavior_replica_gain_values),
         "scenario_metrics": scenario_summary,
         "profile_metrics": profile_summary,
     }
@@ -933,6 +979,7 @@ def write_evidence_bundle(report: dict[str, Any], output_dir: Path) -> dict[str,
         "injected_false_claims",
         "accepted_injected_false_claims",
         "sybil_strategy_allocation_gain",
+        "behavior_equivalent_replica_allocation_gain",
     )
     replication_buffer = io.StringIO(newline="")
     replication_writer = csv.DictWriter(
