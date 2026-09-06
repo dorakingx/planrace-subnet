@@ -306,6 +306,7 @@ def audit_bundle(bundle: Path) -> dict[str, Any]:
             == {digest: sorted(miners) for digest, miners in expected_strategy_groups.items()},
             f"strategy evaluation grouping mismatch: {path}",
         )
+
         recomputed_by_strategy: dict[str, Any] = {}
         for digest, stored in epoch["strategy_evaluations"].items():
             members = sorted(stored["miners"])
@@ -687,6 +688,7 @@ def main() -> None:
         help="replace the source-artifact list with all audited files and re-sign",
     )
     args = parser.parse_args()
+    print(f"starting full localnet claim audit: {args.bundle}", flush=True)
     result = audit_bundle(args.bundle)
     digest = result["original_digest"]
     if args.seal_source_artifacts:

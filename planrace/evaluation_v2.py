@@ -8,6 +8,7 @@ import statistics
 import tempfile
 from collections.abc import Callable, Mapping, Sequence
 from dataclasses import asdict, dataclass
+from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
@@ -16,6 +17,7 @@ from planrace.benchmark_v2 import (
     PUBLIC_TRAINING_SEED,
     QUERY_FAMILIES,
     SCHEMA_V2,
+    GeneratedFixture,
     QueryFamily,
     benchmark_generator_source_digest,
     describe_hidden_fixtures,
@@ -29,8 +31,10 @@ from planrace.models_v2 import (
     ArtifactGrammar,
     HiddenFixtureDescriptor,
     OptimizationBundle,
+    PublicTaskV2,
     PublicTrainingFixture,
     PublishedStatistics,
+    TaskRevealV2,
     domain_separated_digest,
     optimization_strategy_digest,
 )
@@ -260,9 +264,8 @@ def evaluate_bundle_from_sandbox_results(
     artifact before it can reach scoring.
     """
 
-    family = _validate_and_regenerate_task(task)
-    fixtures = generate_hidden_fixtures(
-        bytes.fromhex(task.reveal.secret_seed_hex), family_id=family.family_id
+    family, fixtures = _validated_task_material(
+        task.public.model_dump_json(), task.reveal.model_dump_json()
     )
     if len(results) != len(fixtures):
         raise EvaluationConfigurationError("worker result count does not match holdouts")
@@ -289,6 +292,23 @@ def evaluate_bundle_from_sandbox_results(
             )
         )
     return _finalize_holdout_evaluation(task, bundle, family.family_id, evaluations)
+
+
+@lru_cache(maxsize=128)
+def _validated_task_material(
+    public_json: str, reveal_json: str
+) -> tuple[QueryFamily, tuple[GeneratedFixture, ...]]:
+    """Validate immutable task material once per exact serialized task."""
+
+    task = PrivateTaskV2(
+        public=PublicTaskV2.model_validate_json(public_json),
+        reveal=TaskRevealV2.model_validate_json(reveal_json),
+    )
+    family = _validate_and_regenerate_task(task)
+    fixtures = generate_hidden_fixtures(
+        bytes.fromhex(task.reveal.secret_seed_hex), family_id=family.family_id
+    )
+    return family, fixtures
 
 
 def _finalize_holdout_evaluation(

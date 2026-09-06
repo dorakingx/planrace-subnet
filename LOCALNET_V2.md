@@ -68,8 +68,8 @@ Verified evidence checks:
   development signing URI is public, this signature is a tamper-evident
   checksum—not proof of an independent operator.
 
-The completed run is `localnet-v2-1788677901`, bound to Git commit
-`3091ea31235b7878b951ad9695ce4ecb5cc0de96`. It produced 300 authenticated
+The completed run is `localnet-v2-1788680238`, bound to Git commit
+`acd394a85bc5964c892b99efb5074d32c0c26fb3`. It produced 300 authenticated
 requests and 270 signed responses across six query families. The signed summary
 binds the local evidence policy: at least 24 tasks, three tasks per family, 75%
 availability, 95% compliance and correctness, four distinct eligible behavior
@@ -77,13 +77,13 @@ portfolios, and a 25% per-portfolio cap. Four useful portfolios qualified and
 received 25% each. The selective/copycat pair was grouped into one evaluation
 in every epoch, failed the worst-family gate, and received zero weight.
 
-The mechanism-derived vector finalized successfully at extrinsic `16048-0002`,
-block `0x02358128444f5951575c8451d3a16ccd480b3097e2ef4720cabe0a904205192d`.
+The mechanism-derived vector finalized successfully at extrinsic `23608-0002`,
+block `0x18131a2e8ce28e0c55fae99848953212db2782859f97aa8ae0d5246caa1f95a5`.
 The local Subtensor readback contained UIDs 5–8 at exactly 25% each. All three
 validator-identity ranking pairs reported Kendall tau-b 0.947, 0.947, and 1.0.
 The signed payload
 SHA-256 is
-`b3bb730f8aa2d6cb0b73ef489443d61d91b65ea05a05312c33386a712e96d93b`.
+`aafc5601659875db8b7b940ae17d60989dca3d505e59e9e7ef8c591071919291`.
 
 `results/localnet-v2/summary.json`, `manifest.json`, and the 30 files under
 `epochs/` are authoritative for this run. The public status remains **LOCALNET

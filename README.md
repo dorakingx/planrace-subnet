@@ -48,7 +48,7 @@ identities under one operator, ten heterogeneous miners, 30 epochs, signed
 requests and responses, multiple hidden fixtures, disposable Docker evaluation,
 and an actual mechanism-derived weight write/readback. The verified run contains
 300 authenticated requests, 270 signed responses, four capped strategy
-allocations, and finalized extrinsic `16048-0002`; follow [STATUS.md](STATUS.md)
+allocations, and finalized extrinsic `23608-0002`; follow [STATUS.md](STATUS.md)
 and [LOCALNET_V2.md](LOCALNET_V2.md).
 
 ```bash
@@ -58,8 +58,9 @@ make verify
 make demo
 ```
 
-Verification prerequisites are Git, a POSIX shell, Make, and network access for
-the first bootstrap. The pinned bootstrap installs its own Python toolchain.
+Verification prerequisites are Git, a POSIX shell, Make, Python 3.12, and
+network access for the first bootstrap. The pinned bootstrap creates an isolated
+environment from the host's `python3.12` and installs pinned tooling into it.
 `make verify` runs code checks, the deterministic mechanism reproduction, and
 the complete 30-epoch claim audit; allow roughly 5–10 minutes on a laptop.
 Docker is needed to regenerate sandbox or localnet evidence, but not to verify
@@ -80,12 +81,12 @@ Or without Make:
 
 The bootstrap installs the security-fixed, pinned `uv==0.12.7` inside `.bootstrap`; it does not modify the system Python environment.
 
-`python scripts/verify_localnet_evidence.py results/localnet-v2` is a fast
-signature-and-file-integrity check only; it does not validate the protocol
-claims. Use `make localnet-v2-audit` (or `make verify`) for fixture regeneration,
-stored-evaluation recomputation, authentication checks, aggregation, weight
-payload validation, and chain readback binding. The full auditor prints progress
-as each epoch is checked.
+`.bootstrap/bin/uv run planrace evidence verify results/localnet-v2/manifest.json`
+is a fast signature-and-file-integrity check only; it does not validate the
+protocol claims. Use `make localnet-v2-audit` (or `make verify`) for fixture
+regeneration, stored-evaluation recomputation, authentication checks,
+aggregation, weight payload validation, and chain readback binding. The full
+auditor prints a start notice and progress as each epoch is checked.
 
 ## Protocol v2
 

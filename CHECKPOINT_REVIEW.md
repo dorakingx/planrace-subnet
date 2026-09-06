@@ -46,8 +46,9 @@ blocks the HackQuest checkpoint.
   scenarios.
 - Review family quotas, conservative uncertainty, duplicate portfolio split,
   no-new-update, 25% cap, HHI/Gini, validator disagreement, and rank correlation.
-- Status: 512-replication simulation and localnet rank evidence complete;
-  independent Reviewer D sign-off pending.
+- Status: completed after independent reproduction. No P0/P1/P2. The prior
+  staggered-absence portfolio-diversity bypass and unenforced per-family task
+  minimum were fixed; both adversarial reproductions now fail closed.
 
 ## Reviewer E — hackathon judge
 
@@ -55,7 +56,9 @@ blocks the HackQuest checkpoint.
   `JUDGING_MATRIX.md`; record missing evidence rather than awarding intent.
 - Reject stale/dirty deployment, broken logged-out links, localnet-as-testnet,
   simulated demo footage, or unsupported market/production claims.
-- Status: pending clean deployment, testnet, media, and portal recheck.
+- Status: official-criteria evidence review completed at 49/70 (7.0/10).
+  Checkpoint content is ready subject to a clean matching deployment and portal
+  recheck. Final submission remains blocked on testnet and real media.
 
 ## Reviewer F — fresh evaluator
 

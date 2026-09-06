@@ -26,7 +26,7 @@ Public claim: **LOCALNET EVIDENCE / TESTNET PENDING**.
   identities and ten heterogeneous miner identities.
 - Verified 30-epoch protocol v2 localnet run: six query families, 300
   authenticated requests, 270 signed responses, 30 post-deadline reveals, four
-  capped strategy allocations, finalized extrinsic `16048-0002`, matching
+  capped strategy allocations, finalized extrinsic `23608-0002`, matching
   readback, and a signed 31-source manifest. The complete run kept the local
   chain active from dispatch through readback and binds its aggregation policy
   into the signed summary.
