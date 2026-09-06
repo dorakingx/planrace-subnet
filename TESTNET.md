@@ -226,18 +226,36 @@ the dashboard derives from evidence, the repository/deployment are clean, and no
 P0 security or mechanism finding remains. The required user action will be
 presented as one concise `ACTION REQUIRED` step when those gates are satisfied.
 
-## Intended minimum topology
+## Required testnet topology and acceptance
 
 - one dedicated testnet coldkey with separately named validator/miner hotkeys;
-- at least one registered validator and two heterogeneous registered miners;
+- target: three registered validator hotkeys and ten heterogeneous registered
+  miner hotkeys, using the dedicated identity manifest;
 - public testnet Axon endpoints, receiver-bound signed requests, miner-signed
   responses, and replay rejection;
-- a closed protocol v2 schedule with post-deadline reveal and isolated workers;
+- multiple epochs of a closed protocol v2 schedule with post-deadline reveal,
+  isolated workers, real task dispatch, signed responses, and measured scoring;
 - actual testnet weight commit/set as selected by the pinned-block subnet
   hyperparameters;
 - finalized commit extrinsic/block hash, timelock `reveal_round` when enabled,
   post-reveal `last_update`, raw weights, and metagraph readback;
-- a separately signed testnet evidence manifest and raw epoch evidence.
+- a separately signed testnet evidence manifest and raw epoch evidence;
+- continuous sanitized logs and a demonstrated restart/recovery exercise.
+
+The user's fallback is **one validator and at least five heterogeneous miners**,
+not two miners. Use it only when a concrete external error, cost or testnet rule
+prevents the target topology, and preserve that evidence with the run. Maintain
+the three-validator/ten-miner localnet proof. Label a fallback run as reduced
+scope and retain the missing target identities in the limitations; it is not
+evidence that the full target topology was achieved.
+
+Connectivity checks, individual registrations and a small diagnostic exchange
+are intermediate checks, not acceptance of this topology or the overall goal.
+Before updating a public deployment claim, verify unique registered identities,
+public reachability, actual contributions across epochs, and finalized weight
+readback from the same signed run. A wallet containing 13 hotkeys alone proves
+none of those run properties. Validator identities under one operator must
+remain labeled as such.
 
 ## Operator procedure
 
