@@ -152,6 +152,11 @@ def audit_bundle(bundle: Path) -> dict[str, Any]:
     _require(
         len({item["profile"] for item in summary["miners"]}) == 10, "profile labels are not unique"
     )
+    miner_ids_by_profile = {
+        item["profile"]: f"miner-{int(item['uid']) - 3:02}" for item in summary["miners"]
+    }
+    selective_id = miner_ids_by_profile["selective-index"]
+    copycat_id = miner_ids_by_profile["copycat-sybil"]
     _require(manifest.netuid == summary["netuid"], "summary/manifest netuid mismatch")
     _require(
         list(manifest.validator_hotkeys) == [item["hotkey"] for item in summary["validators"]],
@@ -176,6 +181,7 @@ def audit_bundle(bundle: Path) -> dict[str, Any]:
     accepted_responses = 0
     all_observations: list[EpochObservation] = []
     schedule: list[ScheduledTask] = []
+    sybil_epochs = 0
     for expected_epoch, path in enumerate(epoch_paths):
         epoch = _load(path)
         _require(epoch["epoch"] == expected_epoch, f"epoch ordering mismatch: {path}")
@@ -226,6 +232,16 @@ def audit_bundle(bundle: Path) -> dict[str, Any]:
         )
         _require(len(epoch["observations"]) == 10, f"observation count mismatch: {path}")
         observations = [EpochObservation(**item) for item in epoch["observations"]]
+        observations_by_miner = {item.miner_id: item for item in observations}
+        selective_observation = observations_by_miner[selective_id]
+        copycat_observation = observations_by_miner[copycat_id]
+        if (
+            selective_observation.strategy_digest == copycat_observation.strategy_digest
+            and selective_observation.behavior_digest == copycat_observation.behavior_digest
+            and selective_observation.evidence_digest == copycat_observation.evidence_digest
+            and selective_observation.reward == copycat_observation.reward
+        ):
+            sybil_epochs += 1
         all_observations.extend(observations)
         schedule.append(
             ScheduledTask(
@@ -277,6 +293,10 @@ def audit_bundle(bundle: Path) -> dict[str, Any]:
             )
 
     _require(validator_counts == Counter({0: 10, 1: 10, 2: 10}), "validator rotation mismatch")
+    _require(
+        sybil_epochs == len(epoch_paths),
+        "copycat/Sybil pair was not grouped into one evaluation in every epoch",
+    )
     _require(len(families) >= 4, "insufficient query-family coverage")
     _require(len(generator_digests) == 1, "multiple generator source digests in run")
     _require(
@@ -349,10 +369,6 @@ def audit_bundle(bundle: Path) -> dict[str, Any]:
         "strategy concentration cap exceeded",
     )
     duplicate_groups = summary["allocation"]["duplicate_groups"]
-    _require(
-        any(len(members) > 1 for _, members in duplicate_groups),
-        "duplicate/Sybil strategy was not exercised",
-    )
     identity_weights = dict(summary["allocation"]["weights"])
     for digest, members in duplicate_groups:
         _require(
@@ -362,6 +378,12 @@ def audit_bundle(bundle: Path) -> dict[str, Any]:
                 abs_tol=1e-12,
             ),
             "duplicate identity weights do not equal their strategy allocation",
+        )
+    if not any(len(members) > 1 for _, members in duplicate_groups):
+        _require(
+            identity_weights.get(selective_id, 0.0) == 0.0
+            and identity_weights.get(copycat_id, 0.0) == 0.0,
+            "ineligible copycat/Sybil identities received weight",
         )
     submitted = summary["submitted_u16_weights"]
     _require(bool(submitted), "empty submitted weight vector")
