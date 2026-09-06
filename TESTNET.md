@@ -16,6 +16,13 @@ SDK `bittensor==11.1.0`, canonical endpoint
 `wss://test.finney.opentensor.ai:443`. All mutable chain actions remain blocked
 behind the user gate below.
 
+The public SDK compatibility preview at block `7946919` is recorded alongside
+its referenced identity manifest in
+`results/testnet/provision-sdk-preview.public.json`. SDK 11.1 composed
+`register_subnet` with the expected coldkey and `validator-00`, estimated a
+`0.003183217` test TAO fee below the `0.01` policy cap, and explicitly reported
+`spend_unbounded=true`. No signature was requested and nothing was submitted.
+
 The validator worker is already published for linux/amd64 and linux/arm64. The
 testnet run must use this immutable reference and record it in its signed
 manifest:
@@ -70,21 +77,65 @@ planrace testnet provision-plan > testnet-provision-plan.json
 
 The strict-schema report verifies the canonical endpoint, pinned block,
 runtime, public coldkey and 13 unique hotkeys, current coldkey balance, subnet
-creation price, and existential deposit. It hard-limits the entire dedicated
-wallet to 5 test TAO and the subnet-creation operation to 1.25 test TAO. Runtime
-It also requires the coldkey to own no on-chain hotkeys and all 13 planned
-hotkeys to have no existing registrations, preventing a rerun from creating a
-second subnet. Runtime v454 creates the subnet-owner hotkey `validator-00` as
-UID 0; `validator-01`, `validator-02`, and `miner-00` through `miner-09` require
-12 later burn registrations.
+creation price, and existential deposit. It requires the total project budget
+to remain at or below 5 test TAO, the staged creation-wallet balance to remain
+at or below 1.260001 test TAO, the latest creation-price snapshot to remain at or
+below the 1.25 test TAO review cap, and enough balance for a 0.01 test TAO
+estimated-fee policy cap. Runtime v454 has no subnet-creation price-limit argument:
+these are pre-signing controls, not an on-chain execution-price guarantee, and
+unexpected incoming funds can change exposure. It also requires the coldkey to
+own no on-chain hotkeys and all 13 planned hotkeys to have no existing
+registrations, preventing a rerun from creating a second subnet. Runtime v454
+creates the subnet-owner hotkey `validator-00` as UID 0; `validator-01`,
+`validator-02`, and `miner-00` through `miner-09` require 12 later burn
+registrations.
 
-At block `7946784`, the observed creation price was `1.0` test TAO and the
+The pinned [runtime v454 implementation](https://github.com/opentensor/subtensor/blob/v454/pallets/subtensor/src/subnets/subnet.rs#L206-L212)
+reads `get_network_lock_cost()` inside execution and checks affordability; the
+call takes no caller-supplied maximum-price argument.
+
+At block `7947102` on 2026-09-07, the observed creation price was `1.0` test TAO and the
 existential deposit was `0.0000005`, while the balance remained `0`. Therefore
 `ready_for_authorized_subnet_creation=false`; no transaction or signature was
 requested. The command emits a SHA-256 plan digest even when stopped so the
 exact reviewed state can be distinguished from a later, fresh plan. Prices are
 dynamic and must be read again immediately before any separately authorized
 submission.
+
+Only after a funded plan passes every gate, save and separately authorize its
+exact digest:
+
+```bash
+planrace testnet provision-submit testnet-provision-plan.json \
+  --authorize-plan-digest sha256:REVIEWED_PLAN_DIGEST \
+  --acknowledge-dynamic-cost \
+  > testnet-provision-submission.json
+```
+
+The command reloads the strict schema and digest, rebuilds a fresh plan, rejects
+changes in balance, price, runtime, identities, ownership, or registrations,
+and requires matching local `planrace-testnet` coldkey and `validator-00`
+addresses. It sets a 0.01 test TAO estimated-fee policy, requests finalization,
+and disables retries. The acknowledgement is mandatory because runtime v454
+has no creation-price limit. The receipt records both the reviewed snapshot and
+the runtime-reported locked price, if returned, and remains incomplete until a
+later finalized public readback verifies the assigned non-root netuid, subnet
+owner, owner hotkey at UID 0, and extrinsic.
+
+```bash
+planrace testnet provision-readback testnet-provision-submission.json \
+  > testnet-provision-readback.json
+```
+
+The submission receipt has its own canonical SHA-256 digest. Before chain
+access, the readback command rejects extra fields, amount inconsistencies,
+unsafe flags, missing finalized coordinates, and digest tampering. It then
+waits for a finalized head and verifies the canonical including-block hash,
+the exact block-index extrinsic is `SubtensorModule.register_network` with the
+receipt-bound owner-hotkey argument, subnet existence, registration block,
+locked price, owner coldkey, owner hotkey, `validator-00` at UID 0, the
+hotkey-to-netuid index, and the coldkey-to-hotkey index. It still does not claim
+activation, serving, miner registration, weights, or private-key control.
 
 ## Transaction-free weight plan
 

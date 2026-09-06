@@ -13,7 +13,12 @@ from typing import Literal, Protocol, SupportsFloat, SupportsInt, cast
 from pydantic import BaseModel, ConfigDict
 
 from planrace.network import ensure_supported_network
-from planrace.testnet_preflight import TESTNET_ENDPOINT, validate_public_ss58
+from planrace.testnet_preflight import (
+    MAX_NETUID,
+    TESTNET_ENDPOINT,
+    testnet_subnet_exists,
+    validate_public_ss58,
+)
 from planrace.weights import plan_hotkey_weights
 
 SCHEMA_VERSION = "planrace/testnet-weight-plan/3"
@@ -135,6 +140,8 @@ class Snapshot(Protocol):
     block: int
 
     def read(self, name: str, **params: object) -> object: ...
+
+    def query(self, item: object, params: list[object] | None = None) -> object: ...
 
     def block_info(self) -> object: ...
 
@@ -500,8 +507,8 @@ def collect_testnet_weight_plan(
     """Resolve scores and current weights without constructing or signing a call."""
 
     ensure_supported_network("test")
-    if netuid < 0:
-        raise ValueError("netuid must be non-negative")
+    if not 0 <= netuid <= MAX_NETUID:
+        raise ValueError("netuid must be between 0 and 65535")
     if minimum_positive_hotkeys < 1:
         raise ValueError("minimum_positive_hotkeys must be positive")
     validate_public_ss58(validator_hotkey_ss58)
@@ -539,8 +546,7 @@ def collect_testnet_weight_plan(
         if not block_hash.startswith("0x") or len(block_hash) != 66:
             errors.append("testnet returned an invalid block hash")
 
-        subnet = snapshot.read("subnet", netuid=netuid)
-        subnet_exists = subnet is not None
+        subnet_exists = testnet_subnet_exists(snapshot, netuid)
         hyper: object = {}
         metagraph: object = {}
         validator_uid: int | None = None
@@ -802,8 +808,7 @@ def verify_testnet_weight_readback(
         if not block_hash.startswith("0x") or len(block_hash) != 66:
             errors.append("testnet returned an invalid block hash")
 
-        subnet = snapshot.read("subnet", netuid=source.netuid)
-        subnet_exists = subnet is not None
+        subnet_exists = testnet_subnet_exists(snapshot, source.netuid)
         validator_uid_stable = False
         target_uids_stable = False
         readback = empty_readback

@@ -17,7 +17,15 @@ from planrace.evidence import (
 from planrace.mechanism_simulation import SimulationConfig, run_mechanism_simulation
 from planrace.simulation import simulate
 from planrace.testnet_preflight import collect_testnet_preflight
-from planrace.testnet_provisioning import collect_testnet_provision_plan
+from planrace.testnet_provisioning import (
+    collect_testnet_provision_plan,
+    load_testnet_provision_plan,
+)
+from planrace.testnet_provisioning_readback import verify_testnet_provision_readback
+from planrace.testnet_provisioning_submission import (
+    load_testnet_provision_receipt,
+    submit_testnet_provision_plan,
+)
 from planrace.testnet_submission import submit_testnet_weight_plan
 from planrace.testnet_weights import (
     collect_testnet_weight_plan,
@@ -143,6 +151,69 @@ def testnet_provision_plan_command(
         raise typer.Exit(code=2) from error
     typer.echo(json.dumps(report.model_dump(mode="json"), indent=2, sort_keys=True))
     if report.errors or not report.ready_for_authorized_subnet_creation:
+        raise typer.Exit(code=1)
+
+
+@testnet_app.command("provision-submit")
+def testnet_provision_submit_command(
+    plan: Annotated[Path, typer.Argument(exists=True, dir_okay=False)],
+    authorize_plan_digest: Annotated[
+        str,
+        typer.Option(help="Exact sha256 provision-plan digest authorized for signing."),
+    ],
+    identities: Annotated[
+        Path,
+        typer.Option(
+            exists=True,
+            dir_okay=False,
+            help="Public-only identities used for the mandatory fresh plan.",
+        ),
+    ] = Path("results/testnet/identities.public.json"),
+    acknowledge_dynamic_cost: Annotated[
+        bool,
+        typer.Option(
+            help=(
+                "Acknowledge that runtime v454 has no creation-price limit and the "
+                "execution-block price or incoming balance can change after review."
+            )
+        ),
+    ] = False,
+    max_plan_age_blocks: Annotated[int, typer.Option(min=1, max=24)] = 12,
+) -> None:
+    """Create one subnet only from a fresh digest-authorized testnet plan."""
+
+    try:
+        source = load_testnet_provision_plan(plan)
+        receipt = submit_testnet_provision_plan(
+            source,
+            identities_path=identities,
+            authorize_plan_digest=authorize_plan_digest,
+            acknowledge_dynamic_cost=acknowledge_dynamic_cost,
+            max_plan_age_blocks=max_plan_age_blocks,
+        )
+    except ValueError as error:
+        typer.echo(json.dumps({"error": str(error)}, sort_keys=True))
+        raise typer.Exit(code=2) from error
+    except Exception as error:
+        typer.echo(json.dumps({"error": f"testnet provisioning failed: {type(error).__name__}"}))
+        raise typer.Exit(code=1) from error
+    typer.echo(json.dumps(receipt.model_dump(mode="json"), indent=2, sort_keys=True))
+
+
+@testnet_app.command("provision-readback")
+def testnet_provision_readback_command(
+    receipt: Annotated[Path, typer.Argument(exists=True, dir_okay=False)],
+) -> None:
+    """Verify finalized subnet ownership and UID 0 against a saved receipt."""
+
+    try:
+        source = load_testnet_provision_receipt(receipt)
+        report = verify_testnet_provision_readback(source)
+    except ValueError as error:
+        typer.echo(json.dumps({"error": str(error)}, sort_keys=True))
+        raise typer.Exit(code=2) from error
+    typer.echo(json.dumps(report.model_dump(mode="json"), indent=2, sort_keys=True))
+    if report.errors or not report.ready_for_testnet_evidence:
         raise typer.Exit(code=1)
 
 

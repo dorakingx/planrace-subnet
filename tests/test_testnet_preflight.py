@@ -36,11 +36,16 @@ class FakeSnapshot:
     def __init__(self, *, lookup_error: bool = False) -> None:
         self.lookup_error = lookup_error
 
-    def read(self, name: str, **params: object) -> object:
-        if self.lookup_error and name == "subnet":
+    def query(self, item: object, params: list[object] | None = None) -> object:
+        if self.lookup_error:
             raise RuntimeError("secret transport details must not escape")
+        assert item.name == "NetworksAdded"  # type: ignore[attr-defined]
+        assert params is not None and len(params) == 1
+        return params[0] == 7
+
+    def read(self, name: str, **params: object) -> object:
         if name == "subnet":
-            return FakeSubnet() if params["netuid"] == 7 else None
+            return FakeSubnet()
         if name == "subnet_hyperparameters":
             return {
                 "registration_allowed": True,
@@ -249,7 +254,8 @@ def test_public_address_validator_rejects_non_base58_characters() -> None:
         validate_public_ss58("5" + "0" * 47)
 
 
-def test_negative_netuid_is_rejected_before_connecting() -> None:
+@pytest.mark.parametrize("netuid", [-1, 65_536])
+def test_out_of_range_netuid_is_rejected_before_connecting(netuid: int) -> None:
     called = False
 
     def factory() -> FakeClient:
@@ -257,8 +263,8 @@ def test_negative_netuid_is_rejected_before_connecting() -> None:
         called = True
         return FakeClient()
 
-    with pytest.raises(ValueError, match="non-negative"):
-        collect_testnet_preflight(netuid=-1, client_factory=factory)
+    with pytest.raises(ValueError, match="between 0 and 65535"):
+        collect_testnet_preflight(netuid=netuid, client_factory=factory)
     assert called is False
 
 

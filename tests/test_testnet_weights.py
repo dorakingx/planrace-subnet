@@ -42,6 +42,11 @@ class FakeSnapshot:
     def block_info(self) -> FakeBlockInfo:
         return FakeBlockInfo()
 
+    def query(self, item: object, params: list[object] | None = None) -> object:
+        assert item.name == "NetworksAdded"  # type: ignore[attr-defined]
+        assert params == [7]
+        return True
+
     def read(self, name: str, **params: object) -> object:
         assert params["netuid"] == 7
         if name == "subnet":
@@ -104,6 +109,11 @@ class FakePostSnapshot:
 
     def block_info(self) -> FakePostBlockInfo:
         return FakePostBlockInfo()
+
+    def query(self, item: object, params: list[object] | None = None) -> object:
+        assert item.name == "NetworksAdded"  # type: ignore[attr-defined]
+        assert params == [7]
+        return True
 
     def read(self, name: str, **params: object) -> object:
         assert params["netuid"] == 7
@@ -386,6 +396,25 @@ def test_validator_cannot_be_scored_as_a_miner() -> None:
             score_specs=(f"{VALIDATOR}=1", f"{MINER_A}=1"),
             client_factory=FakeClient,
         )
+
+
+@pytest.mark.parametrize("netuid", [-1, 65_536])
+def test_weight_plan_rejects_out_of_range_netuid_before_connecting(netuid: int) -> None:
+    called = False
+
+    def factory() -> FakeClient:
+        nonlocal called
+        called = True
+        return FakeClient()
+
+    with pytest.raises(ValueError, match="between 0 and 65535"):
+        collect_testnet_weight_plan(
+            netuid=netuid,
+            validator_hotkey_ss58=VALIDATOR,
+            score_specs=score_specs(),
+            client_factory=factory,
+        )
+    assert called is False
 
 
 @pytest.mark.parametrize(

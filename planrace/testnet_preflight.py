@@ -19,6 +19,7 @@ from planrace.network import ensure_supported_network
 
 TESTNET_ENDPOINT = "wss://test.finney.opentensor.ai:443"
 SCHEMA_VERSION = "planrace/testnet-preflight/2"
+MAX_NETUID = 65_535
 _ROLE_RE = re.compile(r"[a-z][a-z0-9_-]{0,31}\Z")
 _SS58_RE = re.compile(r"5[1-9A-HJ-NP-Za-km-z]{47}\Z")
 
@@ -109,6 +110,8 @@ class Snapshot(Protocol):
 
     def read(self, name: str, **params: object) -> object: ...
 
+    def query(self, item: object, params: list[object] | None = None) -> object: ...
+
 
 class TestnetClient(Protocol):
     endpoint: str
@@ -190,6 +193,17 @@ def _optional_bool(value: object) -> bool | None:
     return value if isinstance(value, bool) else None
 
 
+def testnet_subnet_exists(snapshot: Snapshot, netuid: int) -> bool:
+    """Read the authoritative runtime existence flag for one subnet."""
+
+    import bittensor as bt
+
+    value = snapshot.query(bt.storage.SubtensorModule.NetworksAdded, [netuid])
+    if not isinstance(value, bool):
+        raise ValueError("testnet returned an invalid subnet existence flag")
+    return value
+
+
 def _axon_status(value: object) -> tuple[bool, PublicAxon | None]:
     if value is None:
         return False, None
@@ -211,9 +225,11 @@ def _axon_status(value: object) -> tuple[bool, PublicAxon | None]:
 
 
 def _subnet_status(snapshot: Snapshot, netuid: int) -> tuple[SubnetStatus, object | None]:
+    if not testnet_subnet_exists(snapshot, netuid):
+        return SubnetStatus(netuid=netuid, exists=False), None
     subnet = snapshot.read("subnet", netuid=netuid)
     if subnet is None:
-        return SubnetStatus(netuid=netuid, exists=False), None
+        raise ValueError("existing testnet subnet returned no subnet data")
     hyper = snapshot.read("subnet_hyperparameters", netuid=netuid)
     return (
         SubnetStatus(
@@ -326,8 +342,8 @@ def collect_testnet_preflight(
     """Collect a bounded public snapshot without constructing any transaction."""
 
     ensure_supported_network("test")
-    if netuid is not None and netuid < 0:
-        raise ValueError("netuid must be non-negative")
+    if netuid is not None and not 0 <= netuid <= MAX_NETUID:
+        raise ValueError("netuid must be between 0 and 65535")
     if coldkey_ss58 is not None:
         validate_public_ss58(coldkey_ss58)
     roles = parse_public_roles(role_specs)

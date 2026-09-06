@@ -17,7 +17,9 @@ from planrace.testnet_preflight import TESTNET_ENDPOINT, validate_public_ss58
 WALLET_ALIAS = "planrace-testnet"
 OWNER_HOTKEY_ALIAS = "validator-00"
 MAX_TESTNET_BUDGET_RAO = 5_000_000_000
-MAX_SUBNET_CREATION_COST_RAO = 1_250_000_000
+MAX_SUBNET_CREATION_REVIEW_COST_RAO = 1_250_000_000
+MAX_TRANSACTION_FEE_RAO = 10_000_000
+MAX_CREATION_WALLET_BALANCE_RAO = 1_260_001_000
 EXPECTED_VALIDATORS = 3
 EXPECTED_MINERS = 10
 
@@ -88,13 +90,14 @@ class ProvisionGates(_StrictModel):
     all_hotkeys_unregistered: bool
     coldkey_balance_positive: bool
     balance_within_total_budget: bool
-    subnet_cost_within_cap: bool
-    can_cover_subnet_cost_and_existential_deposit: bool
+    creation_wallet_balance_within_exposure_cap: bool
+    subnet_cost_snapshot_within_review_cap: bool
+    can_cover_snapshot_cost_deposit_and_fee_cap: bool
 
 
 class TestnetProvisionPlan(_StrictModel):
-    schema_version: Literal["planrace/testnet-provision-plan/1"] = (
-        "planrace/testnet-provision-plan/1"
+    schema_version: Literal["planrace/testnet-provision-plan/2"] = (
+        "planrace/testnet-provision-plan/2"
     )
     read_only: bool = True
     transaction_constructed: bool = False
@@ -118,7 +121,10 @@ class TestnetProvisionPlan(_StrictModel):
     coldkey_balance_rao: int | None
     coldkey_balance_tao: str | None
     max_testnet_budget_rao: int = MAX_TESTNET_BUDGET_RAO
-    max_subnet_creation_cost_rao: int = MAX_SUBNET_CREATION_COST_RAO
+    max_subnet_creation_review_cost_rao: int = MAX_SUBNET_CREATION_REVIEW_COST_RAO
+    max_transaction_fee_rao: int = MAX_TRANSACTION_FEE_RAO
+    max_creation_wallet_balance_rao: int = MAX_CREATION_WALLET_BALANCE_RAO
+    onchain_creation_cost_limit_available: bool = False
     burn_registrations_after_creation: int
     gates: ProvisionGates
     ready_for_authorized_subnet_creation: bool
@@ -282,8 +288,9 @@ def _empty_gates() -> ProvisionGates:
         all_hotkeys_unregistered=False,
         coldkey_balance_positive=False,
         balance_within_total_budget=False,
-        subnet_cost_within_cap=False,
-        can_cover_subnet_cost_and_existential_deposit=False,
+        creation_wallet_balance_within_exposure_cap=False,
+        subnet_cost_snapshot_within_review_cap=False,
+        can_cover_snapshot_cost_deposit_and_fee_cap=False,
     )
 
 
@@ -291,6 +298,124 @@ def _digest_payload(report: TestnetProvisionPlan) -> str:
     payload = report.model_dump(mode="json", exclude={"plan_digest", "next_action"})
     canonical = json.dumps(payload, separators=(",", ":"), sort_keys=True).encode()
     return "sha256:" + hashlib.sha256(canonical).hexdigest()
+
+
+def _validated_provision_plan_digest(report: TestnetProvisionPlan) -> str:
+    """Recompute every semantic gate before a saved plan can reach signing code."""
+
+    required_numbers = (
+        report.block,
+        report.runtime_spec_version,
+        report.subnet_creation_cost_rao,
+        report.existential_deposit_rao,
+        report.coldkey_balance_rao,
+    )
+    if any(value is None or value < 0 for value in required_numbers):
+        raise ValueError("provision plan has incomplete chain or cost coordinates")
+    if report.block_hash is None or not report.block_hash.startswith("0x"):
+        raise ValueError("provision plan has an invalid block hash")
+    if len(report.block_hash) != 66:
+        raise ValueError("provision plan has an invalid block hash")
+    validate_public_ss58(report.coldkey_ss58)
+    validate_public_ss58(report.owner_hotkey_ss58)
+    if (
+        report.endpoint != TESTNET_ENDPOINT
+        or report.network != "test"
+        or report.wallet_alias != WALLET_ALIAS
+        or report.owner_hotkey_alias != OWNER_HOTKEY_ALIAS
+        or report.onchain_creation_cost_limit_available
+        or report.max_testnet_budget_rao != MAX_TESTNET_BUDGET_RAO
+        or report.max_subnet_creation_review_cost_rao != MAX_SUBNET_CREATION_REVIEW_COST_RAO
+        or report.max_transaction_fee_rao != MAX_TRANSACTION_FEE_RAO
+        or report.max_creation_wallet_balance_rao != MAX_CREATION_WALLET_BALANCE_RAO
+    ):
+        raise ValueError("provision plan violates the fixed testnet safety boundary")
+    if len(report.roles) != EXPECTED_VALIDATORS + EXPECTED_MINERS:
+        raise ValueError("provision plan must contain exactly 3 validators and 10 miners")
+    expected_aliases = tuple(
+        f"validator-{index:02d}" for index in range(EXPECTED_VALIDATORS)
+    ) + tuple(f"miner-{index:02d}" for index in range(EXPECTED_MINERS))
+    if tuple(role.alias for role in report.roles) != expected_aliases:
+        raise ValueError("provision plan contains unexpected role aliases")
+    hotkeys = tuple(role.hotkey_ss58 for role in report.roles)
+    for hotkey in hotkeys:
+        validate_public_ss58(hotkey)
+    if (
+        len(hotkeys) != len(set(hotkeys))
+        or report.coldkey_ss58 in hotkeys
+        or report.owner_hotkey_ss58 != hotkeys[0]
+    ):
+        raise ValueError("provision plan contains invalid public identities")
+    for index, role in enumerate(report.roles):
+        expected_validator = index < EXPECTED_VALIDATORS
+        if (
+            role.role != ("validator" if expected_validator else "miner")
+            or role.registered_netuids
+            or role.created_with_subnet != (index == 0)
+            or role.requires_burn_registration != (index != 0)
+        ):
+            raise ValueError("provision plan contains unexpected role state")
+    if report.coldkey_owned_hotkeys or report.burn_registrations_after_creation != 12:
+        raise ValueError("provision plan contains existing ownership or an invalid topology")
+
+    block = cast(int, report.block)
+    runtime = cast(int, report.runtime_spec_version)
+    cost = cast(int, report.subnet_creation_cost_rao)
+    deposit = cast(int, report.existential_deposit_rao)
+    balance = cast(int, report.coldkey_balance_rao)
+    if (
+        report.subnet_creation_cost_tao != _tao_string(cost)
+        or report.existential_deposit_tao != _tao_string(deposit)
+        or report.coldkey_balance_tao != _tao_string(balance)
+    ):
+        raise ValueError("provision plan TAO renderings do not match exact rao values")
+    expected_gates = ProvisionGates(
+        canonical_endpoint=True,
+        snapshot_pinned=block >= 0 and runtime >= 0,
+        identities_valid=True,
+        dedicated_wallet_only=True,
+        exact_role_count=True,
+        public_hotkeys_unique=True,
+        owner_is_validator_00=True,
+        coldkey_has_no_owned_hotkeys=True,
+        all_hotkeys_unregistered=True,
+        coldkey_balance_positive=balance > 0,
+        balance_within_total_budget=0 < balance <= MAX_TESTNET_BUDGET_RAO,
+        creation_wallet_balance_within_exposure_cap=(balance <= MAX_CREATION_WALLET_BALANCE_RAO),
+        subnet_cost_snapshot_within_review_cap=(cost <= MAX_SUBNET_CREATION_REVIEW_COST_RAO),
+        can_cover_snapshot_cost_deposit_and_fee_cap=(
+            balance >= cost + deposit + MAX_TRANSACTION_FEE_RAO
+        ),
+    )
+    if (
+        report.gates != expected_gates
+        or not report.ready_for_authorized_subnet_creation
+        or report.errors
+        or not report.read_only
+        or report.transaction_constructed
+        or report.signature_requested
+        or not all(report.gates.model_dump().values())
+    ):
+        raise ValueError("source provision plan did not pass every pre-signing gate")
+    if report.plan_digest is None:
+        raise ValueError("provision plan has no digest")
+    expected_digest = _digest_payload(report)
+    if report.plan_digest != expected_digest:
+        raise ValueError("provision plan digest mismatch")
+    return expected_digest
+
+
+def load_testnet_provision_plan(path: Path) -> TestnetProvisionPlan:
+    """Load a strict saved plan and reject semantic or digest tampering."""
+
+    try:
+        report = TestnetProvisionPlan.model_validate_json(path.read_bytes())
+    except OSError as error:
+        raise ValueError(f"cannot read provision plan: {type(error).__name__}") from error
+    except ValueError as error:
+        raise ValueError("provision plan schema validation failed") from error
+    _validated_provision_plan_digest(report)
+    return report
 
 
 def collect_testnet_provision_plan(
@@ -307,6 +432,18 @@ def collect_testnet_provision_plan(
     limitations = (
         "This latest-block plan is not finalized transaction evidence.",
         "The subnet creation price is dynamic and can change before inclusion.",
+        (
+            "Runtime v454 has no subnet-creation price-limit argument; 1.25 test TAO "
+            "is a pre-signing review cap, not an on-chain execution cap."
+        ),
+        (
+            "Creation requires a staged wallet balance no greater than 1.260001 test TAO; "
+            "the 5 test TAO value is only the total project budget."
+        ),
+        (
+            "Because anyone can send funds to a public address, even the staged "
+            "balance is not an on-chain execution-price limit."
+        ),
         "The new subnet creates validator-00 as UID 0; the other 12 hotkeys require later burns.",
         "No transaction, wallet unlock, signature, registration, or mainnet access is performed.",
     )
@@ -355,9 +492,14 @@ def collect_testnet_provision_plan(
             all_hotkeys_unregistered=all(not role.registered_netuids for role in roles),
             coldkey_balance_positive=balance_rao > 0,
             balance_within_total_budget=0 < balance_rao <= MAX_TESTNET_BUDGET_RAO,
-            subnet_cost_within_cap=cost_rao <= MAX_SUBNET_CREATION_COST_RAO,
-            can_cover_subnet_cost_and_existential_deposit=(
-                balance_rao >= cost_rao + existential_rao
+            creation_wallet_balance_within_exposure_cap=(
+                balance_rao <= MAX_CREATION_WALLET_BALANCE_RAO
+            ),
+            subnet_cost_snapshot_within_review_cap=(
+                cost_rao <= MAX_SUBNET_CREATION_REVIEW_COST_RAO
+            ),
+            can_cover_snapshot_cost_deposit_and_fee_cap=(
+                balance_rao >= cost_rao + existential_rao + MAX_TRANSACTION_FEE_RAO
             ),
         )
         ready = all(gates.model_dump().values()) and not errors
@@ -371,10 +513,15 @@ def collect_testnet_provision_plan(
             next_action = "Obtain the approved test TAO allocation, then rerun this plan."
         elif balance_rao > MAX_TESTNET_BUDGET_RAO:
             next_action = "Stop: balance exceeds the approved 5 test TAO project budget."
-        elif cost_rao > MAX_SUBNET_CREATION_COST_RAO:
-            next_action = "Stop: subnet creation cost exceeds the 1.25 test TAO operation cap."
-        elif balance_rao < cost_rao + existential_rao:
-            next_action = "Obtain enough test TAO to cover creation plus existential deposit."
+        elif balance_rao > MAX_CREATION_WALLET_BALANCE_RAO:
+            next_action = "Stop: staged creation-wallet balance exceeds 1.260001 test TAO."
+        elif cost_rao > MAX_SUBNET_CREATION_REVIEW_COST_RAO:
+            next_action = "Stop: subnet creation snapshot exceeds the 1.25 test TAO review cap."
+        elif balance_rao < cost_rao + existential_rao + MAX_TRANSACTION_FEE_RAO:
+            next_action = (
+                "Obtain enough test TAO to cover the snapshot cost, deposit, "
+                "and estimated-fee policy cap."
+            )
         else:
             next_action = "Review this plan and explicitly authorize its digest before signing."
         report = TestnetProvisionPlan(

@@ -1,0 +1,29 @@
+{
+  "block_after": 7946919,
+  "block_before": 7946919,
+  "endpoint": "wss://test.finney.opentensor.ai:443",
+  "fee_tao": "0.003183217",
+  "identity_manifest": "results/testnet/identities.public.json",
+  "limitations": [
+    "SDK preview only; not a signed transaction or deployment claim.",
+    "Runtime v454 has no subnet-creation price-limit argument.",
+    "The dynamic creation price can change before inclusion."
+  ],
+  "max_fee_tao": "0.01",
+  "network": "test",
+  "op": "register_subnet",
+  "owner_hotkey_alias": "validator-00",
+  "owner_hotkey_matches_manifest": true,
+  "policy_ok": true,
+  "policy_violations": [],
+  "runtime_spec_version": 454,
+  "schema_version": "planrace/testnet-provision-sdk-preview/1",
+  "sdk_version": "11.1.0",
+  "signature_requested": false,
+  "signer": "coldkey",
+  "signer_matches_manifest": true,
+  "spend_unbounded": true,
+  "submitted": false,
+  "transaction_constructed": true,
+  "wallet_alias": "planrace-testnet"
+}
