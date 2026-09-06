@@ -28,6 +28,6 @@
     "planrace/scoring_v2.py": "2f4ff07ff9860f2407ccde2aa1f060a7127523a0f343b4fb63516a6c3af36ff7",
     "scripts/run_mechanism_v2.py": "e66a27e4de7c7909201439f1eaf8e6507173a56cdbadef57192ddb7b3ac8909b"
   },
-  "source_git_base_commit": "6008a1748cc0a3f4ee5fff2863254e7b025cbada",
+  "source_git_base_commit": "3671f8881bc7e49a74ed120e36b35d6b62e89e6a",
   "source_tree_dirty": false
 }
