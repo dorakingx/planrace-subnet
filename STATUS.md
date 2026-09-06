@@ -44,11 +44,11 @@ Public claim: **LOCALNET EVIDENCE / TESTNET PENDING**.
   typecheck, lint, build, evidence tests, route smoke tests, browser flows,
   accessibility, responsive layout, dependency audit, and public-link checks
   passed.
-- Production deployment `dpl_aGNeFPzcyZkYNpmZien12ogRQshX` is READY at
-  `https://planrace-subnet.vercel.app/` from exact GitHub SHA `bd4fe62`, with
-  passing public page, evidence, robots, and sitemap checks.
-- GitHub Actions passed both Python verification and the complete dashboard job
-  for the checkpoint-deck commit (run `34027507801`).
+- The canonical production alias `https://planrace-subnet.vercel.app/` is READY;
+  its Git-linked build provenance and public page, evidence, robots, and sitemap
+  routes are checked on delivery.
+- GitHub Actions passes the Python verification and complete dashboard jobs,
+  including evidence audits, browser E2E, dependency audits, and secret scans.
 
 ## Next gates
 
