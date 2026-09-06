@@ -1,6 +1,6 @@
 # HackQuest checkpoint proposal
 
-Status: **draft — independent review findings are being remediated before posting**.
+Status: **content pass — ready for authenticated HackQuest posting**.
 
 ## Project
 
@@ -110,8 +110,9 @@ Bittensor testnet evidence remain unfinished. Future-block entropy mixing is
 also deferred. PlanRace must continue to display **LOCALNET EVIDENCE / TESTNET
 PENDING** until those facts change.
 
-- Checkpoint gate: publish regenerated v2 evidence, clean Git/Vercel provenance,
-  and a reproducible reviewer pass.
+- Checkpoint gate: complete. Regenerated v2 evidence, clean Git/Vercel
+  provenance, and the six-review pass are public; only authenticated portal
+  posting remains.
 - Final-submission gate: user-authorized dedicated testnet identities,
   registrations, signed multi-miner flow, timelock-aware weight readback, and a
   short end-to-end demo.
@@ -129,8 +130,10 @@ PENDING** until those facts change.
 
 ## Post gate
 
-Do not post until P0 tests, localnet v2, clean GitHub/Vercel provenance, logged-out
-HTTP checks, link/secret/dependency checks, and independent review all pass.
+The P0 tests, localnet v2, clean GitHub/Vercel provenance, logged-out HTTP
+checks, link/secret/dependency checks, and independent review all pass. Recheck
+the authenticated form fields and then post this proposal without adding a
+testnet-complete claim.
 The public page checked 2026-09-05 confirms Checkpoint #1 on 2026-09-20 and
 Final Submission on 2026-10-19. It displays the overall submission window ending
 at 15:59 without a rendered timezone. Reconfirm the checkpoint's exact time and

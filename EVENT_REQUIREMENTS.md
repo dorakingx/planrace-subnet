@@ -9,9 +9,9 @@ a timezone, so the authenticated submission form remains authoritative.
 |---|---|---|---|---|---|
 | Event period | Aug 22–Oct 19, 2026 | Confirmed | “Hackathon Duration” | This file; `STATUS.md` | Exact cutoff timezone is not rendered |
 | Submission window | Aug 21 16:00–Oct 19 15:59 | Confirmed as displayed | Schedule → Submission | Recheck authenticated form before posting | Timezone unconfirmed |
-| Checkpoint #1 | Sep 20 subnet proposal: problem, architecture, miner-validator design, evaluation, incentives | Confirmed | Checkpoint #1 and proposal requirements | `CHECKPOINT_PROPOSAL.md` | Not yet posted |
+| Checkpoint #1 | Sep 20 subnet proposal: problem, architecture, miner-validator design, evaluation, incentives | Confirmed | Checkpoint #1 and proposal requirements | `CHECKPOINT_PROPOSAL.md`, `submission/HACKQUEST_CHECKPOINT_PAYLOAD.md` | Content pass; authenticated post pending |
 | Final | Updated proposal, public GitHub, testnet implementation, demo video, final pitch | Confirmed | Final Submission | `UPDATED_SUBNET_PROPOSAL.md`, repository, `TESTNET.md`, demo/pitch files | Testnet, video, pitch delivery pending |
-| Required build | Credible subnet concept progressing to working Bittensor testnet implementation | Confirmed | What You Need to Build | Protocol v2 implementation and evidence | Dedicated testnet wallet/action pending |
+| Required build | Credible subnet concept progressing to working Bittensor testnet implementation | Confirmed | What You Need to Build | Protocol v2 implementation and evidence | Dedicated wallet created; test TAO and execution pending |
 | Miner work | Defined tasks and expected outputs; functional miner logic | Confirmed | Strong submission / Testnet Implementation | `PROTOCOL_V2.md`, `planrace/api_v2.py`, `planrace/models_v2.py` | Public testnet Axons pending |
 | Validator work | Working evaluation, scoring, incentives, and evidence | Confirmed | Strong submission / Testnet Implementation | scorer, sandbox, auditors, mechanism and localnet bundles | Testnet readback pending |
 | Public repository | Subnet/miner/validator code, setup, technical docs, testnet deployment instructions | Confirmed | GitHub Repository | Public PlanRace repository, passing CI, README/docs | Recheck public accessibility at final submission |

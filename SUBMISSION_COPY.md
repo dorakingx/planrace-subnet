@@ -1,8 +1,8 @@
 # HackQuest submission copy
 
-Status: draft. Do not paste/post until the portal fields are re-read, localnet v2
-and clean deployment gates pass, and the project is renamed from QECForge to
-PlanRace. Testnet claims below remain explicitly pending.
+Status: checkpoint copy passed; authenticated portal re-read, project rename,
+and posting remain. Localnet v2 and clean deployment gates pass. Testnet claims
+below remain explicitly pending.
 
 ## Name
 
@@ -119,7 +119,8 @@ video field before recording.
 
 ## Checkpoint update
 
-Use `CHECKPOINT_PROPOSAL.md` only after its post gate passes.
+Use `CHECKPOINT_PROPOSAL.md`; its content gate passes. The paste-ready field map
+is `submission/HACKQUEST_CHECKPOINT_PAYLOAD.md`.
 
 ## Portal fields requiring live re-verification
 

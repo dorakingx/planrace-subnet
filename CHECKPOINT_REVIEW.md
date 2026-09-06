@@ -1,7 +1,7 @@
 # Checkpoint review gate
 
-Status: **not passed**. This file is the review worksheet; scores/sign-off must
-not be filled before the referenced evidence exists. A P0 or critical finding
+Status: **content passed; authenticated publication pending**. All six reviews
+below are complete with no unresolved P0/P1. A new P0 or critical finding still
 blocks the HackQuest checkpoint.
 
 ## Reviewer A — database systems

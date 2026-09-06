@@ -51,7 +51,8 @@ the current proof, and a privacy-preserving buyer adapter remains future work.
 ## Evidence and roadmap
 
 The committed mechanism simulation and localnet v2 evidence establish the
-SQLite mechanism. Next gates are a dedicated testnet wallet and test-TAO allocation,
-testnet registration and signed multi-miner flow, clean public deployment, and
-independent validation. Subsequent tracks target DuckDB/PostgreSQL, validator
-diversity, workload adapters, and a distributed benchmark fleet.
+SQLite mechanism. The dedicated testnet wallet and 3-validator/10-miner public
+identity set now exist. Next gates are test-TAO allocation, testnet registration
+and signed multi-miner flow, and independent validation. Subsequent tracks
+target DuckDB/PostgreSQL, validator diversity, workload adapters, and a
+distributed benchmark fleet.
