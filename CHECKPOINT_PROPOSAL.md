@@ -57,8 +57,10 @@ performance; a closed family-balanced epoch schedule then gates availability,
 compliance, correctness, minimum coverage, and worst-family performance.
 
 Exact executable duplicates are evaluated once and split. Byte-distinct
-strategies with the same observed hidden-fixture plans share one behavior group;
-five positive groups are required and no group can receive more than 25%.
+strategies with the same observed hidden-fixture plans share one behavior group.
+The general mechanism default requires five positive groups. The signed localnet
+integration run precommits four—the mathematical minimum under its 25% cap—and
+no group can receive more than 25%.
 Failed gates create no new chain update and are never presented as cleared old
 weights.
 

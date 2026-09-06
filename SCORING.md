@@ -52,10 +52,14 @@ concentration cap and divided back in proportion to their already-split
 rewards. Byte-distinct near copies therefore cannot create reward, satisfy
 diversity, or bypass the cap.
 
-Final observed-behavior weights have a 25% cap and require five distinct
-positive strategies. If all candidates fail, diversity is insufficient, or
-the cap cannot be met, the validator emits a no-new-update decision instead of
-fabricating a winner. This does not erase a previously stored chain vector.
+Final observed-behavior weights have a 25% cap. The production-oriented default
+requires five distinct positive strategies. The published localnet integration
+run explicitly binds a four-group threshold—the mathematical minimum compatible
+with the cap—to exercise a complete chain write with four useful strategies; it
+is not a claim that this is the final production governance setting. If all
+candidates fail, diversity is insufficient, or the cap cannot be met, the
+validator emits a no-new-update decision instead of fabricating a winner. This
+does not erase a previously stored chain vector.
 
 Every allocation reports strategy-level Gini, HHI, top-one share, and effective
 strategy count.

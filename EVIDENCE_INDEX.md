@@ -9,8 +9,9 @@ localnet, and future testnet evidence. A missing artifact is marked pending.
 make bootstrap
 make sync
 make verify
-.venv/bin/python scripts/verify_mechanism_v2.py --require-clean-source
-.venv/bin/python -m planrace evidence verify results/localnet-v2/manifest.json
+.bootstrap/bin/uv run python scripts/verify_mechanism_v2.py --require-clean-source
+.bootstrap/bin/uv run planrace evidence verify results/localnet-v2/manifest.json
+.bootstrap/bin/uv run python scripts/audit_localnet_v2.py results/localnet-v2
 ```
 
 The localnet manifest is validator-signed. The deterministic mechanism manifest

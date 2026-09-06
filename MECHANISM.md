@@ -46,10 +46,12 @@ The complete formula and defaults are in `SCORING.md` and executable in
 - timing outliers influence a winsorized center and a downside confidence bound;
 - one strategy digest receives one reward pool even when submitted by multiple
   identities;
-- fewer than five distinct positive behaviors, all-fail outcomes, or an
-  unsatisfiable 25% cap produce no new update. A prior on-chain vector is not
-  cleared automatically and must be monitored through `last_update` and the
-  activity cutoff.
+- fewer than the precommitted minimum of distinct positive behaviors, all-fail
+  outcomes, or an unsatisfiable 25% cap produce no new update. The general
+  simulation default is five; the signed localnet integration run explicitly
+  uses four, the mathematical minimum compatible with that cap. A prior
+  on-chain vector is not cleared automatically and must be monitored through
+  `last_update` and the activity cutoff.
 
 ## Gaming and validator analysis
 

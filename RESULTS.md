@@ -25,19 +25,21 @@ visible rather than described as universal agreement.
 
 ## Protocol v2 localnet
 
-The verified run `localnet-v2-1788563665` completed 30 epochs on local netuid 3
+The verified run `localnet-v2-1788674678` completed 30 epochs on local netuid 3
 with three rotating validator identities, ten miner identities, six query
 families, 300 authenticated requests, and 270 signed responses. Every epoch
-contained seven unique executable-strategy evaluations over eight hidden
+contained six or seven unique executable-strategy evaluations over eight hidden
 fixtures.
 
-Six identities passed all closed-schedule gates, representing five distinct
-strategy portfolios. The per-strategy cap produced five 20% allocations; the
-selective/copycat duplicate pair split its group allocation into 10% each.
-The mechanism-derived vector finalized at extrinsic `9062-0002` and matched the
-Subtensor readback. Pairwise validator Kendall tau-b values were 0.5789, 0.6316,
-and 0.9474. These validators were three identities under one operator, so this
-is repeatability evidence, not independent consensus. See
+Four identities passed all closed-schedule gates, representing four distinct
+strategy portfolios. The signed local evidence policy used the mathematically
+minimum four groups compatible with its 25% cap; each qualified portfolio
+received 25%. The selective/copycat pair shared one evaluation in all 30 epochs,
+failed the worst-family gate, and received zero. The mechanism-derived vector
+finalized at extrinsic `5569-0002` and matched the Subtensor readback. All three
+pairwise validator Kendall tau-b values were 1.0. These validators were three
+identities under one operator, so this is repeatability evidence, not
+independent consensus. See
 [LOCALNET_V2.md](LOCALNET_V2.md) and
 [`results/localnet-v2/`](results/localnet-v2/).
 

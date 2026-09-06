@@ -43,8 +43,8 @@ The official local Subtensor protocol v2 run uses three test validator
 identities under one operator, ten heterogeneous miners, 30 epochs, signed
 requests and responses, multiple hidden fixtures, disposable Docker evaluation,
 and an actual mechanism-derived weight write/readback. The verified run contains
-300 authenticated requests, 270 signed responses, five capped strategy
-allocations, and finalized extrinsic `9062-0002`; follow [STATUS.md](STATUS.md)
+300 authenticated requests, 270 signed responses, four capped strategy
+allocations, and finalized extrinsic `5569-0002`; follow [STATUS.md](STATUS.md)
 and [LOCALNET_V2.md](LOCALNET_V2.md).
 
 ```bash
