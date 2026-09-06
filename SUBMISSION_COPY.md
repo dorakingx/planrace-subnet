@@ -1,8 +1,11 @@
 # HackQuest submission copy
 
-Status: checkpoint copy passed; authenticated portal re-read, project rename,
-and posting remain. Localnet v2 and clean deployment gates pass. Testnet claims
-below remain explicitly pending.
+Status (2026-09-07 JST): project renamed to PlanRace and submitted to the
+Bittensor Global Subnet Hackathon. A Development checkpoint and a Design
+checkpoint linking the full proposal are posted. Demo and interim pitch are
+published. Official Checkpoint #1 acceptance and real testnet execution remain
+unverified/pending; a generic checkpoint post is not an organizer receipt.
+See `submission/HACKQUEST_SUBMISSION_RECEIPT.md` for verified public state.
 
 ## Name
 
@@ -18,7 +21,8 @@ PlanRace is a Bittensor subnet where miners produce bounded structured index
 plans for validator-owned SQL. Validators replay artifacts on unrevealed generated test
 databases, require exact result equality, measure performance themselves,
 and convert only correct scores into weights. It makes optimization open to
-competing solvers while keeping verification cheap, objective, and reproducible.
+competing solvers with bounded, replayable verification. Verification being
+economically cheaper than discovery is a hypothesis, not a measured result.
 
 Protocol v2 removes the deterministic public seed leak, signs both directions,
 evaluates only inside disposable resource-capped workers, and aggregates a
@@ -49,9 +53,8 @@ completed claims.
 
 ## Logo
 
-Use the PlanRace green database/verification mark from the deployed site's
-`dashboard/app/icon.svg`. Reconfirm the portal's accepted file type, dimensions,
-and size before upload.
+Uploaded `submission/planrace-logo.png` (800x800 PNG). The separate project
+image is `submission/planrace-hackquest-1280x720.png` (1280x720 PNG).
 
 ## Repository
 
@@ -107,24 +110,68 @@ the current portal exposes.
 
 ## Demo video
 
-Pending a real testnet recording. Use `SHOT_LIST.md`, `VOICEOVER.md`, and
-`CAPTIONS.srt`. Do not upload simulation or localnet footage as the required
-testnet segment. Reconfirm count, duration, privacy, and hosting requirements.
+Published interim asset: `submission/planrace-localnet-demo.mp4`, a 62-second
+silent localnet evidence dashboard walkthrough. Public URL:
+https://assets.hackquest.io/hackathons/projects/demoVideo/wuA6RfKG9HF2gCwIgWq_0.mp4
+
+This does not satisfy the required real testnet recording. The final testnet
+shot list and script remain in `SHOT_LIST.md`, `VOICEOVER.md` and `CAPTIONS.srt`.
 
 ## Pitch video
 
-Pending. Use `PITCH_SCRIPT.md`; include the real testnet result and limitations.
-Reconfirm whether HackQuest provides separate demo/pitch fields or a single
-video field before recording.
+Published interim asset: `submission/planrace-interim-pitch.mp4`, a 253.527-second
+narrated localnet pitch with an embedded English subtitle track. Public URL:
+https://assets.hackquest.io/hackathons/projects/pitchVideo/lo7HDuBmzuPCI1PAqtkeg.mp4
+
+HackQuest has separate Demo Video and Pitch Video fields. Full perceptual QA
+and the final real-testnet pitch remain pending. See `submission/MEDIA.md`.
 
 ## Checkpoint update
 
-Use `CHECKPOINT_PROPOSAL.md`; its content gate passes. The paste-ready field map
-is `submission/HACKQUEST_CHECKPOINT_PAYLOAD.md`.
+Published as a Design checkpoint titled
+“PlanRace: Subnet Proposal for Checkpoint #1”, with a link to the immutable
+`CHECKPOINT_PROPOSAL.md` at commit `b1fc6c8c950a9c24f70cb870161b3b42d1ccba82`.
+Its 200-character field is only a summary, not the full proposal. A separate
+Development checkpoint is preserved. The exact payload is recorded in
+`submission/HACKQUEST_CHECKPOINT_PAYLOAD.md`.
+
+## Event submission form — observed 2026-09-07 JST
+
+| Exact field/control | Required | Saved value |
+|---|---|---|
+| Select the Project to Submit | Yes | PlanRace (`da3b136a-c415-44cc-99cb-62c459e87f9f`) |
+| What is your contract address? | Yes | The honest testnet-pending disclosure below |
+| Which Prize Track Do You Belong To (Please select all that apply) | Yes | Grand Prizes |
+| Submit | Action | Previously accepted; do not submit a duplicate merely to recheck status |
+
+Saved deployment-address disclosure:
+
+> Not yet deployed on public Bittensor testnet; no public subnet/contract address exists. Protocol v2 verified on local Subtensor only. Localnet evidence: https://planrace-subnet.vercel.app/ . Real testnet registration and weights are pending.
+
+The form warns that deployment on the ecosystem is required to qualify. Portal
+acceptance of the disclosure does not waive that requirement. No event-specific
+Checkpoint #1 selector or separate proposal upload was visible in this form.
+
+## Generic checkpoint form — observed 2026-09-07 JST
+
+Type, Title and Description have required markers. Types are Idea, Design,
+Development, Testing, Launch and Other. Title displays a limit of 50 and
+Description a limit of 200. Link is optional. Up to three images can be added;
+the form advertises 500x300 or 1280x720. Controls are Cancel and Post.
+No checkpoint deadline time/timezone or organizer acceptance control was shown.
+
+## Deadline evidence — observed 2026-09-07 JST
+
+The official event says Checkpoint #1 is September 20 but gives no exact time
+for that checkpoint. Its public page data gives the overall submission close
+as `2026-10-19T15:59:00.000Z`, equivalent to October 20 at 00:59 JST. The
+authenticated Brave Schedule tab displayed `Oct 20,2026 00:59`, consistently
+with the JST environment, but did not label the timezone. Do not apply the
+final submission timestamp to Checkpoint #1.
 
 ## Portal fields requiring live re-verification
 
-The current form must be re-read immediately before entry. Preserve exact labels,
+For future updates, the current form must be re-read immediately before entry. Preserve exact labels,
 required/optional status, character limits, accepted URL/file formats, track and
 category selections, team fields, social/contact fields, video count/duration/
 hosting, legal consent, and checkpoint/final-submit controls here before posting.
