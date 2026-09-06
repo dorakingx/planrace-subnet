@@ -44,7 +44,7 @@ The authoritative command is:
 ```bash
 .bootstrap/bin/uv run python -u scripts/run_localnet_v2.py \
   --epochs 30 --netuid 3 \
-  --worker-image sha256:8685473bb8d2ea75f5a3ab4021ad1f9f72552d6efeee240df13f25f40e5f3aef \
+  --worker-image sha256:b5956478877e7084e13b72c431a7ff70f59147fc3b7ccf3ea9a0db9a07bba24e \
   --chain-image sha256:592aa28d528ebadba5f83807d0d38e29fa954dd91ac3e180b48259d64a654e8f \
   --evaluation-workers 3 \
   --output .localnet-state/localnet-v2-continuous-final
@@ -68,8 +68,8 @@ Verified evidence checks:
   development signing URI is public, this signature is a tamper-evident
   checksum—not proof of an independent operator.
 
-The completed run is `localnet-v2-1788674678`, bound to Git commit
-`a0a97bba370229b47661dfec4e665ef1723ba4e3`. It produced 300 authenticated
+The completed run is `localnet-v2-1788677901`, bound to Git commit
+`3091ea31235b7878b951ad9695ce4ecb5cc0de96`. It produced 300 authenticated
 requests and 270 signed responses across six query families. The signed summary
 binds the local evidence policy: at least 24 tasks, three tasks per family, 75%
 availability, 95% compliance and correctness, four distinct eligible behavior
@@ -77,12 +77,13 @@ portfolios, and a 25% per-portfolio cap. Four useful portfolios qualified and
 received 25% each. The selective/copycat pair was grouped into one evaluation
 in every epoch, failed the worst-family gate, and received zero weight.
 
-The mechanism-derived vector finalized successfully at extrinsic `5569-0002`,
-block `0x173019072bd83d2957a926b1e9e67ebaa1ddffa4835433f43718e88a05a9c72c`.
+The mechanism-derived vector finalized successfully at extrinsic `16048-0002`,
+block `0x02358128444f5951575c8451d3a16ccd480b3097e2ef4720cabe0a904205192d`.
 The local Subtensor readback contained UIDs 5–8 at exactly 25% each. All three
-validator-identity ranking pairs reported Kendall tau-b 1.0. The signed payload
+validator-identity ranking pairs reported Kendall tau-b 0.947, 0.947, and 1.0.
+The signed payload
 SHA-256 is
-`e6f793eb6b6f54635ac5ca20974d295f435f2aa25b8b0aafb06e5a36a16ccd7a`.
+`b3bb730f8aa2d6cb0b73ef489443d61d91b65ea05a05312c33386a712e96d93b`.
 
 `results/localnet-v2/summary.json`, `manifest.json`, and the 30 files under
 `epochs/` are authoritative for this run. The public status remains **LOCALNET

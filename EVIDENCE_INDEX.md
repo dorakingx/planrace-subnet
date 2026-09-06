@@ -14,9 +14,11 @@ make verify
 .bootstrap/bin/uv run python scripts/audit_localnet_v2.py results/localnet-v2
 ```
 
-The localnet manifest is validator-signed. The deterministic mechanism manifest
-is a seed/source/lock/artifact hash ledger rather than a validator signature.
-Neither form makes a localnet or simulation run a testnet run.
+The localnet manifest is signed by an externally expected but publicly
+derivable development signer, so it is a tamper-evident checksum rather than
+independent-operator authenticity. The deterministic mechanism manifest is a
+seed/source/lock/artifact hash ledger. Neither form makes a localnet or
+simulation run a testnet run.
 
 ## Protocol v2 security and mechanism
 

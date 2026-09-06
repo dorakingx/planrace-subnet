@@ -12,7 +12,9 @@ blocks the HackQuest checkpoint.
   interleaving, setup/storage accounting, reuse horizons, and index-plan usage.
 - Challenge any claim that finite SQLite fixtures imply universal equivalence or
   production-engine performance.
-- Status: pending full localnet v2 evidence and fresh run.
+- Status: completed at hardened source review. No P0. Index-order digest and
+  ordered-pair distribution P1 findings were fixed; setup sampling and broader
+  type/collation localnet coverage remain documented limitations.
 
 ## Reviewer B — Bittensor mechanism
 
@@ -21,7 +23,9 @@ blocks the HackQuest checkpoint.
   behavior, finalized extrinsic, and metagraph/weights readback.
 - Ensure three local validators are described as identities under one operator,
   never independent operation.
-- Status: local-chain v2 final vector pending; testnet pending.
+- Status: completed at hardened localnet review. No P0. Finalized
+  hotkey-to-UID resolution and transcript-to-observation auditing P1 findings
+  were fixed. Testnet remains pending and is not claimed.
 
 ## Reviewer C — security
 
@@ -30,8 +34,10 @@ blocks the HackQuest checkpoint.
 - Exercise malformed UTF-8/JSON, oversized and partial response, SQL/DDL escape,
   network/filesystem access, timeout, worker crash/OOM, and supply-chain digest.
 - Rerun secret scans over history and working tree.
-- Status: implementation tests exist; fresh integrated run and source-artifact
-  signature audit pending.
+- Status: completed at hardened security review. No P0. Compression bomb,
+  RFC6598 SSRF, headline-score audit, and public-signer claim P1 findings were
+  fixed. Killable sync strategy isolation and hash-locked worker transitives
+  remain documented hardening work.
 
 ## Reviewer D — mechanism design
 
@@ -40,7 +46,8 @@ blocks the HackQuest checkpoint.
   scenarios.
 - Review family quotas, conservative uncertainty, duplicate portfolio split,
   no-new-update, 25% cap, HHI/Gini, validator disagreement, and rank correlation.
-- Status: 512-replication simulation complete; localnet rank evidence pending.
+- Status: 512-replication simulation and localnet rank evidence complete;
+  independent Reviewer D sign-off pending.
 
 ## Reviewer E — hackathon judge
 

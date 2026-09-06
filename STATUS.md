@@ -16,7 +16,7 @@ Public claim: **LOCALNET EVIDENCE / TESTNET PENDING**.
   storage scoring across reuse horizons.
 - Closed multi-family schedule, conservative multi-epoch aggregation, duplicate
   strategy splitting, explicit no-new-update, and weight concentration cap.
-- Final clean Python gate: 232 tests passed, Ruff and mypy clean, and 87.12%
+- Final clean Python gate: 236 tests passed, Ruff and mypy clean, and 87.17%
   branch coverage against the 85% threshold.
 - Seeded 512-replication v2 mechanism/adversary simulation with 0 false
   acceptance, 100% all-fail no-update, and negligible duplicated-strategy
@@ -25,7 +25,7 @@ Public claim: **LOCALNET EVIDENCE / TESTNET PENDING**.
   identities and ten heterogeneous miner identities.
 - Verified 30-epoch protocol v2 localnet run: six query families, 300
   authenticated requests, 270 signed responses, 30 post-deadline reveals, four
-  capped strategy allocations, finalized extrinsic `5569-0002`, matching
+  capped strategy allocations, finalized extrinsic `16048-0002`, matching
   readback, and a signed 31-source manifest. The complete run kept the local
   chain active from dispatch through readback and binds its aggregation policy
   into the signed summary.

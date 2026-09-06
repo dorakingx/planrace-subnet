@@ -61,7 +61,7 @@ class _AuditNonceStore:
 
 
 def _evaluation_json(evaluation: Any) -> dict[str, Any]:
-    return {
+    payload = {
         "task_id": evaluation.task_id,
         "task_commitment": evaluation.task_commitment,
         "artifact_digest": evaluation.artifact_digest,
@@ -82,6 +82,7 @@ def _evaluation_json(evaluation: Any) -> dict[str, Any]:
             for fixture in evaluation.fixture_evaluations
         ],
     }
+    return json.loads(json.dumps(payload))
 
 
 def _load(path: Path) -> dict[str, Any]:
@@ -310,7 +311,7 @@ def audit_bundle(bundle: Path) -> dict[str, Any]:
             members = sorted(stored["miners"])
             representative = responses_by_miner[members[0]].artifact
             results = tuple(
-                SandboxResultV2.model_validate(fixture["result"])
+                SandboxResultV2.model_validate_json(json.dumps(fixture["result"]))
                 for fixture in stored["evaluation"]["fixtures"]
             )
             recomputed = evaluate_bundle_from_sandbox_results(private_task, representative, results)
