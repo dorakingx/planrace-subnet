@@ -16,7 +16,7 @@ Public claim: **LOCALNET EVIDENCE / TESTNET PENDING**.
   storage scoring across reuse horizons.
 - Closed multi-family schedule, conservative multi-epoch aggregation, duplicate
   strategy splitting, explicit no-new-update, and weight concentration cap.
-- Final clean Python gate: 239 tests passed, Ruff and mypy clean, and 87.18%
+- Final clean Python gate: 239 tests passed, Ruff and mypy clean, and 87.14%
   branch coverage against the 85% threshold.
 - Seeded 512-replication v2 mechanism/adversary simulation with 0 false
   acceptance, 100% all-fail no-update, zero exact-duplicate allocation gain,

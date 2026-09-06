@@ -65,11 +65,15 @@ blocks the HackQuest checkpoint.
 - From a clean environment, use only README to install, test, verify manifests,
   and explain the commodity/why-Bittensor/limitations in under two minutes.
 - Record elapsed time, platform, commands, failures, and documentation changes.
-- Status: pending final public commit.
+- Status: completed on a clean clone plus final spot-check. No P0/P1/P2/P3.
+  Bootstrap/readme prerequisites, full `make verify`, immediate audit progress,
+  fast signature-only verification, secret baseline, and the two-minute project
+  explanation were independently checked.
 
 ## Gate decision
 
-- Checkpoint: **BLOCKED** until every status above is complete and no P0/critical
-  finding remains.
+- Checkpoint: **CONTENT PASS / PUBLICATION PENDING**. All six reviews are
+  complete with no unresolved P0/P1. A matching production deployment and the
+  authenticated HackQuest portal recheck remain before posting.
 - Final: requires a second fresh review after testnet, media, portal submission
   draft, deployment, and release candidate are immutable.
