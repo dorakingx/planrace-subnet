@@ -36,8 +36,12 @@ and all-fail scenarios. A committed 512-replication run preserves raw rows and a
 source/lock/artifact hash manifest under
 [`results/mechanism-v2/`](results/mechanism-v2/). It
 recorded zero accepted injected false claims, zero gaming weight, fail-safe
-no-update in every all-fail replication, and no material allocation gain from
-duplicating a strategy.
+no-update in every all-fail replication, and zero allocation gain from exact
+strategy duplication. Byte-distinct, behavior-equivalent availability replicas
+remain a measured economic risk: their worst simulated group-allocation gain was
+13.57 percentage points (mean 1.37 points). They cannot count as extra diversity
+or lift their behavior group above the 25% cap, but registration economics are
+still needed to deter redundant identities.
 
 The official local Subtensor protocol v2 run uses three test validator
 identities under one operator, ten heterogeneous miners, 30 epochs, signed

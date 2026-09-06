@@ -51,7 +51,10 @@ mass rather than identity count. At allocation time, full portfolios with the
 same observed hidden-fixture query-plan behavior are grouped before the
 concentration cap and divided back in proportion to their already-split
 rewards. Byte-distinct near copies therefore cannot create reward, satisfy
-diversity, or bypass the cap.
+diversity, or bypass the cap. Multiple separately available encodings can still
+increase the probability that their single behavior group clears availability
+gates; the simulation reports that residual gain separately from exact-strategy
+duplication. Registration/stake economics remain part of the production defense.
 
 Final observed-behavior weights have a 25% cap. The production-oriented default
 requires five distinct positive strategies. The published localnet integration

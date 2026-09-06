@@ -674,6 +674,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 0,
       "duplicate_cache_hits": 24,
       "effective_miners": 8.240875024077916,
@@ -748,6 +749,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 0,
       "duplicate_cache_hits": 24,
       "effective_miners": 8.240875024077914,
@@ -822,6 +824,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 0,
       "duplicate_cache_hits": 24,
       "effective_miners": 8.240875024077916,
@@ -896,6 +899,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 0,
       "duplicate_cache_hits": 24,
       "effective_miners": 7.349572237882347,
@@ -970,6 +974,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 0,
       "duplicate_cache_hits": 24,
       "effective_miners": 7.273420415764814,
@@ -1041,6 +1046,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 0,
       "duplicate_cache_hits": 24,
       "effective_miners": 6.247894668274852,
@@ -1111,6 +1117,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 0,
       "duplicate_cache_hits": 24,
       "effective_miners": 8.240875024077916,
@@ -1185,6 +1192,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": null,
       "cohort": 0,
       "duplicate_cache_hits": 24,
       "effective_miners": 0.0,
@@ -1237,6 +1245,7 @@
         "warm-specialist": 49.833966503008774,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 1,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.154186250335815,
@@ -1315,6 +1324,7 @@
         "warm-specialist": 49.83396650300877,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 1,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.154186250335814,
@@ -1393,6 +1403,7 @@
         "warm-specialist": 49.83396650300877,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 1,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.154186250335815,
@@ -1471,6 +1482,7 @@
         "warm-specialist": 43.59046342007401,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 1,
       "duplicate_cache_hits": 24,
       "effective_miners": 9.110643878217783,
@@ -1549,6 +1561,7 @@
         "warm-specialist": 49.08403957307603,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 1,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.16145835416312,
@@ -1627,6 +1640,7 @@
         "warm-specialist": 38.15582649195643,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 1,
       "duplicate_cache_hits": 24,
       "effective_miners": 6.982380302185714,
@@ -1701,6 +1715,7 @@
         "warm-specialist": 49.833966503008774,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 1,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.154186250335815,
@@ -1779,6 +1794,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": null,
       "cohort": 1,
       "duplicate_cache_hits": 24,
       "effective_miners": 0.0,
@@ -1831,6 +1847,7 @@
         "warm-specialist": 49.71369272547143,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 2,
       "duplicate_cache_hits": 24,
       "effective_miners": 11.383044042210237,
@@ -1910,6 +1927,7 @@
         "warm-specialist": 49.71369272547141,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 2,
       "duplicate_cache_hits": 24,
       "effective_miners": 11.383044042210237,
@@ -1989,6 +2007,7 @@
         "warm-specialist": 49.713692725471425,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 2,
       "duplicate_cache_hits": 24,
       "effective_miners": 11.383044042210235,
@@ -2068,6 +2087,7 @@
         "warm-specialist": 43.60146381454439,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 2,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.726447657808377,
@@ -2147,6 +2167,7 @@
         "warm-specialist": 48.12049422851804,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 2,
       "duplicate_cache_hits": 24,
       "effective_miners": 9.28117693375377,
@@ -2222,6 +2243,7 @@
         "warm-specialist": 37.77571250962697,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 2,
       "duplicate_cache_hits": 24,
       "effective_miners": 8.889298587252497,
@@ -2299,6 +2321,7 @@
         "warm-specialist": 49.71369272547143,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 2,
       "duplicate_cache_hits": 24,
       "effective_miners": 11.383044042210237,
@@ -2378,6 +2401,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": null,
       "cohort": 2,
       "duplicate_cache_hits": 24,
       "effective_miners": 0.0,
@@ -2430,6 +2454,7 @@
         "warm-specialist": 49.91573369281321,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 3,
       "duplicate_cache_hits": 24,
       "effective_miners": 11.162076631552386,
@@ -2510,6 +2535,7 @@
         "warm-specialist": 49.91573369281321,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 3,
       "duplicate_cache_hits": 24,
       "effective_miners": 11.162076631552386,
@@ -2590,6 +2616,7 @@
         "warm-specialist": 49.91573369281321,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 3,
       "duplicate_cache_hits": 24,
       "effective_miners": 11.162076631552386,
@@ -2670,6 +2697,7 @@
         "warm-specialist": 43.49614048196386,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 3,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.127622163194825,
@@ -2750,6 +2778,7 @@
         "warm-specialist": 46.44143626584189,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 3,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.568566316872737,
@@ -2827,6 +2856,7 @@
         "warm-specialist": 38.53528876757165,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 3,
       "duplicate_cache_hits": 24,
       "effective_miners": 7.913468964112943,
@@ -2901,6 +2931,7 @@
         "warm-specialist": 49.91573369281321,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 3,
       "duplicate_cache_hits": 24,
       "effective_miners": 11.162076631552386,
@@ -2981,6 +3012,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": null,
       "cohort": 3,
       "duplicate_cache_hits": 24,
       "effective_miners": 0.0,
@@ -3033,6 +3065,7 @@
         "warm-specialist": 49.82596905306177,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 4,
       "duplicate_cache_hits": 24,
       "effective_miners": 9.178786478604273,
@@ -3108,6 +3141,7 @@
         "warm-specialist": 49.82596905306176,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 4,
       "duplicate_cache_hits": 24,
       "effective_miners": 9.178786478604273,
@@ -3183,6 +3217,7 @@
         "warm-specialist": 49.82596905306177,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 4,
       "duplicate_cache_hits": 24,
       "effective_miners": 9.178786478604273,
@@ -3258,6 +3293,7 @@
         "warm-specialist": 43.61231076310185,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 4,
       "duplicate_cache_hits": 24,
       "effective_miners": 8.15918442420049,
@@ -3333,6 +3369,7 @@
         "warm-specialist": 50.169270606105016,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 4,
       "duplicate_cache_hits": 24,
       "effective_miners": 12.048167377354114,
@@ -3415,6 +3452,7 @@
         "warm-specialist": 38.136558154627885,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 4,
       "duplicate_cache_hits": 24,
       "effective_miners": 6.232239564951347,
@@ -3484,6 +3522,7 @@
         "warm-specialist": 49.82596905306177,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 4,
       "duplicate_cache_hits": 24,
       "effective_miners": 9.178786478604273,
@@ -3559,6 +3598,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": null,
       "cohort": 4,
       "duplicate_cache_hits": 24,
       "effective_miners": 0.0,
@@ -3611,6 +3651,7 @@
         "warm-specialist": 49.73171985316348,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 5,
       "duplicate_cache_hits": 24,
       "effective_miners": 8.887738015426939,
@@ -3685,6 +3726,7 @@
         "warm-specialist": 49.73171985316348,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 5,
       "duplicate_cache_hits": 24,
       "effective_miners": 8.88773801542694,
@@ -3759,6 +3801,7 @@
         "warm-specialist": 49.73171985316348,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 5,
       "duplicate_cache_hits": 24,
       "effective_miners": 8.887738015426939,
@@ -3833,6 +3876,7 @@
         "warm-specialist": 43.43192626689465,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 5,
       "duplicate_cache_hits": 24,
       "effective_miners": 8.74145040015095,
@@ -3907,6 +3951,7 @@
         "warm-specialist": 47.59487503428872,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 5,
       "duplicate_cache_hits": 24,
       "effective_miners": 11.50276200993444,
@@ -3987,6 +4032,7 @@
         "warm-specialist": 38.10048941212587,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 5,
       "duplicate_cache_hits": 24,
       "effective_miners": 7.880577600214865,
@@ -4061,6 +4107,7 @@
         "warm-specialist": 49.73171985316348,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 5,
       "duplicate_cache_hits": 24,
       "effective_miners": 8.887738015426939,
@@ -4135,6 +4182,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": null,
       "cohort": 5,
       "duplicate_cache_hits": 24,
       "effective_miners": 0.0,
@@ -4187,6 +4235,7 @@
         "warm-specialist": 49.75304448619691,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 6,
       "duplicate_cache_hits": 24,
       "effective_miners": 7.649276534650922,
@@ -4259,6 +4308,7 @@
         "warm-specialist": 49.75304448619691,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 6,
       "duplicate_cache_hits": 24,
       "effective_miners": 7.649276534650924,
@@ -4331,6 +4381,7 @@
         "warm-specialist": 49.75304448619691,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 6,
       "duplicate_cache_hits": 24,
       "effective_miners": 7.649276534650925,
@@ -4403,6 +4454,7 @@
         "warm-specialist": 43.54935259082303,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 6,
       "duplicate_cache_hits": 24,
       "effective_miners": 7.128711037681978,
@@ -4475,6 +4527,7 @@
         "warm-specialist": 48.846317269752745,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 6,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.17952299386775,
@@ -4553,6 +4606,7 @@
         "warm-specialist": 38.21748932473848,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 6,
       "duplicate_cache_hits": 24,
       "effective_miners": 5.940925263179801,
@@ -4623,6 +4677,7 @@
         "warm-specialist": 49.75304448619691,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 6,
       "duplicate_cache_hits": 24,
       "effective_miners": 7.649276534650922,
@@ -4695,6 +4750,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": null,
       "cohort": 6,
       "duplicate_cache_hits": 24,
       "effective_miners": 0.0,
@@ -4747,6 +4803,7 @@
         "warm-specialist": 49.99384695025899,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 7,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.332641259016418,
@@ -4824,6 +4881,7 @@
         "warm-specialist": 49.99384695025901,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 7,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.332641259016418,
@@ -4901,6 +4959,7 @@
         "warm-specialist": 49.99384695025899,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 7,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.332641259016416,
@@ -4978,6 +5037,7 @@
         "warm-specialist": 43.70216952067606,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 7,
       "duplicate_cache_hits": 24,
       "effective_miners": 9.877797947198909,
@@ -5055,6 +5115,7 @@
         "warm-specialist": 48.02904576889042,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 7,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.197743975652257,
@@ -5132,6 +5193,7 @@
         "warm-specialist": 38.52951566980323,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 7,
       "duplicate_cache_hits": 24,
       "effective_miners": 8.9177225745549,
@@ -5207,6 +5269,7 @@
         "warm-specialist": 49.99384695025899,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 7,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.332641259016418,
@@ -5284,6 +5347,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": null,
       "cohort": 7,
       "duplicate_cache_hits": 24,
       "effective_miners": 0.0,
@@ -5336,6 +5400,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 8,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.246079850887487,
@@ -5414,6 +5479,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 8,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.246079850887487,
@@ -5492,6 +5558,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 8,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.246079850887488,
@@ -5570,6 +5637,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 8,
       "duplicate_cache_hits": 24,
       "effective_miners": 9.297812428964424,
@@ -5648,6 +5716,7 @@
         "warm-specialist": 48.57094681585272,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0950587580339269,
       "cohort": 8,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.147628720359545,
@@ -5679,7 +5748,7 @@
         "sha256:d3c89b4d42f786d1f48ff44e128762b4ec8a81be43fb132f8a5554110bb1ce0c": 0.055541590705172734,
         "sha256:d607c4ccadbd1b933b9e972cf8a71b9268cb429b730e9ccc5e868d49661066b2": 0.10638145579210356
       },
-      "sybil_strategy_allocation_gain": 0.04752937901696345,
+      "sybil_strategy_allocation_gain": 0.0,
       "sybil_weight": 0.18058742612980777,
       "top1_share": 0.12269118286684452,
       "trial_pairs": 4520,
@@ -5725,6 +5794,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 8,
       "duplicate_cache_hits": 24,
       "effective_miners": 7.914598717408235,
@@ -5799,6 +5869,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 8,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.246079850887487,
@@ -5877,6 +5948,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": null,
       "cohort": 8,
       "duplicate_cache_hits": 24,
       "effective_miners": 0.0,
@@ -5929,6 +6001,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.09061234781777845,
       "cohort": 9,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.19483575229023,
@@ -5960,7 +6033,7 @@
         "sha256:d13831132851afcef0b35c66378f9226280191db5fae0e865e0ee7d7a987ac43": 0.10324486666469898,
         "sha256:d3c89b4d42f786d1f48ff44e128762b4ec8a81be43fb132f8a5554110bb1ce0c": 0.052253166815378345
       },
-      "sybil_strategy_allocation_gain": 0.045306173908889226,
+      "sybil_strategy_allocation_gain": 0.0,
       "sybil_weight": 0.18117366508470764,
       "top1_share": 0.12347171566334725,
       "trial_pairs": 4520,
@@ -6006,6 +6079,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.09061234781777847,
       "cohort": 9,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.19483575229023,
@@ -6037,7 +6111,7 @@
         "sha256:d13831132851afcef0b35c66378f9226280191db5fae0e865e0ee7d7a987ac43": 0.10324486666469902,
         "sha256:d3c89b4d42f786d1f48ff44e128762b4ec8a81be43fb132f8a5554110bb1ce0c": 0.0522531668153783
       },
-      "sybil_strategy_allocation_gain": 0.04530617390888923,
+      "sybil_strategy_allocation_gain": 0.0,
       "sybil_weight": 0.18117366508470767,
       "top1_share": 0.12347171566334726,
       "trial_pairs": 4520,
@@ -6083,6 +6157,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.09061234781777847,
       "cohort": 9,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.19483575229023,
@@ -6114,7 +6189,7 @@
         "sha256:d13831132851afcef0b35c66378f9226280191db5fae0e865e0ee7d7a987ac43": 0.103244866664699,
         "sha256:d3c89b4d42f786d1f48ff44e128762b4ec8a81be43fb132f8a5554110bb1ce0c": 0.05225316681537834
       },
-      "sybil_strategy_allocation_gain": 0.04530617390888923,
+      "sybil_strategy_allocation_gain": 0.0,
       "sybil_weight": 0.18117366508470767,
       "top1_share": 0.12347171566334726,
       "trial_pairs": 4520,
@@ -6160,6 +6235,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.08912453816853007,
       "cohort": 9,
       "duplicate_cache_hits": 24,
       "effective_miners": 9.119461800818831,
@@ -6191,7 +6267,7 @@
         "sha256:d13831132851afcef0b35c66378f9226280191db5fae0e865e0ee7d7a987ac43": 0.11082116094485536,
         "sha256:d3c89b4d42f786d1f48ff44e128762b4ec8a81be43fb132f8a5554110bb1ce0c": 0.021867715793232063
       },
-      "sybil_strategy_allocation_gain": 0.044562269084265034,
+      "sybil_strategy_allocation_gain": 0.0,
       "sybil_weight": 0.17792490092008179,
       "top1_share": 0.13783380995355332,
       "trial_pairs": 4520,
@@ -6237,6 +6313,7 @@
         "warm-specialist": 48.05624406064478,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 9,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.257907449484128,
@@ -6313,6 +6390,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.06809547920598794,
       "cohort": 9,
       "duplicate_cache_hits": 24,
       "effective_miners": 6.901815482024304,
@@ -6342,7 +6420,7 @@
         "sha256:ba87167fd790330c3ed420573f86be850615af15b1bd1dca15e05d5c9225523d": 0.06809547920598794,
         "sha256:d13831132851afcef0b35c66378f9226280191db5fae0e865e0ee7d7a987ac43": 0.11683481930265359
       },
-      "sybil_strategy_allocation_gain": 0.03404773960299397,
+      "sybil_strategy_allocation_gain": 0.0,
       "sybil_weight": 0.13517004854647255,
       "top1_share": 0.20129896644801898,
       "trial_pairs": 4520,
@@ -6386,6 +6464,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.09061234781777845,
       "cohort": 9,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.19483575229023,
@@ -6417,7 +6496,7 @@
         "sha256:d13831132851afcef0b35c66378f9226280191db5fae0e865e0ee7d7a987ac43": 0.10324486666469898,
         "sha256:d3c89b4d42f786d1f48ff44e128762b4ec8a81be43fb132f8a5554110bb1ce0c": 0.052253166815378345
       },
-      "sybil_strategy_allocation_gain": 0.045306173908889226,
+      "sybil_strategy_allocation_gain": 0.0,
       "sybil_weight": 0.18117366508470764,
       "top1_share": 0.12347171566334725,
       "trial_pairs": 4520,
@@ -6463,6 +6542,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": null,
       "cohort": 9,
       "duplicate_cache_hits": 24,
       "effective_miners": 0.0,
@@ -6515,6 +6595,7 @@
         "warm-specialist": 49.64593329022989,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 10,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.177137827490178,
@@ -6592,6 +6673,7 @@
         "warm-specialist": 49.64593329022989,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 10,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.177137827490178,
@@ -6669,6 +6751,7 @@
         "warm-specialist": 49.64593329022989,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 10,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.17713782749018,
@@ -6746,6 +6829,7 @@
         "warm-specialist": 43.35011532293103,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 10,
       "duplicate_cache_hits": 24,
       "effective_miners": 9.134363044205331,
@@ -6823,6 +6907,7 @@
         "warm-specialist": 50.10213398507779,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 10,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.277793986520845,
@@ -6901,6 +6986,7 @@
         "warm-specialist": 37.93005843962595,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 10,
       "duplicate_cache_hits": 24,
       "effective_miners": 7.297811728833707,
@@ -6974,6 +7060,7 @@
         "warm-specialist": 49.64593329022989,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 10,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.177137827490178,
@@ -7051,6 +7138,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": null,
       "cohort": 10,
       "duplicate_cache_hits": 24,
       "effective_miners": 0.0,
@@ -7103,6 +7191,7 @@
         "warm-specialist": 49.795699041893,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 11,
       "duplicate_cache_hits": 24,
       "effective_miners": 9.408677604185545,
@@ -7179,6 +7268,7 @@
         "warm-specialist": 49.795699041893,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 11,
       "duplicate_cache_hits": 24,
       "effective_miners": 9.408677604185545,
@@ -7255,6 +7345,7 @@
         "warm-specialist": 49.795699041893,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 11,
       "duplicate_cache_hits": 24,
       "effective_miners": 9.408677604185545,
@@ -7331,6 +7422,7 @@
         "warm-specialist": 43.60408726518181,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 11,
       "duplicate_cache_hits": 24,
       "effective_miners": 8.782509036902072,
@@ -7407,6 +7499,7 @@
         "warm-specialist": 48.79736073341439,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 11,
       "duplicate_cache_hits": 24,
       "effective_miners": 11.161425661747666,
@@ -7487,6 +7580,7 @@
         "warm-specialist": 38.36685365142486,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 11,
       "duplicate_cache_hits": 24,
       "effective_miners": 7.201011418559905,
@@ -7559,6 +7653,7 @@
         "warm-specialist": 49.795699041893,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 11,
       "duplicate_cache_hits": 24,
       "effective_miners": 9.408677604185545,
@@ -7635,6 +7730,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": null,
       "cohort": 11,
       "duplicate_cache_hits": 24,
       "effective_miners": 0.0,
@@ -7687,6 +7783,7 @@
         "warm-specialist": 49.84927219012261,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 12,
       "duplicate_cache_hits": 24,
       "effective_miners": 7.6929731794560645,
@@ -7759,6 +7856,7 @@
         "warm-specialist": 49.84927219012261,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 12,
       "duplicate_cache_hits": 24,
       "effective_miners": 7.692973179456065,
@@ -7831,6 +7929,7 @@
         "warm-specialist": 49.84927219012261,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 12,
       "duplicate_cache_hits": 24,
       "effective_miners": 7.692973179456065,
@@ -7903,6 +8002,7 @@
         "warm-specialist": 43.60469472101407,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 12,
       "duplicate_cache_hits": 24,
       "effective_miners": 7.141880964870338,
@@ -7975,6 +8075,7 @@
         "warm-specialist": 50.421966544060766,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 12,
       "duplicate_cache_hits": 24,
       "effective_miners": 8.17645309245263,
@@ -8049,6 +8150,7 @@
         "warm-specialist": 38.23717480959769,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 12,
       "duplicate_cache_hits": 24,
       "effective_miners": 6.060825292237043,
@@ -8119,6 +8221,7 @@
         "warm-specialist": 49.84927219012261,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 12,
       "duplicate_cache_hits": 24,
       "effective_miners": 7.6929731794560645,
@@ -8191,6 +8294,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": null,
       "cohort": 12,
       "duplicate_cache_hits": 24,
       "effective_miners": 0.0,
@@ -8243,6 +8347,7 @@
         "warm-specialist": 49.71400005429536,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 13,
       "duplicate_cache_hits": 24,
       "effective_miners": 9.183935845484966,
@@ -8318,6 +8423,7 @@
         "warm-specialist": 49.71400005429536,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 13,
       "duplicate_cache_hits": 24,
       "effective_miners": 9.183935845484966,
@@ -8393,6 +8499,7 @@
         "warm-specialist": 49.71400005429536,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 13,
       "duplicate_cache_hits": 24,
       "effective_miners": 9.183935845484966,
@@ -8468,6 +8575,7 @@
         "warm-specialist": 43.594886921407536,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 13,
       "duplicate_cache_hits": 24,
       "effective_miners": 8.152832293392857,
@@ -8543,6 +8651,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 13,
       "duplicate_cache_hits": 24,
       "effective_miners": 8.177097442696198,
@@ -8615,6 +8724,7 @@
         "warm-specialist": 38.00073583955622,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 13,
       "duplicate_cache_hits": 24,
       "effective_miners": 5.966421529289965,
@@ -8684,6 +8794,7 @@
         "warm-specialist": 49.71400005429536,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 13,
       "duplicate_cache_hits": 24,
       "effective_miners": 9.183935845484966,
@@ -8759,6 +8870,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": null,
       "cohort": 13,
       "duplicate_cache_hits": 24,
       "effective_miners": 0.0,
@@ -8811,6 +8923,7 @@
         "warm-specialist": 49.86044409513722,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 14,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.637580786295718,
@@ -8889,6 +9002,7 @@
         "warm-specialist": 49.86044409513722,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 14,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.637580786295716,
@@ -8967,6 +9081,7 @@
         "warm-specialist": 49.86044409513722,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 14,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.637580786295715,
@@ -9045,6 +9160,7 @@
         "warm-specialist": 43.70219943832348,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 14,
       "duplicate_cache_hits": 24,
       "effective_miners": 9.974791318724684,
@@ -9123,6 +9239,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 14,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.17011640127034,
@@ -9201,6 +9318,7 @@
         "warm-specialist": 38.38404837323836,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 14,
       "duplicate_cache_hits": 24,
       "effective_miners": 7.9042221889176565,
@@ -9275,6 +9393,7 @@
         "warm-specialist": 49.86044409513722,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 14,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.637580786295718,
@@ -9353,6 +9472,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": null,
       "cohort": 14,
       "duplicate_cache_hits": 24,
       "effective_miners": 0.0,
@@ -9405,6 +9525,7 @@
         "warm-specialist": 49.927581947416314,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 15,
       "duplicate_cache_hits": 24,
       "effective_miners": 12.152971768636634,
@@ -9487,6 +9608,7 @@
         "warm-specialist": 49.92758194741631,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 15,
       "duplicate_cache_hits": 24,
       "effective_miners": 12.152971768636634,
@@ -9569,6 +9691,7 @@
         "warm-specialist": 49.92758194741631,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 15,
       "duplicate_cache_hits": 24,
       "effective_miners": 12.152971768636634,
@@ -9651,6 +9774,7 @@
         "warm-specialist": 43.88822096715161,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 15,
       "duplicate_cache_hits": 24,
       "effective_miners": 11.077026931172087,
@@ -9733,6 +9857,7 @@
         "warm-specialist": 46.98045843192182,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 15,
       "duplicate_cache_hits": 24,
       "effective_miners": 8.174187590973629,
@@ -9807,6 +9932,7 @@
         "warm-specialist": 38.674284454519636,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 15,
       "duplicate_cache_hits": 24,
       "effective_miners": 8.897459307533795,
@@ -9885,6 +10011,7 @@
         "warm-specialist": 49.927581947416314,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 15,
       "duplicate_cache_hits": 24,
       "effective_miners": 12.152971768636634,
@@ -9967,6 +10094,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": null,
       "cohort": 15,
       "duplicate_cache_hits": 24,
       "effective_miners": 0.0,
@@ -10019,6 +10147,7 @@
         "warm-specialist": 49.863420233038376,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 16,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.590924848670099,
@@ -10097,6 +10226,7 @@
         "warm-specialist": 49.863420233038376,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 16,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.590924848670099,
@@ -10175,6 +10305,7 @@
         "warm-specialist": 49.86342023303835,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 16,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.590924848670099,
@@ -10253,6 +10384,7 @@
         "warm-specialist": 43.53729509007793,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 16,
       "duplicate_cache_hits": 24,
       "effective_miners": 9.944378985092206,
@@ -10331,6 +10463,7 @@
         "warm-specialist": 49.2564062083541,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 16,
       "duplicate_cache_hits": 24,
       "effective_miners": 7.7386314063687704,
@@ -10404,6 +10537,7 @@
         "warm-specialist": 38.40663476587047,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 16,
       "duplicate_cache_hits": 24,
       "effective_miners": 7.887337753381392,
@@ -10478,6 +10612,7 @@
         "warm-specialist": 49.863420233038376,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 16,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.590924848670099,
@@ -10556,6 +10691,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": null,
       "cohort": 16,
       "duplicate_cache_hits": 24,
       "effective_miners": 0.0,
@@ -10608,6 +10744,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 17,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.16007779210255,
@@ -10686,6 +10823,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 17,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.16007779210255,
@@ -10764,6 +10902,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 17,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.160077792102546,
@@ -10842,6 +10981,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 17,
       "duplicate_cache_hits": 24,
       "effective_miners": 9.166310783462015,
@@ -10920,6 +11060,7 @@
         "warm-specialist": 49.049597230742535,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 17,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.201242328180019,
@@ -10997,6 +11138,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 17,
       "duplicate_cache_hits": 24,
       "effective_miners": 7.147039108856116,
@@ -11071,6 +11213,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 17,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.16007779210255,
@@ -11149,6 +11292,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": null,
       "cohort": 17,
       "duplicate_cache_hits": 24,
       "effective_miners": 0.0,
@@ -11201,6 +11345,7 @@
         "warm-specialist": 49.877017683402784,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 18,
       "duplicate_cache_hits": 24,
       "effective_miners": 7.30795404541618,
@@ -11273,6 +11418,7 @@
         "warm-specialist": 49.87701768340279,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 18,
       "duplicate_cache_hits": 24,
       "effective_miners": 7.30795404541618,
@@ -11345,6 +11491,7 @@
         "warm-specialist": 49.87701768340279,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 18,
       "duplicate_cache_hits": 24,
       "effective_miners": 7.307954045416178,
@@ -11417,6 +11564,7 @@
         "warm-specialist": 43.55366990387015,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 18,
       "duplicate_cache_hits": 24,
       "effective_miners": 6.203973433669525,
@@ -11489,6 +11637,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 18,
       "duplicate_cache_hits": 24,
       "effective_miners": 8.870114052485727,
@@ -11564,6 +11713,7 @@
         "warm-specialist": 37.8531653384077,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 18,
       "duplicate_cache_hits": 24,
       "effective_miners": 4.7973010319087415,
@@ -11630,6 +11780,7 @@
         "warm-specialist": 49.877017683402784,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 18,
       "duplicate_cache_hits": 24,
       "effective_miners": 7.30795404541618,
@@ -11702,6 +11853,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": null,
       "cohort": 18,
       "duplicate_cache_hits": 24,
       "effective_miners": 0.0,
@@ -11754,6 +11906,7 @@
         "warm-specialist": 49.95300131639054,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 19,
       "duplicate_cache_hits": 24,
       "effective_miners": 11.161939974266529,
@@ -11834,6 +11987,7 @@
         "warm-specialist": 49.95300131639054,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 19,
       "duplicate_cache_hits": 24,
       "effective_miners": 11.161939974266527,
@@ -11914,6 +12068,7 @@
         "warm-specialist": 49.95300131639055,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 19,
       "duplicate_cache_hits": 24,
       "effective_miners": 11.161939974266527,
@@ -11994,6 +12149,7 @@
         "warm-specialist": 43.72430435786813,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 19,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.074732227117243,
@@ -12074,6 +12230,7 @@
         "warm-specialist": 46.318200358353266,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.09908436349836294,
       "cohort": 19,
       "duplicate_cache_hits": 24,
       "effective_miners": 9.498979328468993,
@@ -12104,7 +12261,7 @@
         "sha256:ba87167fd790330c3ed420573f86be850615af15b1bd1dca15e05d5c9225523d": 0.09908436349836294,
         "sha256:c6e0db30d988b0f747a5ce319ad940c0a952775d4f5b26ec46df53428dc94301": 0.038550070048099586
       },
-      "sybil_strategy_allocation_gain": 0.04954218174918147,
+      "sybil_strategy_allocation_gain": 0.0,
       "sybil_weight": 0.1930325544852703,
       "top1_share": 0.12219715033390903,
       "trial_pairs": 4490,
@@ -12149,6 +12306,7 @@
         "warm-specialist": 38.699965910191025,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 19,
       "duplicate_cache_hits": 24,
       "effective_miners": 7.968572006486229,
@@ -12225,6 +12383,7 @@
         "warm-specialist": 49.95300131639054,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 19,
       "duplicate_cache_hits": 24,
       "effective_miners": 11.161939974266529,
@@ -12305,6 +12464,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": null,
       "cohort": 19,
       "duplicate_cache_hits": 24,
       "effective_miners": 0.0,
@@ -12357,6 +12517,7 @@
         "warm-specialist": 49.86803828745211,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 20,
       "duplicate_cache_hits": 24,
       "effective_miners": 8.181336496175636,
@@ -12430,6 +12591,7 @@
         "warm-specialist": 49.868038287452116,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 20,
       "duplicate_cache_hits": 24,
       "effective_miners": 8.181336496175634,
@@ -12503,6 +12665,7 @@
         "warm-specialist": 49.868038287452116,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 20,
       "duplicate_cache_hits": 24,
       "effective_miners": 8.181336496175634,
@@ -12576,6 +12739,7 @@
         "warm-specialist": 43.57465807888401,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 20,
       "duplicate_cache_hits": 24,
       "effective_miners": 7.15000433194635,
@@ -12649,6 +12813,7 @@
         "warm-specialist": 47.56706391544535,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 20,
       "duplicate_cache_hits": 24,
       "effective_miners": 9.859981618790426,
@@ -12725,6 +12890,7 @@
         "warm-specialist": 38.375338245459936,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 20,
       "duplicate_cache_hits": 24,
       "effective_miners": 5.204897428925957,
@@ -12792,6 +12958,7 @@
         "warm-specialist": 49.86803828745211,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 20,
       "duplicate_cache_hits": 24,
       "effective_miners": 8.181336496175636,
@@ -12865,6 +13032,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": null,
       "cohort": 20,
       "duplicate_cache_hits": 24,
       "effective_miners": 0.0,
@@ -12917,6 +13085,7 @@
         "warm-specialist": 49.80719238012673,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.08744532331936877,
       "cohort": 21,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.199736432255543,
@@ -12948,7 +13117,7 @@
         "sha256:d3c89b4d42f786d1f48ff44e128762b4ec8a81be43fb132f8a5554110bb1ce0c": 0.05063658554565036,
         "sha256:d607c4ccadbd1b933b9e972cf8a71b9268cb429b730e9ccc5e868d49661066b2": 0.10025164820884414
       },
-      "sybil_strategy_allocation_gain": 0.043722661659684386,
+      "sybil_strategy_allocation_gain": 0.0,
       "sybil_weight": 0.17525891619432438,
       "top1_share": 0.11944356533780708,
       "trial_pairs": 4510,
@@ -12994,6 +13163,7 @@
         "warm-specialist": 49.80719238012672,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.08744532331936877,
       "cohort": 21,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.199736432255541,
@@ -13025,7 +13195,7 @@
         "sha256:d3c89b4d42f786d1f48ff44e128762b4ec8a81be43fb132f8a5554110bb1ce0c": 0.050636585545650335,
         "sha256:d607c4ccadbd1b933b9e972cf8a71b9268cb429b730e9ccc5e868d49661066b2": 0.10025164820884414
       },
-      "sybil_strategy_allocation_gain": 0.043722661659684386,
+      "sybil_strategy_allocation_gain": 0.0,
       "sybil_weight": 0.17525891619432438,
       "top1_share": 0.11944356533780709,
       "trial_pairs": 4510,
@@ -13071,6 +13241,7 @@
         "warm-specialist": 49.80719238012673,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.08744532331936877,
       "cohort": 21,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.199736432255543,
@@ -13102,7 +13273,7 @@
         "sha256:d3c89b4d42f786d1f48ff44e128762b4ec8a81be43fb132f8a5554110bb1ce0c": 0.05063658554565037,
         "sha256:d607c4ccadbd1b933b9e972cf8a71b9268cb429b730e9ccc5e868d49661066b2": 0.10025164820884412
       },
-      "sybil_strategy_allocation_gain": 0.043722661659684386,
+      "sybil_strategy_allocation_gain": 0.0,
       "sybil_weight": 0.17525891619432438,
       "top1_share": 0.11944356533780708,
       "trial_pairs": 4510,
@@ -13148,6 +13319,7 @@
         "warm-specialist": 43.698631440449944,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.08449789621003782,
       "cohort": 21,
       "duplicate_cache_hits": 24,
       "effective_miners": 9.261057613270534,
@@ -13179,7 +13351,7 @@
         "sha256:d3c89b4d42f786d1f48ff44e128762b4ec8a81be43fb132f8a5554110bb1ce0c": 0.020616942833856435,
         "sha256:d607c4ccadbd1b933b9e972cf8a71b9268cb429b730e9ccc5e868d49661066b2": 0.11890152384531946
       },
-      "sybil_strategy_allocation_gain": 0.04224894810501891,
+      "sybil_strategy_allocation_gain": 0.0,
       "sybil_weight": 0.1688273800901518,
       "top1_share": 0.13025926469306515,
       "trial_pairs": 4510,
@@ -13225,6 +13397,7 @@
         "warm-specialist": 48.852153643811405,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.07669812652934035,
       "cohort": 21,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.589723569010848,
@@ -13256,7 +13429,7 @@
         "sha256:d3c89b4d42f786d1f48ff44e128762b4ec8a81be43fb132f8a5554110bb1ce0c": 0.043974841391879634,
         "sha256:d607c4ccadbd1b933b9e972cf8a71b9268cb429b730e9ccc5e868d49661066b2": 0.0938837309505439
       },
-      "sybil_strategy_allocation_gain": 0.03834906326467018,
+      "sybil_strategy_allocation_gain": 0.0,
       "sybil_weight": 0.15768077206897246,
       "top1_share": 0.10778132651137237,
       "trial_pairs": 4510,
@@ -13302,6 +13475,7 @@
         "warm-specialist": 38.16454059678859,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.05766016215757251,
       "cohort": 21,
       "duplicate_cache_hits": 24,
       "effective_miners": 7.953021011388184,
@@ -13331,7 +13505,7 @@
         "sha256:ba87167fd790330c3ed420573f86be850615af15b1bd1dca15e05d5c9225523d": 0.05766016215757251,
         "sha256:d607c4ccadbd1b933b9e972cf8a71b9268cb429b730e9ccc5e868d49661066b2": 0.15056242949575444
       },
-      "sybil_strategy_allocation_gain": 0.028830081078786256,
+      "sybil_strategy_allocation_gain": 0.0,
       "sybil_weight": 0.11765367849357722,
       "top1_share": 0.15578463054136568,
       "trial_pairs": 4510,
@@ -13375,6 +13549,7 @@
         "warm-specialist": 49.80719238012673,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.08744532331936877,
       "cohort": 21,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.199736432255543,
@@ -13406,7 +13581,7 @@
         "sha256:d3c89b4d42f786d1f48ff44e128762b4ec8a81be43fb132f8a5554110bb1ce0c": 0.05063658554565036,
         "sha256:d607c4ccadbd1b933b9e972cf8a71b9268cb429b730e9ccc5e868d49661066b2": 0.10025164820884414
       },
-      "sybil_strategy_allocation_gain": 0.043722661659684386,
+      "sybil_strategy_allocation_gain": 0.0,
       "sybil_weight": 0.17525891619432438,
       "top1_share": 0.11944356533780708,
       "trial_pairs": 4510,
@@ -13452,6 +13627,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": null,
       "cohort": 21,
       "duplicate_cache_hits": 24,
       "effective_miners": 0.0,
@@ -13504,6 +13680,7 @@
         "warm-specialist": 49.78766556190102,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 22,
       "duplicate_cache_hits": 24,
       "effective_miners": 12.165365236171981,
@@ -13586,6 +13763,7 @@
         "warm-specialist": 49.78766556190104,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 22,
       "duplicate_cache_hits": 24,
       "effective_miners": 12.165365236171981,
@@ -13668,6 +13846,7 @@
         "warm-specialist": 49.78766556190104,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 22,
       "duplicate_cache_hits": 24,
       "effective_miners": 12.165365236171981,
@@ -13750,6 +13929,7 @@
         "warm-specialist": 43.643606668502464,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 22,
       "duplicate_cache_hits": 24,
       "effective_miners": 11.115233683220243,
@@ -13832,6 +14012,7 @@
         "warm-specialist": 47.75127709695426,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.07820495852664867,
       "cohort": 22,
       "duplicate_cache_hits": 24,
       "effective_miners": 11.610771745841795,
@@ -13864,7 +14045,7 @@
         "sha256:d3c89b4d42f786d1f48ff44e128762b4ec8a81be43fb132f8a5554110bb1ce0c": 0.04547349011864278,
         "sha256:d607c4ccadbd1b933b9e972cf8a71b9268cb429b730e9ccc5e868d49661066b2": 0.08871351454912127
       },
-      "sybil_strategy_allocation_gain": 0.03910247926332434,
+      "sybil_strategy_allocation_gain": 0.0,
       "sybil_weight": 0.07820495852664867,
       "top1_share": 0.09939740491713156,
       "trial_pairs": 4530,
@@ -13910,6 +14091,7 @@
         "warm-specialist": 38.00690204668703,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 22,
       "duplicate_cache_hits": 24,
       "effective_miners": 8.937572305990502,
@@ -13988,6 +14170,7 @@
         "warm-specialist": 49.78766556190102,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 22,
       "duplicate_cache_hits": 24,
       "effective_miners": 12.165365236171981,
@@ -14070,6 +14253,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": null,
       "cohort": 22,
       "duplicate_cache_hits": 24,
       "effective_miners": 0.0,
@@ -14122,6 +14306,7 @@
         "warm-specialist": 49.890398015833156,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 23,
       "duplicate_cache_hits": 24,
       "effective_miners": 11.16497558367787,
@@ -14202,6 +14387,7 @@
         "warm-specialist": 49.890398015833156,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 23,
       "duplicate_cache_hits": 24,
       "effective_miners": 11.16497558367787,
@@ -14282,6 +14468,7 @@
         "warm-specialist": 49.89039801583318,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 23,
       "duplicate_cache_hits": 24,
       "effective_miners": 11.16497558367787,
@@ -14362,6 +14549,7 @@
         "warm-specialist": 43.598201089733635,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 23,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.127062966164388,
@@ -14442,6 +14630,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 23,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.220988649920068,
@@ -14519,6 +14708,7 @@
         "warm-specialist": 38.19544246552898,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 23,
       "duplicate_cache_hits": 24,
       "effective_miners": 7.864025399922143,
@@ -14595,6 +14785,7 @@
         "warm-specialist": 49.890398015833156,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 23,
       "duplicate_cache_hits": 24,
       "effective_miners": 11.16497558367787,
@@ -14675,6 +14866,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": null,
       "cohort": 23,
       "duplicate_cache_hits": 24,
       "effective_miners": 0.0,
@@ -14727,6 +14919,7 @@
         "warm-specialist": 50.07280584075314,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 24,
       "duplicate_cache_hits": 24,
       "effective_miners": 11.39331589588467,
@@ -14807,6 +15000,7 @@
         "warm-specialist": 50.07280584075316,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 24,
       "duplicate_cache_hits": 24,
       "effective_miners": 11.39331589588467,
@@ -14887,6 +15081,7 @@
         "warm-specialist": 50.07280584075314,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 24,
       "duplicate_cache_hits": 24,
       "effective_miners": 11.39331589588467,
@@ -14967,6 +15162,7 @@
         "warm-specialist": 43.933144521682344,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 24,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.733128068829691,
@@ -15047,6 +15243,7 @@
         "warm-specialist": 49.88567563766618,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 24,
       "duplicate_cache_hits": 24,
       "effective_miners": 11.210843773216823,
@@ -15127,6 +15324,7 @@
         "warm-specialist": 38.50839985895408,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 24,
       "duplicate_cache_hits": 24,
       "effective_miners": 8.957326690298688,
@@ -15205,6 +15403,7 @@
         "warm-specialist": 50.07280584075314,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 24,
       "duplicate_cache_hits": 24,
       "effective_miners": 11.39331589588467,
@@ -15285,6 +15484,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": null,
       "cohort": 24,
       "duplicate_cache_hits": 24,
       "effective_miners": 0.0,
@@ -15337,6 +15537,7 @@
         "warm-specialist": 49.7644423544331,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 25,
       "duplicate_cache_hits": 24,
       "effective_miners": 11.3939041274548,
@@ -15417,6 +15618,7 @@
         "warm-specialist": 49.7644423544331,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 25,
       "duplicate_cache_hits": 24,
       "effective_miners": 11.393904127454801,
@@ -15497,6 +15699,7 @@
         "warm-specialist": 49.76444235443312,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 25,
       "duplicate_cache_hits": 24,
       "effective_miners": 11.3939041274548,
@@ -15577,6 +15780,7 @@
         "warm-specialist": 43.58334195742411,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 25,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.750341926094148,
@@ -15657,6 +15861,7 @@
         "warm-specialist": 49.36972981390957,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 25,
       "duplicate_cache_hits": 24,
       "effective_miners": 9.642660400665436,
@@ -15733,6 +15938,7 @@
         "warm-specialist": 38.08690170630108,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 25,
       "duplicate_cache_hits": 24,
       "effective_miners": 8.81175439715428,
@@ -15809,6 +16015,7 @@
         "warm-specialist": 49.7644423544331,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 25,
       "duplicate_cache_hits": 24,
       "effective_miners": 11.3939041274548,
@@ -15889,6 +16096,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": null,
       "cohort": 25,
       "duplicate_cache_hits": 24,
       "effective_miners": 0.0,
@@ -15941,6 +16149,7 @@
         "warm-specialist": 49.83816931364129,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 26,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.42112116220396,
@@ -16018,6 +16227,7 @@
         "warm-specialist": 49.83816931364129,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 26,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.421121162203962,
@@ -16095,6 +16305,7 @@
         "warm-specialist": 49.83816931364129,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 26,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.421121162203962,
@@ -16172,6 +16383,7 @@
         "warm-specialist": 43.63179857669176,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 26,
       "duplicate_cache_hits": 24,
       "effective_miners": 9.919293234441666,
@@ -16249,6 +16461,7 @@
         "warm-specialist": 49.399198423186455,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 26,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.46971475382384,
@@ -16326,6 +16539,7 @@
         "warm-specialist": 38.43050604400092,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 26,
       "duplicate_cache_hits": 24,
       "effective_miners": 8.839966666815124,
@@ -16401,6 +16615,7 @@
         "warm-specialist": 49.83816931364129,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 26,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.42112116220396,
@@ -16478,6 +16693,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": null,
       "cohort": 26,
       "duplicate_cache_hits": 24,
       "effective_miners": 0.0,
@@ -16530,6 +16746,7 @@
         "warm-specialist": 49.88405667850723,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 27,
       "duplicate_cache_hits": 24,
       "effective_miners": 11.373114697040997,
@@ -16610,6 +16827,7 @@
         "warm-specialist": 49.88405667850725,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 27,
       "duplicate_cache_hits": 24,
       "effective_miners": 11.373114697040997,
@@ -16690,6 +16908,7 @@
         "warm-specialist": 49.88405667850723,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 27,
       "duplicate_cache_hits": 24,
       "effective_miners": 11.373114697040998,
@@ -16770,6 +16989,7 @@
         "warm-specialist": 43.62788654304461,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 27,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.752355957410284,
@@ -16850,6 +17070,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.08958988927612765,
       "cohort": 27,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.239305773842569,
@@ -16881,7 +17102,7 @@
         "sha256:d3c89b4d42f786d1f48ff44e128762b4ec8a81be43fb132f8a5554110bb1ce0c": 0.05669549498585034,
         "sha256:d607c4ccadbd1b933b9e972cf8a71b9268cb429b730e9ccc5e868d49661066b2": 0.10502030117966239
       },
-      "sybil_strategy_allocation_gain": 0.04479494463806383,
+      "sybil_strategy_allocation_gain": 0.0,
       "sybil_weight": 0.17975560184761202,
       "top1_share": 0.12566130821671903,
       "trial_pairs": 4490,
@@ -16927,6 +17148,7 @@
         "warm-specialist": 38.36865654256054,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 27,
       "duplicate_cache_hits": 24,
       "effective_miners": 8.909052194522188,
@@ -17003,6 +17225,7 @@
         "warm-specialist": 49.88405667850723,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 27,
       "duplicate_cache_hits": 24,
       "effective_miners": 11.373114697040997,
@@ -17083,6 +17306,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": null,
       "cohort": 27,
       "duplicate_cache_hits": 24,
       "effective_miners": 0.0,
@@ -17135,6 +17359,7 @@
         "warm-specialist": 49.97315007652186,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 28,
       "duplicate_cache_hits": 24,
       "effective_miners": 12.028395868783585,
@@ -17216,6 +17441,7 @@
         "warm-specialist": 49.97315007652186,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 28,
       "duplicate_cache_hits": 24,
       "effective_miners": 12.028395868783587,
@@ -17297,6 +17523,7 @@
         "warm-specialist": 49.97315007652186,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 28,
       "duplicate_cache_hits": 24,
       "effective_miners": 12.028395868783587,
@@ -17378,6 +17605,7 @@
         "warm-specialist": 43.64698424243253,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 28,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.984712281902446,
@@ -17459,6 +17687,7 @@
         "warm-specialist": 49.1122674752305,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 28,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.171062462615344,
@@ -17537,6 +17766,7 @@
         "warm-specialist": 38.55377293468122,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 28,
       "duplicate_cache_hits": 24,
       "effective_miners": 8.797336026458193,
@@ -17612,6 +17842,7 @@
         "warm-specialist": 49.97315007652186,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 28,
       "duplicate_cache_hits": 24,
       "effective_miners": 12.028395868783585,
@@ -17693,6 +17924,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": null,
       "cohort": 28,
       "duplicate_cache_hits": 24,
       "effective_miners": 0.0,
@@ -17745,6 +17977,7 @@
         "warm-specialist": 49.975544076123064,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 29,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.576997163914683,
@@ -17823,6 +18056,7 @@
         "warm-specialist": 49.97554407612307,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 29,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.576997163914685,
@@ -17901,6 +18135,7 @@
         "warm-specialist": 49.97554407612307,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 29,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.576997163914683,
@@ -17979,6 +18214,7 @@
         "warm-specialist": 43.766806350779355,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 29,
       "duplicate_cache_hits": 24,
       "effective_miners": 9.953673314136507,
@@ -18057,6 +18293,7 @@
         "warm-specialist": 47.10978430533978,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 29,
       "duplicate_cache_hits": 24,
       "effective_miners": 9.946099819588408,
@@ -18135,6 +18372,7 @@
         "warm-specialist": 38.58353192085832,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 29,
       "duplicate_cache_hits": 24,
       "effective_miners": 7.994303973435733,
@@ -18211,6 +18449,7 @@
         "warm-specialist": 49.975544076123064,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 29,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.576997163914683,
@@ -18289,6 +18528,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": null,
       "cohort": 29,
       "duplicate_cache_hits": 24,
       "effective_miners": 0.0,
@@ -18341,6 +18581,7 @@
         "warm-specialist": 49.88363759592331,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 30,
       "duplicate_cache_hits": 24,
       "effective_miners": 12.154826179650282,
@@ -18422,6 +18663,7 @@
         "warm-specialist": 49.883637595923304,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 30,
       "duplicate_cache_hits": 24,
       "effective_miners": 12.154826179650282,
@@ -18503,6 +18745,7 @@
         "warm-specialist": 49.883637595923304,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 30,
       "duplicate_cache_hits": 24,
       "effective_miners": 12.154826179650282,
@@ -18584,6 +18827,7 @@
         "warm-specialist": 43.765503259913864,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 30,
       "duplicate_cache_hits": 24,
       "effective_miners": 11.074641376475242,
@@ -18665,6 +18909,7 @@
         "warm-specialist": 48.94454463582733,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 30,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.987397322099532,
@@ -18744,6 +18989,7 @@
         "warm-specialist": 38.59727197019208,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 30,
       "duplicate_cache_hits": 24,
       "effective_miners": 8.915389001437783,
@@ -18821,6 +19067,7 @@
         "warm-specialist": 49.88363759592331,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 30,
       "duplicate_cache_hits": 24,
       "effective_miners": 12.154826179650282,
@@ -18902,6 +19149,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": null,
       "cohort": 30,
       "duplicate_cache_hits": 24,
       "effective_miners": 0.0,
@@ -18954,6 +19202,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 31,
       "duplicate_cache_hits": 24,
       "effective_miners": 11.96091577839339,
@@ -19036,6 +19285,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 31,
       "duplicate_cache_hits": 24,
       "effective_miners": 11.960915778393389,
@@ -19118,6 +19368,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 31,
       "duplicate_cache_hits": 24,
       "effective_miners": 11.96091577839339,
@@ -19200,6 +19451,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 31,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.989089062842615,
@@ -19282,6 +19534,7 @@
         "warm-specialist": 48.991955267635056,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 31,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.230986292432537,
@@ -19359,6 +19612,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 31,
       "duplicate_cache_hits": 24,
       "effective_miners": 8.850328291666234,
@@ -19437,6 +19691,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 31,
       "duplicate_cache_hits": 24,
       "effective_miners": 11.96091577839339,
@@ -19519,6 +19774,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": null,
       "cohort": 31,
       "duplicate_cache_hits": 24,
       "effective_miners": 0.0,
@@ -19571,6 +19827,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 32,
       "duplicate_cache_hits": 24,
       "effective_miners": 11.205906447002675,
@@ -19651,6 +19908,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 32,
       "duplicate_cache_hits": 24,
       "effective_miners": 11.205906447002674,
@@ -19731,6 +19989,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 32,
       "duplicate_cache_hits": 24,
       "effective_miners": 11.205906447002674,
@@ -19811,6 +20070,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 32,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.16917903890379,
@@ -19891,6 +20151,7 @@
         "warm-specialist": 48.003216308503255,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 32,
       "duplicate_cache_hits": 24,
       "effective_miners": 9.507907066310597,
@@ -19966,6 +20227,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 32,
       "duplicate_cache_hits": 24,
       "effective_miners": 7.975814686815835,
@@ -20042,6 +20304,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 32,
       "duplicate_cache_hits": 24,
       "effective_miners": 11.205906447002675,
@@ -20122,6 +20385,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": null,
       "cohort": 32,
       "duplicate_cache_hits": 24,
       "effective_miners": 0.0,
@@ -20174,6 +20438,7 @@
         "warm-specialist": 49.800853758960486,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 33,
       "duplicate_cache_hits": 24,
       "effective_miners": 9.402754062845203,
@@ -20250,6 +20515,7 @@
         "warm-specialist": 49.800853758960486,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 33,
       "duplicate_cache_hits": 24,
       "effective_miners": 9.402754062845203,
@@ -20326,6 +20592,7 @@
         "warm-specialist": 49.800853758960486,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 33,
       "duplicate_cache_hits": 24,
       "effective_miners": 9.402754062845204,
@@ -20402,6 +20669,7 @@
         "warm-specialist": 43.585781843834,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 33,
       "duplicate_cache_hits": 24,
       "effective_miners": 8.802065245449121,
@@ -20478,6 +20746,7 @@
         "warm-specialist": 47.88412410206381,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 33,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.17022299647205,
@@ -20555,6 +20824,7 @@
         "warm-specialist": 38.206993222048716,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 33,
       "duplicate_cache_hits": 24,
       "effective_miners": 7.2953478331197115,
@@ -20629,6 +20899,7 @@
         "warm-specialist": 49.800853758960486,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 33,
       "duplicate_cache_hits": 24,
       "effective_miners": 9.402754062845203,
@@ -20705,6 +20976,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": null,
       "cohort": 33,
       "duplicate_cache_hits": 24,
       "effective_miners": 0.0,
@@ -20757,6 +21029,7 @@
         "warm-specialist": 49.84723058976075,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 34,
       "duplicate_cache_hits": 24,
       "effective_miners": 11.363941221150135,
@@ -20837,6 +21110,7 @@
         "warm-specialist": 49.84723058976075,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 34,
       "duplicate_cache_hits": 24,
       "effective_miners": 11.363941221150135,
@@ -20917,6 +21191,7 @@
         "warm-specialist": 49.84723058976075,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 34,
       "duplicate_cache_hits": 24,
       "effective_miners": 11.363941221150133,
@@ -20997,6 +21272,7 @@
         "warm-specialist": 43.59688026198396,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 34,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.73149162476349,
@@ -21077,6 +21353,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0898075521509801,
       "cohort": 34,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.20107217677891,
@@ -21108,7 +21385,7 @@
         "sha256:d3c89b4d42f786d1f48ff44e128762b4ec8a81be43fb132f8a5554110bb1ce0c": 0.04968681522814641,
         "sha256:d607c4ccadbd1b933b9e972cf8a71b9268cb429b730e9ccc5e868d49661066b2": 0.10551609502297583
       },
-      "sybil_strategy_allocation_gain": 0.04490377607549005,
+      "sybil_strategy_allocation_gain": 0.0,
       "sybil_weight": 0.16780508580340242,
       "top1_share": 0.13037135053930074,
       "trial_pairs": 4500,
@@ -21154,6 +21431,7 @@
         "warm-specialist": 38.25842805870268,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 34,
       "duplicate_cache_hits": 24,
       "effective_miners": 8.891540292050948,
@@ -21232,6 +21510,7 @@
         "warm-specialist": 49.84723058976075,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 34,
       "duplicate_cache_hits": 24,
       "effective_miners": 11.363941221150135,
@@ -21312,6 +21591,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": null,
       "cohort": 34,
       "duplicate_cache_hits": 24,
       "effective_miners": 0.0,
@@ -21364,6 +21644,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 35,
       "duplicate_cache_hits": 24,
       "effective_miners": 11.196148730884385,
@@ -21444,6 +21725,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 35,
       "duplicate_cache_hits": 24,
       "effective_miners": 11.196148730884385,
@@ -21524,6 +21806,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 35,
       "duplicate_cache_hits": 24,
       "effective_miners": 11.196148730884385,
@@ -21604,6 +21887,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 35,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.170488516809607,
@@ -21684,6 +21968,7 @@
         "warm-specialist": 48.64513434007188,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 35,
       "duplicate_cache_hits": 24,
       "effective_miners": 9.29264682578443,
@@ -21759,6 +22044,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 35,
       "duplicate_cache_hits": 24,
       "effective_miners": 7.975390759249074,
@@ -21835,6 +22121,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 35,
       "duplicate_cache_hits": 24,
       "effective_miners": 11.196148730884385,
@@ -21915,6 +22202,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": null,
       "cohort": 35,
       "duplicate_cache_hits": 24,
       "effective_miners": 0.0,
@@ -21967,6 +22255,7 @@
         "warm-specialist": 49.95827891256503,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 36,
       "duplicate_cache_hits": 24,
       "effective_miners": 11.93742315533817,
@@ -22049,6 +22338,7 @@
         "warm-specialist": 49.958278912565035,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 36,
       "duplicate_cache_hits": 24,
       "effective_miners": 11.937423155338172,
@@ -22131,6 +22421,7 @@
         "warm-specialist": 49.95827891256503,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 36,
       "duplicate_cache_hits": 24,
       "effective_miners": 11.93742315533817,
@@ -22213,6 +22504,7 @@
         "warm-specialist": 43.625600884863914,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 36,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.907949945179013,
@@ -22295,6 +22587,7 @@
         "warm-specialist": 48.9532117729606,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.07154946061931457,
       "cohort": 36,
       "duplicate_cache_hits": 24,
       "effective_miners": 12.126537806869871,
@@ -22328,7 +22621,7 @@
         "sha256:d3c89b4d42f786d1f48ff44e128762b4ec8a81be43fb132f8a5554110bb1ce0c": 0.04563624917963446,
         "sha256:d607c4ccadbd1b933b9e972cf8a71b9268cb429b730e9ccc5e868d49661066b2": 0.08811497539625529
       },
-      "sybil_strategy_allocation_gain": 0.035774730309657284,
+      "sybil_strategy_allocation_gain": 0.0,
       "sybil_weight": 0.1472927516349113,
       "top1_share": 0.10199067491976484,
       "trial_pairs": 4520,
@@ -22376,6 +22669,7 @@
         "warm-specialist": 38.43979304307947,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 36,
       "duplicate_cache_hits": 24,
       "effective_miners": 8.772532341392935,
@@ -22454,6 +22748,7 @@
         "warm-specialist": 49.95827891256503,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 36,
       "duplicate_cache_hits": 24,
       "effective_miners": 11.93742315533817,
@@ -22536,6 +22831,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": null,
       "cohort": 36,
       "duplicate_cache_hits": 24,
       "effective_miners": 0.0,
@@ -22588,6 +22884,7 @@
         "warm-specialist": 49.95108604786267,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 37,
       "duplicate_cache_hits": 24,
       "effective_miners": 11.156152846829826,
@@ -22667,6 +22964,7 @@
         "warm-specialist": 49.95108604786267,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 37,
       "duplicate_cache_hits": 24,
       "effective_miners": 11.156152846829826,
@@ -22746,6 +23044,7 @@
         "warm-specialist": 49.95108604786266,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 37,
       "duplicate_cache_hits": 24,
       "effective_miners": 11.156152846829825,
@@ -22825,6 +23124,7 @@
         "warm-specialist": 43.71232446810586,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 37,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.131551958583925,
@@ -22904,6 +23204,7 @@
         "warm-specialist": 50.781041077012645,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 37,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.942895402568922,
@@ -22984,6 +23285,7 @@
         "warm-specialist": 38.55806276580251,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 37,
       "duplicate_cache_hits": 24,
       "effective_miners": 8.107788593409081,
@@ -23057,6 +23359,7 @@
         "warm-specialist": 49.95108604786267,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 37,
       "duplicate_cache_hits": 24,
       "effective_miners": 11.156152846829826,
@@ -23136,6 +23439,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": null,
       "cohort": 37,
       "duplicate_cache_hits": 24,
       "effective_miners": 0.0,
@@ -23188,6 +23492,7 @@
         "warm-specialist": 49.857138959997584,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.09211192682064359,
       "cohort": 38,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.250020765219537,
@@ -23219,7 +23524,7 @@
         "sha256:d3c89b4d42f786d1f48ff44e128762b4ec8a81be43fb132f8a5554110bb1ce0c": 0.05409377099751651,
         "sha256:d607c4ccadbd1b933b9e972cf8a71b9268cb429b730e9ccc5e868d49661066b2": 0.10497072856943923
       },
-      "sybil_strategy_allocation_gain": 0.046055963410321796,
+      "sybil_strategy_allocation_gain": 0.0,
       "sybil_weight": 0.1837937935485282,
       "top1_share": 0.12197476089577457,
       "trial_pairs": 4500,
@@ -23265,6 +23570,7 @@
         "warm-specialist": 49.85713895999759,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0921119268206436,
       "cohort": 38,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.250020765219537,
@@ -23296,7 +23602,7 @@
         "sha256:d3c89b4d42f786d1f48ff44e128762b4ec8a81be43fb132f8a5554110bb1ce0c": 0.054093770997516465,
         "sha256:d607c4ccadbd1b933b9e972cf8a71b9268cb429b730e9ccc5e868d49661066b2": 0.10497072856943925
       },
-      "sybil_strategy_allocation_gain": 0.0460559634103218,
+      "sybil_strategy_allocation_gain": 0.0,
       "sybil_weight": 0.18379379354852823,
       "top1_share": 0.1219747608957746,
       "trial_pairs": 4500,
@@ -23342,6 +23648,7 @@
         "warm-specialist": 49.85713895999759,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0921119268206436,
       "cohort": 38,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.250020765219537,
@@ -23373,7 +23680,7 @@
         "sha256:d3c89b4d42f786d1f48ff44e128762b4ec8a81be43fb132f8a5554110bb1ce0c": 0.05409377099751652,
         "sha256:d607c4ccadbd1b933b9e972cf8a71b9268cb429b730e9ccc5e868d49661066b2": 0.10497072856943925
       },
-      "sybil_strategy_allocation_gain": 0.0460559634103218,
+      "sybil_strategy_allocation_gain": 0.0,
       "sybil_weight": 0.18379379354852823,
       "top1_share": 0.1219747608957746,
       "trial_pairs": 4500,
@@ -23419,6 +23726,7 @@
         "warm-specialist": 43.72642026046032,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.09131527265357915,
       "cohort": 38,
       "duplicate_cache_hits": 24,
       "effective_miners": 9.17945861123324,
@@ -23450,7 +23758,7 @@
         "sha256:d3c89b4d42f786d1f48ff44e128762b4ec8a81be43fb132f8a5554110bb1ce0c": 0.023147574109680363,
         "sha256:d607c4ccadbd1b933b9e972cf8a71b9268cb429b730e9ccc5e868d49661066b2": 0.12825298206120456
       },
-      "sybil_strategy_allocation_gain": 0.045657636326789576,
+      "sybil_strategy_allocation_gain": 0.0,
       "sybil_weight": 0.1823340893845552,
       "top1_share": 0.14061905718770526,
       "trial_pairs": 4500,
@@ -23496,6 +23804,7 @@
         "warm-specialist": 49.06181101551956,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.09365010784783988,
       "cohort": 38,
       "duplicate_cache_hits": 24,
       "effective_miners": 9.322604230612699,
@@ -23526,7 +23835,7 @@
         "sha256:d13831132851afcef0b35c66378f9226280191db5fae0e865e0ee7d7a987ac43": 0.11229457206559258,
         "sha256:d607c4ccadbd1b933b9e972cf8a71b9268cb429b730e9ccc5e868d49661066b2": 0.1113476298309976
       },
-      "sybil_strategy_allocation_gain": 0.04682505392391994,
+      "sybil_strategy_allocation_gain": 0.0,
       "sybil_weight": 0.18687942024720708,
       "top1_share": 0.12748786570466528,
       "trial_pairs": 4500,
@@ -23571,6 +23880,7 @@
         "warm-specialist": 38.37599162002505,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.07031806641712104,
       "cohort": 38,
       "duplicate_cache_hits": 24,
       "effective_miners": 7.044161786882779,
@@ -23600,7 +23910,7 @@
         "sha256:d13831132851afcef0b35c66378f9226280191db5fae0e865e0ee7d7a987ac43": 0.12239653896343153,
         "sha256:d607c4ccadbd1b933b9e972cf8a71b9268cb429b730e9ccc5e868d49661066b2": 0.18388951736880554
       },
-      "sybil_strategy_allocation_gain": 0.03515903320856052,
+      "sybil_strategy_allocation_gain": 0.0,
       "sybil_weight": 0.14471886915473497,
       "top1_share": 0.18888888296972334,
       "trial_pairs": 4500,
@@ -23644,6 +23954,7 @@
         "warm-specialist": 49.857138959997584,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.09211192682064359,
       "cohort": 38,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.250020765219537,
@@ -23675,7 +23986,7 @@
         "sha256:d3c89b4d42f786d1f48ff44e128762b4ec8a81be43fb132f8a5554110bb1ce0c": 0.05409377099751651,
         "sha256:d607c4ccadbd1b933b9e972cf8a71b9268cb429b730e9ccc5e868d49661066b2": 0.10497072856943923
       },
-      "sybil_strategy_allocation_gain": 0.046055963410321796,
+      "sybil_strategy_allocation_gain": 0.0,
       "sybil_weight": 0.1837937935485282,
       "top1_share": 0.12197476089577457,
       "trial_pairs": 4500,
@@ -23721,6 +24032,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": null,
       "cohort": 38,
       "duplicate_cache_hits": 24,
       "effective_miners": 0.0,
@@ -23773,6 +24085,7 @@
         "warm-specialist": 49.83673004132084,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.09483350887267675,
       "cohort": 39,
       "duplicate_cache_hits": 24,
       "effective_miners": 9.345368165520894,
@@ -23803,7 +24116,7 @@
         "sha256:d13831132851afcef0b35c66378f9226280191db5fae0e865e0ee7d7a987ac43": 0.10757238526679609,
         "sha256:d607c4ccadbd1b933b9e972cf8a71b9268cb429b730e9ccc5e868d49661066b2": 0.10806861971832153
       },
-      "sybil_strategy_allocation_gain": 0.047416754436338374,
+      "sybil_strategy_allocation_gain": 0.0,
       "sybil_weight": 0.18903538013843119,
       "top1_share": 0.12833276611072095,
       "trial_pairs": 4500,
@@ -23848,6 +24161,7 @@
         "warm-specialist": 49.83673004132086,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.09483350887267675,
       "cohort": 39,
       "duplicate_cache_hits": 24,
       "effective_miners": 9.345368165520894,
@@ -23878,7 +24192,7 @@
         "sha256:d13831132851afcef0b35c66378f9226280191db5fae0e865e0ee7d7a987ac43": 0.10757238526679609,
         "sha256:d607c4ccadbd1b933b9e972cf8a71b9268cb429b730e9ccc5e868d49661066b2": 0.10806861971832153
       },
-      "sybil_strategy_allocation_gain": 0.047416754436338374,
+      "sybil_strategy_allocation_gain": 0.0,
       "sybil_weight": 0.18903538013843119,
       "top1_share": 0.12833276611072097,
       "trial_pairs": 4500,
@@ -23923,6 +24237,7 @@
         "warm-specialist": 49.83673004132084,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.09483350887267675,
       "cohort": 39,
       "duplicate_cache_hits": 24,
       "effective_miners": 9.345368165520895,
@@ -23953,7 +24268,7 @@
         "sha256:d13831132851afcef0b35c66378f9226280191db5fae0e865e0ee7d7a987ac43": 0.10757238526679609,
         "sha256:d607c4ccadbd1b933b9e972cf8a71b9268cb429b730e9ccc5e868d49661066b2": 0.10806861971832153
       },
-      "sybil_strategy_allocation_gain": 0.047416754436338374,
+      "sybil_strategy_allocation_gain": 0.0,
       "sybil_weight": 0.18903538013843113,
       "top1_share": 0.12833276611072095,
       "trial_pairs": 4500,
@@ -23998,6 +24313,7 @@
         "warm-specialist": 43.58301835583661,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.08591615984515301,
       "cohort": 39,
       "duplicate_cache_hits": 24,
       "effective_miners": 8.928439198543094,
@@ -24028,7 +24344,7 @@
         "sha256:d13831132851afcef0b35c66378f9226280191db5fae0e865e0ee7d7a987ac43": 0.10549852245271063,
         "sha256:d607c4ccadbd1b933b9e972cf8a71b9268cb429b730e9ccc5e868d49661066b2": 0.12129837543703818
       },
-      "sybil_strategy_allocation_gain": 0.042958079922576504,
+      "sybil_strategy_allocation_gain": 0.0,
       "sybil_weight": 0.172353538484286,
       "top1_share": 0.13217796762632766,
       "trial_pairs": 4500,
@@ -24073,6 +24389,7 @@
         "warm-specialist": 50.376825359048766,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 39,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.240842449705712,
@@ -24151,6 +24468,7 @@
         "warm-specialist": 38.282862976291234,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.05577073208813164,
       "cohort": 39,
       "duplicate_cache_hits": 24,
       "effective_miners": 8.24307632015474,
@@ -24180,7 +24498,7 @@
         "sha256:d13831132851afcef0b35c66378f9226280191db5fae0e865e0ee7d7a987ac43": 0.0956338796584703,
         "sha256:d607c4ccadbd1b933b9e972cf8a71b9268cb429b730e9ccc5e868d49661066b2": 0.14196206823576693
       },
-      "sybil_strategy_allocation_gain": 0.02788536604406582,
+      "sybil_strategy_allocation_gain": 0.0,
       "sybil_weight": 0.1120616697138424,
       "top1_share": 0.1474895177241947,
       "trial_pairs": 4500,
@@ -24224,6 +24542,7 @@
         "warm-specialist": 49.83673004132084,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.09483350887267675,
       "cohort": 39,
       "duplicate_cache_hits": 24,
       "effective_miners": 9.345368165520894,
@@ -24254,7 +24573,7 @@
         "sha256:d13831132851afcef0b35c66378f9226280191db5fae0e865e0ee7d7a987ac43": 0.10757238526679609,
         "sha256:d607c4ccadbd1b933b9e972cf8a71b9268cb429b730e9ccc5e868d49661066b2": 0.10806861971832153
       },
-      "sybil_strategy_allocation_gain": 0.047416754436338374,
+      "sybil_strategy_allocation_gain": 0.0,
       "sybil_weight": 0.18903538013843119,
       "top1_share": 0.12833276611072095,
       "trial_pairs": 4500,
@@ -24299,6 +24618,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": null,
       "cohort": 39,
       "duplicate_cache_hits": 24,
       "effective_miners": 0.0,
@@ -24351,6 +24671,7 @@
         "warm-specialist": 49.86266292572577,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 40,
       "duplicate_cache_hits": 24,
       "effective_miners": 9.185719657040535,
@@ -24427,6 +24748,7 @@
         "warm-specialist": 49.86266292572577,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 40,
       "duplicate_cache_hits": 24,
       "effective_miners": 9.185719657040533,
@@ -24503,6 +24825,7 @@
         "warm-specialist": 49.86266292572577,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 40,
       "duplicate_cache_hits": 24,
       "effective_miners": 9.185719657040535,
@@ -24579,6 +24902,7 @@
         "warm-specialist": 43.66744134474681,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 40,
       "duplicate_cache_hits": 24,
       "effective_miners": 8.149114214799182,
@@ -24655,6 +24979,7 @@
         "warm-specialist": 49.666201703750254,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 40,
       "duplicate_cache_hits": 24,
       "effective_miners": 11.064479319262704,
@@ -24735,6 +25060,7 @@
         "warm-specialist": 38.429022902222066,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 40,
       "duplicate_cache_hits": 24,
       "effective_miners": 6.223235459465254,
@@ -24805,6 +25131,7 @@
         "warm-specialist": 49.86266292572577,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 40,
       "duplicate_cache_hits": 24,
       "effective_miners": 9.185719657040535,
@@ -24881,6 +25208,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": null,
       "cohort": 40,
       "duplicate_cache_hits": 24,
       "effective_miners": 0.0,
@@ -24933,6 +25261,7 @@
         "warm-specialist": 49.81371199278904,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 41,
       "duplicate_cache_hits": 24,
       "effective_miners": 9.63240755969978,
@@ -25009,6 +25338,7 @@
         "warm-specialist": 49.81371199278904,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 41,
       "duplicate_cache_hits": 24,
       "effective_miners": 9.632407559699782,
@@ -25085,6 +25415,7 @@
         "warm-specialist": 49.813711992789045,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 41,
       "duplicate_cache_hits": 24,
       "effective_miners": 9.632407559699784,
@@ -25161,6 +25492,7 @@
         "warm-specialist": 43.42323533232062,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 41,
       "duplicate_cache_hits": 24,
       "effective_miners": 9.015608348091575,
@@ -25237,6 +25569,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.07226834488520326,
       "cohort": 41,
       "duplicate_cache_hits": 24,
       "effective_miners": 8.925854635280661,
@@ -25267,7 +25600,7 @@
         "sha256:d3c89b4d42f786d1f48ff44e128762b4ec8a81be43fb132f8a5554110bb1ce0c": 0.04839505828573245,
         "sha256:d607c4ccadbd1b933b9e972cf8a71b9268cb429b730e9ccc5e868d49661066b2": 0.1278341321877496
       },
-      "sybil_strategy_allocation_gain": 0.03613417244260163,
+      "sybil_strategy_allocation_gain": 0.0,
       "sybil_weight": 0.18086049891459058,
       "top1_share": 0.15180693282107074,
       "trial_pairs": 4490,
@@ -25312,6 +25645,7 @@
         "warm-specialist": 38.302180695947904,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 41,
       "duplicate_cache_hits": 24,
       "effective_miners": 6.992027046797106,
@@ -25384,6 +25718,7 @@
         "warm-specialist": 49.81371199278904,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 41,
       "duplicate_cache_hits": 24,
       "effective_miners": 9.63240755969978,
@@ -25460,6 +25795,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": null,
       "cohort": 41,
       "duplicate_cache_hits": 24,
       "effective_miners": 0.0,
@@ -25512,6 +25848,7 @@
         "warm-specialist": 49.68507306101375,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 42,
       "duplicate_cache_hits": 24,
       "effective_miners": 8.840974073751406,
@@ -25586,6 +25923,7 @@
         "warm-specialist": 49.68507306101376,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 42,
       "duplicate_cache_hits": 24,
       "effective_miners": 8.840974073751406,
@@ -25660,6 +25998,7 @@
         "warm-specialist": 49.68507306101376,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 42,
       "duplicate_cache_hits": 24,
       "effective_miners": 8.840974073751406,
@@ -25734,6 +26073,7 @@
         "warm-specialist": 43.686454668157296,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 42,
       "duplicate_cache_hits": 24,
       "effective_miners": 8.602818757882424,
@@ -25808,6 +26148,7 @@
         "warm-specialist": 50.50474961273811,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 42,
       "duplicate_cache_hits": 24,
       "effective_miners": 9.102166527799683,
@@ -25883,6 +26224,7 @@
         "warm-specialist": 38.030320904158486,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 42,
       "duplicate_cache_hits": 24,
       "effective_miners": 6.9875194144059485,
@@ -25957,6 +26299,7 @@
         "warm-specialist": 49.68507306101375,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 42,
       "duplicate_cache_hits": 24,
       "effective_miners": 8.840974073751406,
@@ -26031,6 +26374,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": null,
       "cohort": 42,
       "duplicate_cache_hits": 24,
       "effective_miners": 0.0,
@@ -26083,6 +26427,7 @@
         "warm-specialist": 49.72335521390266,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 43,
       "duplicate_cache_hits": 24,
       "effective_miners": 11.152325437796875,
@@ -26162,6 +26507,7 @@
         "warm-specialist": 49.723355213902664,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 43,
       "duplicate_cache_hits": 24,
       "effective_miners": 11.152325437796877,
@@ -26241,6 +26587,7 @@
         "warm-specialist": 49.723355213902664,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 43,
       "duplicate_cache_hits": 24,
       "effective_miners": 11.152325437796877,
@@ -26320,6 +26667,7 @@
         "warm-specialist": 43.48085115020839,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 43,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.137811989360541,
@@ -26399,6 +26747,7 @@
         "warm-specialist": 47.32506667190873,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.08683561821400261,
       "cohort": 43,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.624830443555428,
@@ -26430,7 +26779,7 @@
         "sha256:d3c89b4d42f786d1f48ff44e128762b4ec8a81be43fb132f8a5554110bb1ce0c": 0.05151276077953218,
         "sha256:d607c4ccadbd1b933b9e972cf8a71b9268cb429b730e9ccc5e868d49661066b2": 0.10103098050810598
       },
-      "sybil_strategy_allocation_gain": 0.043417809107001305,
+      "sybil_strategy_allocation_gain": 0.0,
       "sybil_weight": 0.16239485974487794,
       "top1_share": 0.11095965314289959,
       "trial_pairs": 4500,
@@ -26476,6 +26825,7 @@
         "warm-specialist": 38.21474603820269,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 43,
       "duplicate_cache_hits": 24,
       "effective_miners": 8.171278834728673,
@@ -26549,6 +26899,7 @@
         "warm-specialist": 49.72335521390266,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 43,
       "duplicate_cache_hits": 24,
       "effective_miners": 11.152325437796875,
@@ -26628,6 +26979,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": null,
       "cohort": 43,
       "duplicate_cache_hits": 24,
       "effective_miners": 0.0,
@@ -26680,6 +27032,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 44,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.620192372994538,
@@ -26758,6 +27111,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 44,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.620192372994538,
@@ -26836,6 +27190,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 44,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.620192372994538,
@@ -26914,6 +27269,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 44,
       "duplicate_cache_hits": 24,
       "effective_miners": 9.956753469911247,
@@ -26992,6 +27348,7 @@
         "warm-specialist": 49.13859405789223,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 44,
       "duplicate_cache_hits": 24,
       "effective_miners": 8.517200354481279,
@@ -27066,6 +27423,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 44,
       "duplicate_cache_hits": 24,
       "effective_miners": 8.148386426140865,
@@ -27142,6 +27500,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 44,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.620192372994538,
@@ -27220,6 +27579,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": null,
       "cohort": 44,
       "duplicate_cache_hits": 24,
       "effective_miners": 0.0,
@@ -27272,6 +27632,7 @@
         "warm-specialist": 49.91016765699028,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 45,
       "duplicate_cache_hits": 24,
       "effective_miners": 11.581034341370357,
@@ -27352,6 +27713,7 @@
         "warm-specialist": 49.91016765699028,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 45,
       "duplicate_cache_hits": 24,
       "effective_miners": 11.581034341370357,
@@ -27432,6 +27794,7 @@
         "warm-specialist": 49.91016765699028,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 45,
       "duplicate_cache_hits": 24,
       "effective_miners": 11.581034341370358,
@@ -27512,6 +27875,7 @@
         "warm-specialist": 43.771808716861585,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 45,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.91385128048135,
@@ -27592,6 +27956,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.09944438441305405,
       "cohort": 45,
       "duplicate_cache_hits": 24,
       "effective_miners": 9.391449681680033,
@@ -27622,7 +27987,7 @@
         "sha256:d13831132851afcef0b35c66378f9226280191db5fae0e865e0ee7d7a987ac43": 0.10386487069867212,
         "sha256:d607c4ccadbd1b933b9e972cf8a71b9268cb429b730e9ccc5e868d49661066b2": 0.11060062184305627
       },
-      "sybil_strategy_allocation_gain": 0.04972219220652702,
+      "sybil_strategy_allocation_gain": 0.0,
       "sybil_weight": 0.19664590590455283,
       "top1_share": 0.12261345664499657,
       "trial_pairs": 4500,
@@ -27667,6 +28032,7 @@
         "warm-specialist": 38.11679524096497,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 45,
       "duplicate_cache_hits": 24,
       "effective_miners": 8.93482198328995,
@@ -27745,6 +28111,7 @@
         "warm-specialist": 49.91016765699028,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 45,
       "duplicate_cache_hits": 24,
       "effective_miners": 11.581034341370357,
@@ -27825,6 +28192,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": null,
       "cohort": 45,
       "duplicate_cache_hits": 24,
       "effective_miners": 0.0,
@@ -27877,6 +28245,7 @@
         "warm-specialist": 49.83452667575082,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 46,
       "duplicate_cache_hits": 24,
       "effective_miners": 11.15504056907981,
@@ -27957,6 +28326,7 @@
         "warm-specialist": 49.83452667575085,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 46,
       "duplicate_cache_hits": 24,
       "effective_miners": 11.15504056907981,
@@ -28037,6 +28407,7 @@
         "warm-specialist": 49.83452667575082,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 46,
       "duplicate_cache_hits": 24,
       "effective_miners": 11.155040569079809,
@@ -28117,6 +28488,7 @@
         "warm-specialist": 43.68688022744083,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 46,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.092866520889967,
@@ -28197,6 +28569,7 @@
         "warm-specialist": 49.84263098305289,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 46,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.221655750457593,
@@ -28275,6 +28648,7 @@
         "warm-specialist": 38.668208247469686,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 46,
       "duplicate_cache_hits": 24,
       "effective_miners": 7.992174341347198,
@@ -28351,6 +28725,7 @@
         "warm-specialist": 49.83452667575082,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 46,
       "duplicate_cache_hits": 24,
       "effective_miners": 11.15504056907981,
@@ -28431,6 +28806,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": null,
       "cohort": 46,
       "duplicate_cache_hits": 24,
       "effective_miners": 0.0,
@@ -28483,6 +28859,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0983715511883124,
       "cohort": 47,
       "duplicate_cache_hits": 24,
       "effective_miners": 9.22968738847363,
@@ -28513,7 +28890,7 @@
         "sha256:d3c89b4d42f786d1f48ff44e128762b4ec8a81be43fb132f8a5554110bb1ce0c": 0.05710342965029949,
         "sha256:d607c4ccadbd1b933b9e972cf8a71b9268cb429b730e9ccc5e868d49661066b2": 0.11365268640436668
       },
-      "sybil_strategy_allocation_gain": 0.0491857755941562,
+      "sybil_strategy_allocation_gain": 0.0,
       "sybil_weight": 0.1973495666206385,
       "top1_share": 0.13509745461366218,
       "trial_pairs": 4500,
@@ -28558,6 +28935,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.09837155118831242,
       "cohort": 47,
       "duplicate_cache_hits": 24,
       "effective_miners": 9.22968738847363,
@@ -28588,7 +28966,7 @@
         "sha256:d3c89b4d42f786d1f48ff44e128762b4ec8a81be43fb132f8a5554110bb1ce0c": 0.05710342965029946,
         "sha256:d607c4ccadbd1b933b9e972cf8a71b9268cb429b730e9ccc5e868d49661066b2": 0.11365268640436668
       },
-      "sybil_strategy_allocation_gain": 0.04918577559415621,
+      "sybil_strategy_allocation_gain": 0.0,
       "sybil_weight": 0.19734956662063846,
       "top1_share": 0.13509745461366224,
       "trial_pairs": 4500,
@@ -28633,6 +29011,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.09837155118831242,
       "cohort": 47,
       "duplicate_cache_hits": 24,
       "effective_miners": 9.229687388473632,
@@ -28663,7 +29042,7 @@
         "sha256:d3c89b4d42f786d1f48ff44e128762b4ec8a81be43fb132f8a5554110bb1ce0c": 0.057103429650299485,
         "sha256:d607c4ccadbd1b933b9e972cf8a71b9268cb429b730e9ccc5e868d49661066b2": 0.11365268640436668
       },
-      "sybil_strategy_allocation_gain": 0.04918577559415621,
+      "sybil_strategy_allocation_gain": 0.0,
       "sybil_weight": 0.19734956662063846,
       "top1_share": 0.1350974546136622,
       "trial_pairs": 4500,
@@ -28708,6 +29087,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.09578980135911053,
       "cohort": 47,
       "duplicate_cache_hits": 24,
       "effective_miners": 8.311630468812115,
@@ -28738,7 +29118,7 @@
         "sha256:d3c89b4d42f786d1f48ff44e128762b4ec8a81be43fb132f8a5554110bb1ce0c": 0.024538739528747817,
         "sha256:d607c4ccadbd1b933b9e972cf8a71b9268cb429b730e9ccc5e868d49661066b2": 0.13651559821396395
       },
-      "sybil_strategy_allocation_gain": 0.04789490067955526,
+      "sybil_strategy_allocation_gain": 0.0,
       "sybil_weight": 0.19296651384726443,
       "top1_share": 0.142894048464545,
       "trial_pairs": 4500,
@@ -28783,6 +29163,7 @@
         "warm-specialist": 50.83971042299997,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 47,
       "duplicate_cache_hits": 24,
       "effective_miners": 8.36351586547136,
@@ -28855,6 +29236,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.06392011067208017,
       "cohort": 47,
       "duplicate_cache_hits": 24,
       "effective_miners": 6.973000601455518,
@@ -28883,7 +29265,7 @@
         "sha256:ba87167fd790330c3ed420573f86be850615af15b1bd1dca15e05d5c9225523d": 0.06392011067208017,
         "sha256:d607c4ccadbd1b933b9e972cf8a71b9268cb429b730e9ccc5e868d49661066b2": 0.17891642508068925
       },
-      "sybil_strategy_allocation_gain": 0.031960055336040086,
+      "sybil_strategy_allocation_gain": 0.0,
       "sybil_weight": 0.13419483254142328,
       "top1_share": 0.1868361014718128,
       "trial_pairs": 4500,
@@ -28926,6 +29308,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0983715511883124,
       "cohort": 47,
       "duplicate_cache_hits": 24,
       "effective_miners": 9.22968738847363,
@@ -28956,7 +29339,7 @@
         "sha256:d3c89b4d42f786d1f48ff44e128762b4ec8a81be43fb132f8a5554110bb1ce0c": 0.05710342965029949,
         "sha256:d607c4ccadbd1b933b9e972cf8a71b9268cb429b730e9ccc5e868d49661066b2": 0.11365268640436668
       },
-      "sybil_strategy_allocation_gain": 0.0491857755941562,
+      "sybil_strategy_allocation_gain": 0.0,
       "sybil_weight": 0.1973495666206385,
       "top1_share": 0.13509745461366218,
       "trial_pairs": 4500,
@@ -29001,6 +29384,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": null,
       "cohort": 47,
       "duplicate_cache_hits": 24,
       "effective_miners": 0.0,
@@ -29053,6 +29437,7 @@
         "warm-specialist": 49.79711978403244,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 48,
       "duplicate_cache_hits": 24,
       "effective_miners": 7.276879549239781,
@@ -29124,6 +29509,7 @@
         "warm-specialist": 49.797119784032446,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 48,
       "duplicate_cache_hits": 24,
       "effective_miners": 7.276879549239781,
@@ -29195,6 +29581,7 @@
         "warm-specialist": 49.79711978403244,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 48,
       "duplicate_cache_hits": 24,
       "effective_miners": 7.276879549239783,
@@ -29266,6 +29653,7 @@
         "warm-specialist": 43.57917696184635,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 48,
       "duplicate_cache_hits": 24,
       "effective_miners": 6.380618939931352,
@@ -29337,6 +29725,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 48,
       "duplicate_cache_hits": 24,
       "effective_miners": 11.137891706477461,
@@ -29417,6 +29806,7 @@
         "warm-specialist": 38.491154761594835,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 48,
       "duplicate_cache_hits": 24,
       "effective_miners": 5.499399285405217,
@@ -29484,6 +29874,7 @@
         "warm-specialist": 49.79711978403244,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 48,
       "duplicate_cache_hits": 24,
       "effective_miners": 7.276879549239781,
@@ -29555,6 +29946,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": null,
       "cohort": 48,
       "duplicate_cache_hits": 24,
       "effective_miners": 0.0,
@@ -29607,6 +29999,7 @@
         "warm-specialist": 49.895989793539805,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 49,
       "duplicate_cache_hits": 24,
       "effective_miners": 11.151134092359737,
@@ -29687,6 +30080,7 @@
         "warm-specialist": 49.895989793539805,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 49,
       "duplicate_cache_hits": 24,
       "effective_miners": 11.151134092359737,
@@ -29767,6 +30161,7 @@
         "warm-specialist": 49.895989793539805,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 49,
       "duplicate_cache_hits": 24,
       "effective_miners": 11.151134092359733,
@@ -29847,6 +30242,7 @@
         "warm-specialist": 43.62391977614897,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 49,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.07444327786329,
@@ -29927,6 +30323,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 49,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.96191777533063,
@@ -30006,6 +30403,7 @@
         "warm-specialist": 38.67368994658846,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 49,
       "duplicate_cache_hits": 24,
       "effective_miners": 7.914820018075053,
@@ -30080,6 +30478,7 @@
         "warm-specialist": 49.895989793539805,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 49,
       "duplicate_cache_hits": 24,
       "effective_miners": 11.151134092359737,
@@ -30160,6 +30559,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": null,
       "cohort": 49,
       "duplicate_cache_hits": 24,
       "effective_miners": 0.0,
@@ -30212,6 +30612,7 @@
         "warm-specialist": 49.902640471639785,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0925946069795057,
       "cohort": 50,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.245801126126077,
@@ -30243,7 +30644,7 @@
         "sha256:d3c89b4d42f786d1f48ff44e128762b4ec8a81be43fb132f8a5554110bb1ce0c": 0.05316061051627338,
         "sha256:d607c4ccadbd1b933b9e972cf8a71b9268cb429b730e9ccc5e868d49661066b2": 0.10525315050182177
       },
-      "sybil_strategy_allocation_gain": 0.04629730348975285,
+      "sybil_strategy_allocation_gain": 0.0,
       "sybil_weight": 0.1851100880819752,
       "top1_share": 0.12241179356635043,
       "trial_pairs": 4480,
@@ -30289,6 +30690,7 @@
         "warm-specialist": 49.902640471639785,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0925946069795057,
       "cohort": 50,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.245801126126077,
@@ -30320,7 +30722,7 @@
         "sha256:d3c89b4d42f786d1f48ff44e128762b4ec8a81be43fb132f8a5554110bb1ce0c": 0.053160610516273354,
         "sha256:d607c4ccadbd1b933b9e972cf8a71b9268cb429b730e9ccc5e868d49661066b2": 0.1052531505018218
       },
-      "sybil_strategy_allocation_gain": 0.04629730348975285,
+      "sybil_strategy_allocation_gain": 0.0,
       "sybil_weight": 0.1851100880819752,
       "top1_share": 0.12241179356635047,
       "trial_pairs": 4480,
@@ -30366,6 +30768,7 @@
         "warm-specialist": 49.902640471639785,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.09259460697950571,
       "cohort": 50,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.245801126126077,
@@ -30397,7 +30800,7 @@
         "sha256:d3c89b4d42f786d1f48ff44e128762b4ec8a81be43fb132f8a5554110bb1ce0c": 0.053160610516273375,
         "sha256:d607c4ccadbd1b933b9e972cf8a71b9268cb429b730e9ccc5e868d49661066b2": 0.10525315050182178
       },
-      "sybil_strategy_allocation_gain": 0.046297303489752854,
+      "sybil_strategy_allocation_gain": 0.0,
       "sybil_weight": 0.1851100880819752,
       "top1_share": 0.12241179356635046,
       "trial_pairs": 4480,
@@ -30443,6 +30846,7 @@
         "warm-specialist": 43.87372548114702,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.09200672577860375,
       "cohort": 50,
       "duplicate_cache_hits": 24,
       "effective_miners": 9.174789289222167,
@@ -30474,7 +30878,7 @@
         "sha256:d3c89b4d42f786d1f48ff44e128762b4ec8a81be43fb132f8a5554110bb1ce0c": 0.023028761440655736,
         "sha256:d607c4ccadbd1b933b9e972cf8a71b9268cb429b730e9ccc5e868d49661066b2": 0.1280316343386418
       },
-      "sybil_strategy_allocation_gain": 0.046003362889301874,
+      "sybil_strategy_allocation_gain": 0.0,
       "sybil_weight": 0.18405650595548317,
       "top1_share": 0.1410930228007645,
       "trial_pairs": 4480,
@@ -30520,6 +30924,7 @@
         "warm-specialist": 48.429434168837005,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 50,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.140405893864113,
@@ -30598,6 +31003,7 @@
         "warm-specialist": 38.389945103293485,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.07046788715175116,
       "cohort": 50,
       "duplicate_cache_hits": 24,
       "effective_miners": 7.01482507084506,
@@ -30627,7 +31033,7 @@
         "sha256:d13831132851afcef0b35c66378f9226280191db5fae0e865e0ee7d7a987ac43": 0.12459610057898025,
         "sha256:d607c4ccadbd1b933b9e972cf8a71b9268cb429b730e9ccc5e868d49661066b2": 0.18655459441027405
       },
-      "sybil_strategy_allocation_gain": 0.03523394357587558,
+      "sybil_strategy_allocation_gain": 0.0,
       "sybil_weight": 0.13961786681396438,
       "top1_share": 0.19240126399584045,
       "trial_pairs": 4480,
@@ -30671,6 +31077,7 @@
         "warm-specialist": 49.902640471639785,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0925946069795057,
       "cohort": 50,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.245801126126077,
@@ -30702,7 +31109,7 @@
         "sha256:d3c89b4d42f786d1f48ff44e128762b4ec8a81be43fb132f8a5554110bb1ce0c": 0.05316061051627338,
         "sha256:d607c4ccadbd1b933b9e972cf8a71b9268cb429b730e9ccc5e868d49661066b2": 0.10525315050182177
       },
-      "sybil_strategy_allocation_gain": 0.04629730348975285,
+      "sybil_strategy_allocation_gain": 0.0,
       "sybil_weight": 0.1851100880819752,
       "top1_share": 0.12241179356635043,
       "trial_pairs": 4480,
@@ -30748,6 +31155,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": null,
       "cohort": 50,
       "duplicate_cache_hits": 24,
       "effective_miners": 0.0,
@@ -30800,6 +31208,7 @@
         "warm-specialist": 49.848335424894096,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 51,
       "duplicate_cache_hits": 24,
       "effective_miners": 8.455229955606379,
@@ -30873,6 +31282,7 @@
         "warm-specialist": 49.84833542489409,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 51,
       "duplicate_cache_hits": 24,
       "effective_miners": 8.45522995560638,
@@ -30946,6 +31356,7 @@
         "warm-specialist": 49.848335424894096,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 51,
       "duplicate_cache_hits": 24,
       "effective_miners": 8.455229955606379,
@@ -31019,6 +31430,7 @@
         "warm-specialist": 43.74331842671165,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 51,
       "duplicate_cache_hits": 24,
       "effective_miners": 7.834020385594431,
@@ -31092,6 +31504,7 @@
         "warm-specialist": 49.02301988047126,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 51,
       "duplicate_cache_hits": 24,
       "effective_miners": 11.12770399586536,
@@ -31172,6 +31585,7 @@
         "warm-specialist": 38.15090129347728,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 51,
       "duplicate_cache_hits": 24,
       "effective_miners": 6.49067481346105,
@@ -31241,6 +31655,7 @@
         "warm-specialist": 49.848335424894096,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 51,
       "duplicate_cache_hits": 24,
       "effective_miners": 8.455229955606379,
@@ -31314,6 +31729,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": null,
       "cohort": 51,
       "duplicate_cache_hits": 24,
       "effective_miners": 0.0,
@@ -31366,6 +31782,7 @@
         "warm-specialist": 49.8559351000428,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 52,
       "duplicate_cache_hits": 24,
       "effective_miners": 8.315140507355508,
@@ -31440,6 +31857,7 @@
         "warm-specialist": 49.8559351000428,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 52,
       "duplicate_cache_hits": 24,
       "effective_miners": 8.315140507355508,
@@ -31514,6 +31932,7 @@
         "warm-specialist": 49.8559351000428,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 52,
       "duplicate_cache_hits": 24,
       "effective_miners": 8.31514050735551,
@@ -31588,6 +32007,7 @@
         "warm-specialist": 43.78115258694847,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 52,
       "duplicate_cache_hits": 24,
       "effective_miners": 7.247415426436165,
@@ -31662,6 +32082,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.1357111812657597,
       "cohort": 52,
       "duplicate_cache_hits": 24,
       "effective_miners": 7.332776129808439,
@@ -31690,7 +32111,7 @@
         "sha256:d3c89b4d42f786d1f48ff44e128762b4ec8a81be43fb132f8a5554110bb1ce0c": 0.07151932148544726,
         "sha256:d607c4ccadbd1b933b9e972cf8a71b9268cb429b730e9ccc5e868d49661066b2": 0.1498329041969178
       },
-      "sybil_strategy_allocation_gain": 0.06785559063287985,
+      "sybil_strategy_allocation_gain": 0.0,
       "sybil_weight": 0.1357111812657597,
       "top1_share": 0.172012714158171,
       "trial_pairs": 4450,
@@ -31732,6 +32153,7 @@
         "warm-specialist": 38.375907181664665,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 52,
       "duplicate_cache_hits": 24,
       "effective_miners": 5.197408297764877,
@@ -31802,6 +32224,7 @@
         "warm-specialist": 49.8559351000428,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 52,
       "duplicate_cache_hits": 24,
       "effective_miners": 8.315140507355508,
@@ -31876,6 +32299,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": null,
       "cohort": 52,
       "duplicate_cache_hits": 24,
       "effective_miners": 0.0,
@@ -31928,6 +32352,7 @@
         "warm-specialist": 49.95486076910725,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 53,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.220364333525518,
@@ -32005,6 +32430,7 @@
         "warm-specialist": 49.95486076910725,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 53,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.220364333525518,
@@ -32082,6 +32508,7 @@
         "warm-specialist": 49.95486076910725,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 53,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.220364333525517,
@@ -32159,6 +32586,7 @@
         "warm-specialist": 43.74841526431584,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 53,
       "duplicate_cache_hits": 24,
       "effective_miners": 9.267211226521336,
@@ -32236,6 +32664,7 @@
         "warm-specialist": 50.19660686076662,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 53,
       "duplicate_cache_hits": 24,
       "effective_miners": 9.234368339795154,
@@ -32311,6 +32740,7 @@
         "warm-specialist": 38.174310639528755,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 53,
       "duplicate_cache_hits": 24,
       "effective_miners": 7.8918014524996405,
@@ -32384,6 +32814,7 @@
         "warm-specialist": 49.95486076910725,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 53,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.220364333525518,
@@ -32461,6 +32892,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": null,
       "cohort": 53,
       "duplicate_cache_hits": 24,
       "effective_miners": 0.0,
@@ -32513,6 +32945,7 @@
         "warm-specialist": 49.837039546973145,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 54,
       "duplicate_cache_hits": 24,
       "effective_miners": 8.238764254365242,
@@ -32586,6 +33019,7 @@
         "warm-specialist": 49.83703954697315,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 54,
       "duplicate_cache_hits": 24,
       "effective_miners": 8.238764254365242,
@@ -32659,6 +33093,7 @@
         "warm-specialist": 49.837039546973145,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 54,
       "duplicate_cache_hits": 24,
       "effective_miners": 8.238764254365243,
@@ -32732,6 +33167,7 @@
         "warm-specialist": 43.793215766905845,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 54,
       "duplicate_cache_hits": 24,
       "effective_miners": 7.208143954895434,
@@ -32805,6 +33241,7 @@
         "warm-specialist": 47.6932229084862,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 54,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.046954846143723,
@@ -32883,6 +33320,7 @@
         "warm-specialist": 38.15216493206755,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 54,
       "duplicate_cache_hits": 24,
       "effective_miners": 5.625665161796227,
@@ -32952,6 +33390,7 @@
         "warm-specialist": 49.837039546973145,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 54,
       "duplicate_cache_hits": 24,
       "effective_miners": 8.238764254365242,
@@ -33025,6 +33464,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": null,
       "cohort": 54,
       "duplicate_cache_hits": 24,
       "effective_miners": 0.0,
@@ -33077,6 +33517,7 @@
         "warm-specialist": 49.673451163626865,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.07420058585045067,
       "cohort": 55,
       "duplicate_cache_hits": 24,
       "effective_miners": 12.164170562222434,
@@ -33110,7 +33551,7 @@
         "sha256:d3c89b4d42f786d1f48ff44e128762b4ec8a81be43fb132f8a5554110bb1ce0c": 0.04252555444974162,
         "sha256:d607c4ccadbd1b933b9e972cf8a71b9268cb429b730e9ccc5e868d49661066b2": 0.0852136568149657
       },
-      "sybil_strategy_allocation_gain": 0.037100292925225334,
+      "sybil_strategy_allocation_gain": 0.0,
       "sybil_weight": 0.148401786607879,
       "top1_share": 0.10169110585037172,
       "trial_pairs": 4530,
@@ -33158,6 +33599,7 @@
         "warm-specialist": 49.673451163626865,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.07420058585045072,
       "cohort": 55,
       "duplicate_cache_hits": 24,
       "effective_miners": 12.164170562222434,
@@ -33191,7 +33633,7 @@
         "sha256:d3c89b4d42f786d1f48ff44e128762b4ec8a81be43fb132f8a5554110bb1ce0c": 0.042525554449741584,
         "sha256:d607c4ccadbd1b933b9e972cf8a71b9268cb429b730e9ccc5e868d49661066b2": 0.0852136568149657
       },
-      "sybil_strategy_allocation_gain": 0.03710029292522536,
+      "sybil_strategy_allocation_gain": 0.0,
       "sybil_weight": 0.14840178660787906,
       "top1_share": 0.10169110585037172,
       "trial_pairs": 4530,
@@ -33239,6 +33681,7 @@
         "warm-specialist": 49.673451163626865,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.07420058585045067,
       "cohort": 55,
       "duplicate_cache_hits": 24,
       "effective_miners": 12.164170562222434,
@@ -33272,7 +33715,7 @@
         "sha256:d3c89b4d42f786d1f48ff44e128762b4ec8a81be43fb132f8a5554110bb1ce0c": 0.04252555444974163,
         "sha256:d607c4ccadbd1b933b9e972cf8a71b9268cb429b730e9ccc5e868d49661066b2": 0.08521365681496572
       },
-      "sybil_strategy_allocation_gain": 0.037100292925225334,
+      "sybil_strategy_allocation_gain": 0.0,
       "sybil_weight": 0.148401786607879,
       "top1_share": 0.10169110585037174,
       "trial_pairs": 4530,
@@ -33320,6 +33763,7 @@
         "warm-specialist": 43.51068789340757,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.07182805825431295,
       "cohort": 55,
       "duplicate_cache_hits": 24,
       "effective_miners": 11.072085026923192,
@@ -33353,7 +33797,7 @@
         "sha256:d3c89b4d42f786d1f48ff44e128762b4ec8a81be43fb132f8a5554110bb1ce0c": 0.016949571206088945,
         "sha256:d607c4ccadbd1b933b9e972cf8a71b9268cb429b730e9ccc5e868d49661066b2": 0.10246222580476834
       },
-      "sybil_strategy_allocation_gain": 0.03591402912715647,
+      "sybil_strategy_allocation_gain": 0.0,
       "sybil_weight": 0.14388660079227178,
       "top1_share": 0.11132015942125914,
       "trial_pairs": 4530,
@@ -33401,6 +33845,7 @@
         "warm-specialist": 45.88286597379226,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.09250362227205279,
       "cohort": 55,
       "duplicate_cache_hits": 24,
       "effective_miners": 9.972639205271975,
@@ -33432,7 +33877,7 @@
         "sha256:d13831132851afcef0b35c66378f9226280191db5fae0e865e0ee7d7a987ac43": 0.10177004180550996,
         "sha256:d3c89b4d42f786d1f48ff44e128762b4ec8a81be43fb132f8a5554110bb1ce0c": 0.047586924052428856
       },
-      "sybil_strategy_allocation_gain": 0.046251811136026395,
+      "sybil_strategy_allocation_gain": 0.0,
       "sybil_weight": 0.09250362227205279,
       "top1_share": 0.12998848746344796,
       "trial_pairs": 4480,
@@ -33477,6 +33922,7 @@
         "warm-specialist": 38.18078508953194,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.05276046444580185,
       "cohort": 55,
       "duplicate_cache_hits": 24,
       "effective_miners": 8.851110486176822,
@@ -33507,7 +33953,7 @@
         "sha256:d13831132851afcef0b35c66378f9226280191db5fae0e865e0ee7d7a987ac43": 0.09270549254841741,
         "sha256:d607c4ccadbd1b933b9e972cf8a71b9268cb429b730e9ccc5e868d49661066b2": 0.13861509662121282
       },
-      "sybil_strategy_allocation_gain": 0.026380232222900923,
+      "sybil_strategy_allocation_gain": 0.0,
       "sybil_weight": 0.10520620282015868,
       "top1_share": 0.14310788239339173,
       "trial_pairs": 4530,
@@ -33552,6 +33998,7 @@
         "warm-specialist": 49.673451163626865,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.07420058585045067,
       "cohort": 55,
       "duplicate_cache_hits": 24,
       "effective_miners": 12.164170562222434,
@@ -33585,7 +34032,7 @@
         "sha256:d3c89b4d42f786d1f48ff44e128762b4ec8a81be43fb132f8a5554110bb1ce0c": 0.04252555444974162,
         "sha256:d607c4ccadbd1b933b9e972cf8a71b9268cb429b730e9ccc5e868d49661066b2": 0.0852136568149657
       },
-      "sybil_strategy_allocation_gain": 0.037100292925225334,
+      "sybil_strategy_allocation_gain": 0.0,
       "sybil_weight": 0.148401786607879,
       "top1_share": 0.10169110585037172,
       "trial_pairs": 4530,
@@ -33633,6 +34080,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": null,
       "cohort": 55,
       "duplicate_cache_hits": 24,
       "effective_miners": 0.0,
@@ -33685,6 +34133,7 @@
         "warm-specialist": 49.84283123775374,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 56,
       "duplicate_cache_hits": 24,
       "effective_miners": 7.421204387139099,
@@ -33756,6 +34205,7 @@
         "warm-specialist": 49.842831237753764,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 56,
       "duplicate_cache_hits": 24,
       "effective_miners": 7.421204387139099,
@@ -33827,6 +34277,7 @@
         "warm-specialist": 49.84283123775374,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 56,
       "duplicate_cache_hits": 24,
       "effective_miners": 7.421204387139099,
@@ -33898,6 +34349,7 @@
         "warm-specialist": 43.71613284553086,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 56,
       "duplicate_cache_hits": 24,
       "effective_miners": 6.849533557697142,
@@ -33969,6 +34421,7 @@
         "warm-specialist": 49.19824326473239,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.07808508285787406,
       "cohort": 56,
       "duplicate_cache_hits": 24,
       "effective_miners": 11.413293572961344,
@@ -34001,7 +34454,7 @@
         "sha256:d13831132851afcef0b35c66378f9226280191db5fae0e865e0ee7d7a987ac43": 0.09074444175564672,
         "sha256:d607c4ccadbd1b933b9e972cf8a71b9268cb429b730e9ccc5e868d49661066b2": 0.09315210909957444
       },
-      "sybil_strategy_allocation_gain": 0.03904254142893703,
+      "sybil_strategy_allocation_gain": 0.0,
       "sybil_weight": 0.15617572952612688,
       "top1_share": 0.10686774925196882,
       "trial_pairs": 4530,
@@ -34048,6 +34501,7 @@
         "warm-specialist": 38.824434213354074,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 56,
       "duplicate_cache_hits": 24,
       "effective_miners": 5.54932485406537,
@@ -34117,6 +34571,7 @@
         "warm-specialist": 49.84283123775374,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 56,
       "duplicate_cache_hits": 24,
       "effective_miners": 7.421204387139099,
@@ -34188,6 +34643,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": null,
       "cohort": 56,
       "duplicate_cache_hits": 24,
       "effective_miners": 0.0,
@@ -34240,6 +34696,7 @@
         "warm-specialist": 49.88278207936128,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.08236171679807328,
       "cohort": 57,
       "duplicate_cache_hits": 24,
       "effective_miners": 11.207341485724841,
@@ -34272,7 +34729,7 @@
         "sha256:d3c89b4d42f786d1f48ff44e128762b4ec8a81be43fb132f8a5554110bb1ce0c": 0.046986753662863416,
         "sha256:d607c4ccadbd1b933b9e972cf8a71b9268cb429b730e9ccc5e868d49661066b2": 0.09463641708839907
       },
-      "sybil_strategy_allocation_gain": 0.04118085839903664,
+      "sybil_strategy_allocation_gain": 0.0,
       "sybil_weight": 0.1652930162908031,
       "top1_share": 0.10994077927908856,
       "trial_pairs": 4530,
@@ -34319,6 +34776,7 @@
         "warm-specialist": 49.882782079361284,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.08236171679807328,
       "cohort": 57,
       "duplicate_cache_hits": 24,
       "effective_miners": 11.207341485724841,
@@ -34351,7 +34809,7 @@
         "sha256:d3c89b4d42f786d1f48ff44e128762b4ec8a81be43fb132f8a5554110bb1ce0c": 0.04698675366286341,
         "sha256:d607c4ccadbd1b933b9e972cf8a71b9268cb429b730e9ccc5e868d49661066b2": 0.09463641708839905
       },
-      "sybil_strategy_allocation_gain": 0.04118085839903664,
+      "sybil_strategy_allocation_gain": 0.0,
       "sybil_weight": 0.16529301629080312,
       "top1_share": 0.10994077927908856,
       "trial_pairs": 4530,
@@ -34398,6 +34856,7 @@
         "warm-specialist": 49.88278207936128,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.08236171679807326,
       "cohort": 57,
       "duplicate_cache_hits": 24,
       "effective_miners": 11.207341485724843,
@@ -34430,7 +34889,7 @@
         "sha256:d3c89b4d42f786d1f48ff44e128762b4ec8a81be43fb132f8a5554110bb1ce0c": 0.046986753662863416,
         "sha256:d607c4ccadbd1b933b9e972cf8a71b9268cb429b730e9ccc5e868d49661066b2": 0.09463641708839907
       },
-      "sybil_strategy_allocation_gain": 0.04118085839903663,
+      "sybil_strategy_allocation_gain": 0.0,
       "sybil_weight": 0.16529301629080306,
       "top1_share": 0.10994077927908856,
       "trial_pairs": 4530,
@@ -34477,6 +34936,7 @@
         "warm-specialist": 43.90314775627045,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0780953060754154,
       "cohort": 57,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.128399034070794,
@@ -34509,7 +34969,7 @@
         "sha256:d3c89b4d42f786d1f48ff44e128762b4ec8a81be43fb132f8a5554110bb1ce0c": 0.017975294937734837,
         "sha256:d607c4ccadbd1b933b9e972cf8a71b9268cb429b730e9ccc5e868d49661066b2": 0.11182117205165117
       },
-      "sybil_strategy_allocation_gain": 0.0390476530377077,
+      "sybil_strategy_allocation_gain": 0.0,
       "sybil_weight": 0.15681776062837827,
       "top1_share": 0.12294378026127974,
       "trial_pairs": 4530,
@@ -34556,6 +35016,7 @@
         "warm-specialist": 50.31040877809096,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.11628459768561678,
       "cohort": 57,
       "duplicate_cache_hits": 24,
       "effective_miners": 7.826875241741069,
@@ -34584,7 +35045,7 @@
         "sha256:d13831132851afcef0b35c66378f9226280191db5fae0e865e0ee7d7a987ac43": 0.13302884123649938,
         "sha256:d607c4ccadbd1b933b9e972cf8a71b9268cb429b730e9ccc5e868d49661066b2": 0.13454632275509731
       },
-      "sybil_strategy_allocation_gain": 0.05814229884280839,
+      "sybil_strategy_allocation_gain": 0.0,
       "sybil_weight": 0.23080045134327687,
       "top1_share": 0.15844740247351555,
       "trial_pairs": 4490,
@@ -34627,6 +35088,7 @@
         "warm-specialist": 38.09440382744435,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.05480898814728084,
       "cohort": 57,
       "duplicate_cache_hits": 24,
       "effective_miners": 8.20537306373802,
@@ -34657,7 +35119,7 @@
         "sha256:d13831132851afcef0b35c66378f9226280191db5fae0e865e0ee7d7a987ac43": 0.09689542491880163,
         "sha256:d607c4ccadbd1b933b9e972cf8a71b9268cb429b730e9ccc5e868d49661066b2": 0.1466586469659554
       },
-      "sybil_strategy_allocation_gain": 0.02740449407364042,
+      "sybil_strategy_allocation_gain": 0.0,
       "sybil_weight": 0.11258647619980214,
       "top1_share": 0.14857942184327996,
       "trial_pairs": 4530,
@@ -34702,6 +35164,7 @@
         "warm-specialist": 49.88278207936128,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.08236171679807328,
       "cohort": 57,
       "duplicate_cache_hits": 24,
       "effective_miners": 11.207341485724841,
@@ -34734,7 +35197,7 @@
         "sha256:d3c89b4d42f786d1f48ff44e128762b4ec8a81be43fb132f8a5554110bb1ce0c": 0.046986753662863416,
         "sha256:d607c4ccadbd1b933b9e972cf8a71b9268cb429b730e9ccc5e868d49661066b2": 0.09463641708839907
       },
-      "sybil_strategy_allocation_gain": 0.04118085839903664,
+      "sybil_strategy_allocation_gain": 0.0,
       "sybil_weight": 0.1652930162908031,
       "top1_share": 0.10994077927908856,
       "trial_pairs": 4530,
@@ -34781,6 +35244,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": null,
       "cohort": 57,
       "duplicate_cache_hits": 24,
       "effective_miners": 0.0,
@@ -34833,6 +35297,7 @@
         "warm-specialist": 49.883161627018374,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 58,
       "duplicate_cache_hits": 24,
       "effective_miners": 9.383356249975428,
@@ -34909,6 +35374,7 @@
         "warm-specialist": 49.883161627018374,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 58,
       "duplicate_cache_hits": 24,
       "effective_miners": 9.383356249975428,
@@ -34985,6 +35451,7 @@
         "warm-specialist": 49.88316162701837,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 58,
       "duplicate_cache_hits": 24,
       "effective_miners": 9.383356249975428,
@@ -35061,6 +35528,7 @@
         "warm-specialist": 43.614887300842774,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 58,
       "duplicate_cache_hits": 24,
       "effective_miners": 8.758419960424563,
@@ -35137,6 +35605,7 @@
         "warm-specialist": 49.689852582449404,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 58,
       "duplicate_cache_hits": 24,
       "effective_miners": 9.287569663915683,
@@ -35212,6 +35681,7 @@
         "warm-specialist": 38.30847686383984,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 58,
       "duplicate_cache_hits": 24,
       "effective_miners": 6.893439553692787,
@@ -35284,6 +35754,7 @@
         "warm-specialist": 49.883161627018374,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 58,
       "duplicate_cache_hits": 24,
       "effective_miners": 9.383356249975428,
@@ -35360,6 +35831,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": null,
       "cohort": 58,
       "duplicate_cache_hits": 24,
       "effective_miners": 0.0,
@@ -35412,6 +35884,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.10177225973166648,
       "cohort": 59,
       "duplicate_cache_hits": 24,
       "effective_miners": 9.203178224025942,
@@ -35442,7 +35915,7 @@
         "sha256:c6e0db30d988b0f747a5ce319ad940c0a952775d4f5b26ec46df53428dc94301": 0.040025270065006724,
         "sha256:d3c89b4d42f786d1f48ff44e128762b4ec8a81be43fb132f8a5554110bb1ce0c": 0.05957155183580563
       },
-      "sybil_strategy_allocation_gain": 0.05088612986583324,
+      "sybil_strategy_allocation_gain": 0.0,
       "sybil_weight": 0.20512859179899445,
       "top1_share": 0.139158481628987,
       "trial_pairs": 4510,
@@ -35487,6 +35960,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.10177225973166648,
       "cohort": 59,
       "duplicate_cache_hits": 24,
       "effective_miners": 9.20317822402594,
@@ -35517,7 +35991,7 @@
         "sha256:c6e0db30d988b0f747a5ce319ad940c0a952775d4f5b26ec46df53428dc94301": 0.040025270065006724,
         "sha256:d3c89b4d42f786d1f48ff44e128762b4ec8a81be43fb132f8a5554110bb1ce0c": 0.059571551835805585
       },
-      "sybil_strategy_allocation_gain": 0.05088612986583324,
+      "sybil_strategy_allocation_gain": 0.0,
       "sybil_weight": 0.2051285917989945,
       "top1_share": 0.13915848162898697,
       "trial_pairs": 4510,
@@ -35562,6 +36036,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.10177225973166648,
       "cohort": 59,
       "duplicate_cache_hits": 24,
       "effective_miners": 9.20317822402594,
@@ -35592,7 +36067,7 @@
         "sha256:c6e0db30d988b0f747a5ce319ad940c0a952775d4f5b26ec46df53428dc94301": 0.0400252700650067,
         "sha256:d3c89b4d42f786d1f48ff44e128762b4ec8a81be43fb132f8a5554110bb1ce0c": 0.059571551835805654
       },
-      "sybil_strategy_allocation_gain": 0.05088612986583324,
+      "sybil_strategy_allocation_gain": 0.0,
       "sybil_weight": 0.2051285917989945,
       "top1_share": 0.139158481628987,
       "trial_pairs": 4510,
@@ -35637,6 +36112,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.09975819072435178,
       "cohort": 59,
       "duplicate_cache_hits": 24,
       "effective_miners": 8.215522359398166,
@@ -35667,7 +36143,7 @@
         "sha256:c6e0db30d988b0f747a5ce319ad940c0a952775d4f5b26ec46df53428dc94301": 0.01020644601512934,
         "sha256:d3c89b4d42f786d1f48ff44e128762b4ec8a81be43fb132f8a5554110bb1ce0c": 0.02491291812341537
       },
-      "sybil_strategy_allocation_gain": 0.04987909536217589,
+      "sybil_strategy_allocation_gain": 0.0,
       "sybil_weight": 0.20171289243781337,
       "top1_share": 0.1496552725717373,
       "trial_pairs": 4510,
@@ -35712,6 +36188,7 @@
         "warm-specialist": 49.1080153838221,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0814948234882568,
       "cohort": 59,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.516537535682643,
@@ -35743,7 +36220,7 @@
         "sha256:d3c89b4d42f786d1f48ff44e128762b4ec8a81be43fb132f8a5554110bb1ce0c": 0.05059952747134865,
         "sha256:d607c4ccadbd1b933b9e972cf8a71b9268cb429b730e9ccc5e868d49661066b2": 0.09955616959261039
       },
-      "sybil_strategy_allocation_gain": 0.0407474117441284,
+      "sybil_strategy_allocation_gain": 0.0,
       "sybil_weight": 0.16203387299732228,
       "top1_share": 0.11992006412798825,
       "trial_pairs": 4490,
@@ -35789,6 +36266,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.07399682029084681,
       "cohort": 59,
       "duplicate_cache_hits": 24,
       "effective_miners": 6.2863316597723395,
@@ -35816,7 +36294,7 @@
         "sha256:b3077ae3df361b2b69765261ef915a124fb6eb5586c5d4bd7b919da35ec1488d": 0.20493350101254634,
         "sha256:ba87167fd790330c3ed420573f86be850615af15b1bd1dca15e05d5c9225523d": 0.07399682029084681
       },
-      "sybil_strategy_allocation_gain": 0.036998410145423405,
+      "sybil_strategy_allocation_gain": 0.0,
       "sybil_weight": 0.14992495587238652,
       "top1_share": 0.20493350101254634,
       "trial_pairs": 4510,
@@ -35858,6 +36336,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.10177225973166648,
       "cohort": 59,
       "duplicate_cache_hits": 24,
       "effective_miners": 9.203178224025942,
@@ -35888,7 +36367,7 @@
         "sha256:c6e0db30d988b0f747a5ce319ad940c0a952775d4f5b26ec46df53428dc94301": 0.040025270065006724,
         "sha256:d3c89b4d42f786d1f48ff44e128762b4ec8a81be43fb132f8a5554110bb1ce0c": 0.05957155183580563
       },
-      "sybil_strategy_allocation_gain": 0.05088612986583324,
+      "sybil_strategy_allocation_gain": 0.0,
       "sybil_weight": 0.20512859179899445,
       "top1_share": 0.139158481628987,
       "trial_pairs": 4510,
@@ -35933,6 +36412,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": null,
       "cohort": 59,
       "duplicate_cache_hits": 24,
       "effective_miners": 0.0,
@@ -35985,6 +36465,7 @@
         "warm-specialist": 49.943172912675436,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 60,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.229855991102458,
@@ -36063,6 +36544,7 @@
         "warm-specialist": 49.943172912675436,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 60,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.229855991102458,
@@ -36141,6 +36623,7 @@
         "warm-specialist": 49.94317291267543,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 60,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.229855991102458,
@@ -36219,6 +36702,7 @@
         "warm-specialist": 43.76838162470337,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 60,
       "duplicate_cache_hits": 24,
       "effective_miners": 9.180946772699967,
@@ -36297,6 +36781,7 @@
         "warm-specialist": 49.550502215791454,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 60,
       "duplicate_cache_hits": 24,
       "effective_miners": 11.393609617917651,
@@ -36377,6 +36862,7 @@
         "warm-specialist": 38.43750823030962,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 60,
       "duplicate_cache_hits": 24,
       "effective_miners": 7.28453777653318,
@@ -36451,6 +36937,7 @@
         "warm-specialist": 49.943172912675436,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 60,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.229855991102458,
@@ -36529,6 +37016,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": null,
       "cohort": 60,
       "duplicate_cache_hits": 24,
       "effective_miners": 0.0,
@@ -36581,6 +37069,7 @@
         "warm-specialist": 49.857776110086455,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 61,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.176174918188849,
@@ -36657,6 +37146,7 @@
         "warm-specialist": 49.857776110086455,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 61,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.176174918188849,
@@ -36733,6 +37223,7 @@
         "warm-specialist": 49.857776110086455,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 61,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.176174918188845,
@@ -36809,6 +37300,7 @@
         "warm-specialist": 43.48086808360409,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 61,
       "duplicate_cache_hits": 24,
       "effective_miners": 9.173375817758641,
@@ -36885,6 +37377,7 @@
         "warm-specialist": 47.422429781127,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 61,
       "duplicate_cache_hits": 24,
       "effective_miners": 8.075295836943994,
@@ -36957,6 +37450,7 @@
         "warm-specialist": 38.435052591799234,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 61,
       "duplicate_cache_hits": 24,
       "effective_miners": 7.474837946254196,
@@ -37029,6 +37523,7 @@
         "warm-specialist": 49.857776110086455,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 61,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.176174918188849,
@@ -37105,6 +37600,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": null,
       "cohort": 61,
       "duplicate_cache_hits": 24,
       "effective_miners": 0.0,
@@ -37157,6 +37653,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 62,
       "duplicate_cache_hits": 24,
       "effective_miners": 9.441639684094367,
@@ -37231,6 +37728,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 62,
       "duplicate_cache_hits": 24,
       "effective_miners": 9.441639684094364,
@@ -37305,6 +37803,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 62,
       "duplicate_cache_hits": 24,
       "effective_miners": 9.441639684094364,
@@ -37379,6 +37878,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 62,
       "duplicate_cache_hits": 24,
       "effective_miners": 8.829887911915499,
@@ -37453,6 +37953,7 @@
         "warm-specialist": 48.99141574330773,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 62,
       "duplicate_cache_hits": 24,
       "effective_miners": 12.158775510305418,
@@ -37535,6 +38036,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 62,
       "duplicate_cache_hits": 24,
       "effective_miners": 7.208308184492515,
@@ -37605,6 +38107,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 62,
       "duplicate_cache_hits": 24,
       "effective_miners": 9.441639684094367,
@@ -37679,6 +38182,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": null,
       "cohort": 62,
       "duplicate_cache_hits": 24,
       "effective_miners": 0.0,
@@ -37731,6 +38235,7 @@
         "warm-specialist": 49.86093758747982,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 63,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.194873401658315,
@@ -37808,6 +38313,7 @@
         "warm-specialist": 49.86093758747981,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 63,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.194873401658313,
@@ -37885,6 +38391,7 @@
         "warm-specialist": 49.86093758747982,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 63,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.194873401658317,
@@ -37962,6 +38469,7 @@
         "warm-specialist": 43.73302078017562,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 63,
       "duplicate_cache_hits": 24,
       "effective_miners": 9.202664139705545,
@@ -38039,6 +38547,7 @@
         "warm-specialist": 47.66227328722493,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.07547966176444741,
       "cohort": 63,
       "duplicate_cache_hits": 24,
       "effective_miners": 11.03022523939314,
@@ -38071,7 +38580,7 @@
         "sha256:d3c89b4d42f786d1f48ff44e128762b4ec8a81be43fb132f8a5554110bb1ce0c": 0.04036726112202971,
         "sha256:d607c4ccadbd1b933b9e972cf8a71b9268cb429b730e9ccc5e868d49661066b2": 0.09215657378106308
       },
-      "sybil_strategy_allocation_gain": 0.037739830882223706,
+      "sybil_strategy_allocation_gain": 0.0,
       "sybil_weight": 0.07547966176444741,
       "top1_share": 0.11399367625742493,
       "trial_pairs": 4490,
@@ -38117,6 +38626,7 @@
         "warm-specialist": 38.55967982286791,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 63,
       "duplicate_cache_hits": 24,
       "effective_miners": 7.468846882930096,
@@ -38190,6 +38700,7 @@
         "warm-specialist": 49.86093758747982,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": 0.0,
       "cohort": 63,
       "duplicate_cache_hits": 24,
       "effective_miners": 10.194873401658315,
@@ -38267,6 +38778,7 @@
         "warm-specialist": 0.0,
         "wrong-fast": 0.0
       },
+      "behavior_equivalent_replica_allocation_gain": null,
       "cohort": 63,
       "duplicate_cache_hits": 24,
       "effective_miners": 0.0,
@@ -38300,6 +38812,8 @@
   "summary": {
     "accepted_injected_false_claims": 0,
     "all_fail_safe_no_update_rate": 1.0,
+    "behavior_equivalent_replica_allocation_gain": 0.1357111812657597,
+    "behavior_equivalent_replica_comparison_count": 448,
     "behavior_group_count": 18,
     "duplicate_evaluation_cache_hits": 12288,
     "epochs_per_replication": 24,
@@ -38311,14 +38825,16 @@
     "honest_winner_rate": 1.0,
     "injected_false_claims": 6089,
     "invalid_attempts": 42609,
-    "max_abs_sybil_strategy_allocation_gain": 0.06785559063287985,
+    "max_abs_behavior_equivalent_replica_allocation_gain": 0.1357111812657597,
+    "max_abs_sybil_strategy_allocation_gain": 0.0,
     "max_top1_share": 0.25,
+    "mean_behavior_equivalent_replica_allocation_gain": 0.013716733264482995,
     "mean_gaming_weight": 0.0,
     "mean_gini": 0.16302428107797476,
     "mean_hhi": 0.10708240275023803,
     "mean_honest_weight": 0.8451818541276956,
     "mean_rank_stability_tau_b": 0.5634683750777206,
-    "mean_sybil_strategy_allocation_gain": 0.006858366632241497,
+    "mean_sybil_strategy_allocation_gain": 0.0,
     "mean_sybil_weight": 0.15481814587230436,
     "mean_top1_share": 0.13241324714004696,
     "mean_validator_disagreement_tv": 0.13929725952233304,
@@ -38626,7 +39142,7 @@
     },
     "strategy_evaluations": 233472,
     "sybil_allocation_comparison_count": 448,
-    "sybil_strategy_allocation_gain": 0.06785559063287985,
+    "sybil_strategy_allocation_gain": 0.0,
     "validator_disagreement_pair_count": 1344,
     "validator_scenario_count": 8
   },

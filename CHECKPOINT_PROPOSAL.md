@@ -62,6 +62,10 @@ The general mechanism default requires five positive groups. The signed localnet
 integration policy requires four—the mathematical minimum under its 25% cap—and
 no group can receive more than 25%. Its schedule was signed after the run, so it
 does not claim an externally timestamped advance commitment.
+The simulation separately reports a residual availability-redundancy effect for
+byte-distinct equivalent encodings (13.57 percentage points worst case, 1.37
+points mean); this cannot create extra diversity or exceed the group cap and is
+left to registration/stake economics rather than presented as solved.
 Failed gates create no new chain update and are never presented as cleared old
 weights.
 

@@ -32,8 +32,8 @@ evidence over a precommitted hidden holdout and pinned engine.
    grouping. Missing tasks do not contribute to a portfolio fingerprint.
 8. **Allocate:** cap concentration, publish metrics, and produce either a
    non-negative vector or an explicit no-new-update decision. Byte-distinct
-   strategies with equivalent observed behavior use the conservative group mass
-   so extra noisy replicas cannot improve a coalition's allocation.
+   strategies with equivalent observed behavior share one conservative group
+   mass, one diversity slot, and one cap.
 
 ## Score and weight policy
 
@@ -67,7 +67,8 @@ The complete formula and defaults are in `SCORING.md` and executable in
 | One extreme timing sample | Winsorized center + MAD lower bound | Coordinated nonstationary noise |
 | Optimize only warm cache | Separate cold/warm metrics and four horizons | Chosen horizon masses are governance policy |
 | Index everything | Setup + storage overhead | Storage proxy may not equal buyer cost |
-| Duplicate/Sybil identities | Canonical digest group splits fixed reward | Novel-looking collusive artifacts |
+| Exact duplicate/Sybil identities | Canonical digest group splits fixed reward | Registration/stake economics |
+| Byte-distinct behavior replicas | One behavior slot and one 25% group cap | Availability redundancy showed 13.57pp worst simulated gain |
 | Validator curriculum skew | Fixed workload-family mass | Biased generator inside a family |
 | Every candidate fails | Explicit no-update | Liveness until honest candidates return |
 

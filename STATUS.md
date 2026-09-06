@@ -16,11 +16,12 @@ Public claim: **LOCALNET EVIDENCE / TESTNET PENDING**.
   storage scoring across reuse horizons.
 - Closed multi-family schedule, conservative multi-epoch aggregation, duplicate
   strategy splitting, explicit no-new-update, and weight concentration cap.
-- Final clean Python gate: 236 tests passed, Ruff and mypy clean, and 87.17%
+- Final clean Python gate: 239 tests passed, Ruff and mypy clean, and 87.18%
   branch coverage against the 85% threshold.
 - Seeded 512-replication v2 mechanism/adversary simulation with 0 false
-  acceptance, 100% all-fail no-update, and negligible duplicated-strategy
-  allocation gain (`results/mechanism-v2/`).
+  acceptance, 100% all-fail no-update, zero exact-duplicate allocation gain,
+  and separately disclosed behavior-equivalent availability-replica gain
+  (`results/mechanism-v2/`).
 - Official local Subtensor netuid 3 setup with three development validator
   identities and ten heterogeneous miner identities.
 - Verified 30-epoch protocol v2 localnet run: six query families, 300
