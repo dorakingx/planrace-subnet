@@ -1,5 +1,10 @@
 # Pitch script
 
+Editable checkpoint deck: `submission/PlanRace_Checkpoint_Pitch.pptx`.
+It intentionally presents the verified localnet result and labels testnet as the
+next gate. Replace the testnet-pending material only after the signed testnet
+manifest and finalized metagraph readback exist.
+
 Every database team has queries that remain logically correct but become
 expensive when schemas, data distributions, traffic, or engine releases change.
 Database-native optimizers and vendor advisors are strong, but they expose one

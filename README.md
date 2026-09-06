@@ -3,7 +3,8 @@
 **The competitive market for verified query plans.**
 
 [Live evidence dashboard](https://planrace-subnet.vercel.app) ·
-[GitHub](https://github.com/dorakingx/planrace-subnet)
+[GitHub](https://github.com/dorakingx/planrace-subnet) ·
+[Checkpoint pitch deck](submission/PlanRace_Checkpoint_Pitch.pptx)
 
 PlanRace is a Bittensor subnet prototype where miners return bounded structured
 index plans for validator-owned SQL. Validators first require exact result equality on

@@ -16,7 +16,7 @@ Public claim: **LOCALNET EVIDENCE / TESTNET PENDING**.
   storage scoring across reuse horizons.
 - Closed multi-family schedule, conservative multi-epoch aggregation, duplicate
   strategy splitting, explicit no-new-update, and weight concentration cap.
-- Final clean Python gate: 239 tests passed, Ruff and mypy clean, and 87.14%
+- Final clean Python gate: 240 tests passed, Ruff and mypy clean, and 87.14%
   branch coverage against the 85% threshold.
 - Seeded 512-replication v2 mechanism/adversary simulation with 0 false
   acceptance, 100% all-fail no-update, zero exact-duplicate allocation gain,
@@ -32,17 +32,18 @@ Public claim: **LOCALNET EVIDENCE / TESTNET PENDING**.
   into the signed summary.
 - Required protocol, market, judging, evidence, and media drafts exist and state
   their gaps explicitly.
+- The editable 10-slide checkpoint deck is validated, visually reviewed, and
+  stored at `submission/PlanRace_Checkpoint_Pitch.pptx`. It distinguishes the
+  verified localnet result from the pending testnet gate.
 - The signed v2 evidence drives the public dashboard. Dashboard format,
   typecheck, lint, build, evidence tests, route smoke tests, browser flows,
   accessibility, responsive layout, dependency audit, and public-link checks
   passed.
-- Clean protocol v2 preview `dpl_5UKpTxYdNhskbUH85VrWponn7j4a` was verified
-  and its artifact promoted as production `dpl_6CxN3ZqYYm7sArcfEwWNDHQDpuYD`.
-  The corrected `dashboard` project root then produced Git-linked production
-  `dpl_3JB3i2sG3kyHFAznCQwSh4iukqie` from exact GitHub SHA `d5ce868` with a clean
-  build log and passing public checks.
+- Production deployment `dpl_9rDSa9KHJqZc3SjwagzwmcBxnEpR` is READY at
+  `https://planrace-subnet.vercel.app/` from exact GitHub SHA `1de0703`, with
+  passing public page, evidence, robots, and sitemap checks.
 - GitHub Actions passed both Python verification and the complete dashboard
-  job after the cross-platform evidence-audit correction.
+  job after the cross-platform evidence-audit correction (run `34026165113`).
 
 ## Next gates
 

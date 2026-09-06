@@ -18,3 +18,5 @@ results/*.json
 !results/localnet-epoch-8.json
 results/localnet-v2/miner-logs/
 .localnet-state/
+.artifacts/
+.chart-data-*/
