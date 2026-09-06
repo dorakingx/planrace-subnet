@@ -5,6 +5,7 @@ from pathlib import Path
 from typing import Any
 
 import pytest
+from bittensor.intents.weights import clip_to_max_weight, normalize
 from typer.testing import CliRunner
 
 from planrace import cli
@@ -13,6 +14,7 @@ from planrace.testnet_preflight import TESTNET_ENDPOINT
 from planrace.testnet_weights import TestnetWeightPlanReport as WeightPlanReport
 from planrace.testnet_weights import TestnetWeightReadbackReport as ReadbackReport
 from planrace.testnet_weights import (
+    _conform_weight_vector,
     collect_testnet_weight_plan,
     load_testnet_weight_plan,
     parse_public_scores,
@@ -42,6 +44,7 @@ class FakeSnapshot:
         if name == "subnet_hyperparameters":
             return {
                 "min_allowed_weights": 2,
+                "max_weights_limit": 65_535,
                 "weights_rate_limit": 100,
                 "commit_reveal_weights_enabled": True,
                 "commit_reveal_period": 1_000,
@@ -50,7 +53,7 @@ class FakeSnapshot:
             return {
                 "hotkeys": [VALIDATOR, MINER_A, MINER_B],
                 "validator_permit": [True, False, False],
-                "last_update": [12_300, 0, 0],
+                "last_update": [12_000, 0, 0],
             }
         if name == "weights":
             return {0: {1: 0.25, 2: 0.75}}
@@ -157,6 +160,7 @@ def test_plan_resolves_public_hotkeys_and_reads_existing_weights() -> None:
     )
 
     assert report.read_only is True
+    assert report.schema_version == "planrace/testnet-weight-plan/2"
     assert report.transaction_constructed is False
     assert report.signature_requested is False
     assert report.block_hash == FakeBlockInfo.hash
@@ -164,13 +168,69 @@ def test_plan_resolves_public_hotkeys_and_reads_existing_weights() -> None:
         (1, 0.25),
         (2, 0.75),
     ]
+    assert [(target.planned_weight, target.u16_weight) for target in report.targets] == [
+        (0.25, 21_845),
+        (0.75, 65_535),
+    ]
+    assert report.max_weights_limit == 65_535
+    assert report.weights_were_clipped is False
     assert report.current_readback.weights == ((1, 0.25), (2, 0.75))
-    assert report.current_readback.last_update == 12_300
+    assert report.current_readback.last_update == 12_000
     assert report.gates.minimum_recipients_met is True
     assert report.ready_for_authorized_submission is True
     assert report.plan_digest is not None
     assert report.plan_digest.startswith("sha256:")
     assert client.closed is True
+
+
+def test_plan_precomputes_sdk_max_weight_clipping_and_u16_readback() -> None:
+    class ClippedSnapshot(FakeSnapshot):
+        def read(self, name: str, **params: object) -> object:
+            value = super().read(name, **params)
+            if name == "subnet_hyperparameters":
+                return {**value, "max_weights_limit": 40_000}  # type: ignore[arg-type]
+            return value
+
+    class ClippedClient(FakeClient):
+        def at(self, block: int) -> ClippedSnapshot:
+            assert block == self.block
+            return ClippedSnapshot()
+
+    report = collect_testnet_weight_plan(
+        netuid=7,
+        validator_hotkey_ss58=VALIDATOR,
+        score_specs=score_specs(),
+        client_factory=ClippedClient,
+    )
+
+    assert report.weights_were_clipped is True
+    assert report.gates.maximum_weight_limit_met is True
+    assert [target.planned_weight for target in report.targets] == [0.25, 0.75]
+    assert [target.u16_weight for target in report.targets] == [41_836, 65_535]
+    assert report.targets[1].weight == pytest.approx(40_000 / 65_535, abs=2 / 65_535)
+    assert report.ready_for_authorized_submission is True
+
+
+@pytest.mark.parametrize(
+    "weights,raw_limit",
+    [
+        ([0.25, 0.75], 40_000),
+        ([0.01, 0.19, 0.8], 30_000),
+        ([1.0, 2.0, 3.0, 4.0], 65_535),
+    ],
+)
+def test_conformed_vector_matches_pinned_sdk(weights: list[float], raw_limit: int) -> None:
+    limit = raw_limit / 65_535
+    conformed = (
+        clip_to_max_weight(weights, limit)
+        if raw_limit < 65_535
+        else [weight / sum(weights) for weight in weights]
+    )
+    expected_uids, expected_u16 = normalize(list(range(len(weights))), conformed)
+    actual, _ = _conform_weight_vector(weights, raw_limit)
+
+    assert [index for index, _, _ in actual] == expected_uids
+    assert [value for _, _, value in actual] == expected_u16
 
 
 def test_digest_is_deterministic_across_score_input_order() -> None:
@@ -232,6 +292,51 @@ def test_missing_target_or_insufficient_positive_scores_are_not_ready() -> None:
     )
     assert insufficient.targets == ()
     assert insufficient.ready_for_authorized_submission is False
+
+
+def test_rate_limit_and_invalid_max_limit_fail_closed() -> None:
+    class RateLimitedSnapshot(FakeSnapshot):
+        def read(self, name: str, **params: object) -> object:
+            value = super().read(name, **params)
+            if name == "metagraph":
+                return {**value, "last_update": [12_300, 0, 0]}  # type: ignore[arg-type]
+            return value
+
+    class RateLimitedClient(FakeClient):
+        def at(self, block: int) -> RateLimitedSnapshot:
+            assert block == self.block
+            return RateLimitedSnapshot()
+
+    limited = collect_testnet_weight_plan(
+        netuid=7,
+        validator_hotkey_ss58=VALIDATOR,
+        score_specs=score_specs(),
+        client_factory=RateLimitedClient,
+    )
+    assert limited.gates.rate_limit_elapsed is False
+    assert limited.ready_for_authorized_submission is False
+    assert "rate limit" in limited.next_action
+
+    class InvalidLimitSnapshot(FakeSnapshot):
+        def read(self, name: str, **params: object) -> object:
+            value = super().read(name, **params)
+            if name == "subnet_hyperparameters":
+                return {**value, "max_weights_limit": 0}  # type: ignore[arg-type]
+            return value
+
+    class InvalidLimitClient(FakeClient):
+        def at(self, block: int) -> InvalidLimitSnapshot:
+            assert block == self.block
+            return InvalidLimitSnapshot()
+
+    invalid = collect_testnet_weight_plan(
+        netuid=7,
+        validator_hotkey_ss58=VALIDATOR,
+        score_specs=score_specs(),
+        client_factory=InvalidLimitClient,
+    )
+    assert invalid.ready_for_authorized_submission is False
+    assert invalid.errors == ("read-only planning failed: ValueError",)
 
 
 def test_validator_cannot_be_scored_as_a_miner() -> None:
@@ -307,6 +412,7 @@ def test_saved_plan_loads_and_later_matching_readback_passes(tmp_path: Path) -> 
     )
 
     assert report.source_plan_digest == source.plan_digest
+    assert report.schema_version == "planrace/testnet-weight-readback/2"
     assert report.block == 12_400
     assert report.current_readback.last_update == 12_350
     assert all(comparison.matches for comparison in report.comparisons)
@@ -323,6 +429,12 @@ def test_tampered_saved_plan_is_rejected_before_chain_access(tmp_path: Path) -> 
     path = tmp_path / "tampered.json"
     path.write_text(json.dumps(data))
 
+    with pytest.raises(ValueError, match="digest mismatch"):
+        load_testnet_weight_plan(path)
+
+    data = weight_plan().model_dump(mode="json")
+    data["commit_reveal_weights_enabled"] = False
+    path.write_text(json.dumps(data))
     with pytest.raises(ValueError, match="digest mismatch"):
         load_testnet_weight_plan(path)
 

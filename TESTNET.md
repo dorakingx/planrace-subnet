@@ -64,10 +64,13 @@ planrace testnet weight-plan \
 ```
 
 The command verifies the canonical testnet endpoint, block number/hash,
-validator registration and permit, every scored hotkey binding, subnet minimum
-recipient count, rate limit, and commit/reveal settings. It emits the prior
-on-chain weight row, normalized proposed weights, and a canonical SHA-256 plan
-digest. It exits nonzero unless all pre-signing gates pass.
+validator registration and permit, every scored hotkey binding, elapsed subnet
+rate limit, minimum recipient count, `max_weights_limit`, and commit/reveal
+settings. It reproduces the pinned SDK's max-weight clipping and u16
+quantization before submission, then emits the prior on-chain row, original and
+conformed weights, exact u16 values, and a canonical SHA-256 plan digest. The
+digest binds the runtime, all relevant hyperparameters, prior readback, UID
+bindings, and final vector. It exits nonzero unless all pre-signing gates pass.
 
 This command remains strictly read-only: `transaction_constructed` and
 `signature_requested` are always false, and there is no wallet path, custom RPC,

@@ -8,7 +8,7 @@ import math
 from collections.abc import Callable, Mapping, Sequence
 from importlib.metadata import version
 from pathlib import Path
-from typing import Protocol, SupportsFloat, SupportsInt, cast
+from typing import Literal, Protocol, SupportsFloat, SupportsInt, cast
 
 from pydantic import BaseModel, ConfigDict
 
@@ -16,18 +16,21 @@ from planrace.network import ensure_supported_network
 from planrace.testnet_preflight import TESTNET_ENDPOINT, validate_public_ss58
 from planrace.weights import plan_hotkey_weights
 
-SCHEMA_VERSION = "planrace/testnet-weight-plan/1"
+SCHEMA_VERSION = "planrace/testnet-weight-plan/2"
+U16_MAX = 65_535
 
 
 class _StrictModel(BaseModel):
-    model_config = ConfigDict(extra="forbid", frozen=True)
+    model_config = ConfigDict(extra="forbid", frozen=True, strict=True)
 
 
 class WeightTarget(_StrictModel):
     hotkey_ss58: str
     uid: int
     score: float
+    planned_weight: float
     weight: float
+    u16_weight: int
 
 
 class WeightReadback(_StrictModel):
@@ -44,11 +47,13 @@ class WeightPlanGates(_StrictModel):
     validator_registered: bool
     validator_permit: bool
     all_targets_registered: bool
+    rate_limit_elapsed: bool
     minimum_recipients_met: bool
+    maximum_weight_limit_met: bool
 
 
 class TestnetWeightPlanReport(_StrictModel):
-    schema_version: str = SCHEMA_VERSION
+    schema_version: Literal["planrace/testnet-weight-plan/2"] = "planrace/testnet-weight-plan/2"
     read_only: bool = True
     transaction_constructed: bool = False
     signature_requested: bool = False
@@ -61,9 +66,11 @@ class TestnetWeightPlanReport(_StrictModel):
     runtime_spec_version: int | None
     validator_hotkey_ss58: str
     min_allowed_weights: int | None
+    max_weights_limit: int | None
     weights_rate_limit: int | None
     commit_reveal_weights_enabled: bool | None
     commit_reveal_period: int | None
+    weights_were_clipped: bool
     targets: tuple[WeightTarget, ...]
     current_readback: WeightReadback
     gates: WeightPlanGates
@@ -97,7 +104,9 @@ class WeightReadbackGates(_StrictModel):
 
 
 class TestnetWeightReadbackReport(_StrictModel):
-    schema_version: str = "planrace/testnet-weight-readback/1"
+    schema_version: Literal["planrace/testnet-weight-readback/2"] = (
+        "planrace/testnet-weight-readback/2"
+    )
     read_only: bool = True
     transaction_constructed: bool = False
     signature_requested: bool = False
@@ -207,6 +216,58 @@ def parse_public_scores(values: Sequence[str]) -> dict[str, float]:
     return scores
 
 
+def _clip_to_max_weight(weights: Sequence[float], raw_limit: int) -> tuple[list[float], bool]:
+    """Match the pinned SDK's max-weight conformity step before u16 encoding."""
+
+    if not 0 < raw_limit <= U16_MAX:
+        raise ValueError("max_weights_limit must be between 1 and 65535")
+    total = math.fsum(weights)
+    if not weights or total <= 0.0 or not math.isfinite(total):
+        raise ValueError("weight vector must have a finite positive total")
+    normalized = [weight / total for weight in weights]
+    limit = raw_limit / U16_MAX
+    if raw_limit == U16_MAX or max(normalized) <= limit:
+        return normalized, False
+    count = len(normalized)
+    if count * limit <= 1.0:
+        return [1.0 / count] * count, True
+
+    ordered = sorted(normalized)
+    cumulative: list[float] = []
+    running = 0.0
+    for weight in ordered:
+        running += weight
+        cumulative.append(running)
+    epsilon = 1e-7
+    below_cutoff = sum(
+        1
+        for index, weight in enumerate(ordered)
+        if weight / ((count - index - 1) * weight + cumulative[index] + epsilon) < limit
+    )
+    cutoff_scale = (limit * cumulative[below_cutoff - 1] - epsilon) / (
+        1.0 - limit * (count - below_cutoff)
+    )
+    cutoff = cutoff_scale * total
+    clipped = [min(float(weight), cutoff) for weight in weights]
+    clipped_total = math.fsum(clipped)
+    return [weight / clipped_total for weight in clipped], True
+
+
+def _conform_weight_vector(
+    weights: Sequence[float], raw_limit: int
+) -> tuple[tuple[tuple[int, float, int], ...], bool]:
+    """Return index, normalized readback weight, and exact submitted u16 value."""
+
+    conformed, clipped = _clip_to_max_weight(weights, raw_limit)
+    top = max(conformed)
+    quantized = [round((weight / top) * U16_MAX) for weight in conformed]
+    nonzero = [(index, value) for index, value in enumerate(quantized) if value > 0]
+    total = sum(value for _, value in nonzero)
+    if not nonzero or total <= 0:
+        raise ValueError("all weights became zero during u16 quantization")
+    return tuple((index, value / total, value) for index, value in nonzero), clipped
+
+
 def _hotkeys(metagraph: object) -> list[str]:
     value = _field(metagraph, "hotkeys", ())
     if not isinstance(value, Sequence) or isinstance(value, (str, bytes)):
@@ -267,17 +328,39 @@ def _weight_readback(
 
 def _digest_payload(
     *,
+    endpoint: str,
+    sdk_version: str,
     netuid: int,
     block: int,
     block_hash: str,
+    runtime_spec_version: int,
     validator_hotkey: str,
+    min_allowed_weights: int,
+    max_weights_limit: int,
+    weights_rate_limit: int,
+    commit_reveal_weights_enabled: bool,
+    commit_reveal_period: int,
+    weights_were_clipped: bool,
     targets: Sequence[WeightTarget],
+    current_readback: WeightReadback,
 ) -> str:
     payload = {
+        "schema_version": SCHEMA_VERSION,
+        "network": "test",
+        "endpoint": endpoint,
+        "sdk_version": sdk_version,
         "block": block,
         "block_hash": block_hash,
+        "runtime_spec_version": runtime_spec_version,
         "netuid": netuid,
+        "min_allowed_weights": min_allowed_weights,
+        "max_weights_limit": max_weights_limit,
+        "weights_rate_limit": weights_rate_limit,
+        "commit_reveal_weights_enabled": commit_reveal_weights_enabled,
+        "commit_reveal_period": commit_reveal_period,
+        "weights_were_clipped": weights_were_clipped,
         "targets": [target.model_dump(mode="json") for target in targets],
+        "current_readback": current_readback.model_dump(mode="json"),
         "validator_hotkey_ss58": validator_hotkey,
     }
     canonical = json.dumps(payload, separators=(",", ":"), sort_keys=True).encode()
@@ -288,16 +371,58 @@ def _validated_plan_digest(report: TestnetWeightPlanReport) -> str:
     if (
         report.block is None
         or report.block_hash is None
+        or report.runtime_spec_version is None
+        or report.min_allowed_weights is None
+        or report.max_weights_limit is None
+        or report.weights_rate_limit is None
+        or report.commit_reveal_weights_enabled is None
+        or report.commit_reveal_period is None
         or report.plan_digest is None
         or not report.targets
     ):
         raise ValueError("weight plan has no complete proposed operation")
+    validate_public_ss58(report.validator_hotkey_ss58)
+    if report.netuid < 0 or report.block < 0:
+        raise ValueError("weight plan contains an invalid chain location")
+    if not report.block_hash.startswith("0x") or len(report.block_hash) != 66:
+        raise ValueError("weight plan contains an invalid block hash")
+    if (
+        report.min_allowed_weights < 0
+        or not 0 < report.max_weights_limit <= U16_MAX
+        or report.weights_rate_limit < 0
+        or report.commit_reveal_period < 0
+    ):
+        raise ValueError("weight plan contains invalid subnet parameters")
+    for target in report.targets:
+        validate_public_ss58(target.hotkey_ss58)
+        if target.hotkey_ss58 == report.validator_hotkey_ss58 or target.uid < 0:
+            raise ValueError("weight plan contains an invalid target identity")
+        if (
+            not math.isfinite(target.score)
+            or target.score <= 0.0
+            or not math.isfinite(target.planned_weight)
+            or target.planned_weight <= 0.0
+            or not math.isfinite(target.weight)
+            or target.weight <= 0.0
+            or not 0 < target.u16_weight <= U16_MAX
+        ):
+            raise ValueError("weight plan contains an invalid target value")
     expected = _digest_payload(
+        endpoint=report.endpoint,
+        sdk_version=report.sdk_version,
         netuid=report.netuid,
         block=report.block,
         block_hash=report.block_hash,
+        runtime_spec_version=report.runtime_spec_version,
         validator_hotkey=report.validator_hotkey_ss58,
+        min_allowed_weights=report.min_allowed_weights,
+        max_weights_limit=report.max_weights_limit,
+        weights_rate_limit=report.weights_rate_limit,
+        commit_reveal_weights_enabled=report.commit_reveal_weights_enabled,
+        commit_reveal_period=report.commit_reveal_period,
+        weights_were_clipped=report.weights_were_clipped,
         targets=report.targets,
+        current_readback=report.current_readback,
     )
     if report.plan_digest != expected:
         raise ValueError("weight plan digest mismatch")
@@ -322,6 +447,20 @@ def _validated_plan_digest(report: TestnetWeightPlanReport) -> str:
         abs_tol=1e-12,
     ):
         raise ValueError("weight plan target weights are not normalized")
+    total_u16 = sum(target.u16_weight for target in report.targets)
+    if total_u16 <= 0 or any(target.u16_weight <= 0 for target in report.targets):
+        raise ValueError("weight plan contains an invalid u16 weight")
+    if any(
+        not math.isclose(target.weight, target.u16_weight / total_u16, abs_tol=1e-12)
+        for target in report.targets
+    ):
+        raise ValueError("weight plan normalized weights do not match its u16 vector")
+    if (
+        report.max_weights_limit is None
+        or max(target.u16_weight for target in report.targets) * U16_MAX
+        > report.max_weights_limit * total_u16
+    ):
+        raise ValueError("weight plan exceeds max_weights_limit")
     return expected
 
 
@@ -394,15 +533,18 @@ def collect_testnet_weight_plan(
         targets: tuple[WeightTarget, ...] = ()
         readback = empty_readback
         min_allowed: int | None = None
+        max_weights_limit: int | None = None
         rate_limit: int | None = None
         commit_reveal: bool | None = None
         reveal_period: int | None = None
+        weights_were_clipped = False
         all_targets_registered = False
         validator_registered = False
         if subnet_exists:
             hyper = snapshot.read("subnet_hyperparameters", netuid=netuid)
             metagraph = snapshot.read("metagraph", netuid=netuid)
             min_allowed = _optional_int(_field(hyper, "min_allowed_weights"))
+            max_weights_limit = _optional_int(_field(hyper, "max_weights_limit"))
             rate_limit = _optional_int(_field(hyper, "weights_rate_limit"))
             commit_reveal = _optional_bool(_field(hyper, "commit_reveal_weights_enabled"))
             reveal_period = _optional_int(_field(hyper, "commit_reveal_period"))
@@ -413,15 +555,20 @@ def collect_testnet_weight_plan(
             all_targets_registered = proposed.planned and all(
                 hotkey in uid_by_hotkey for hotkey in proposed.hotkeys
             )
-            if proposed.planned and all_targets_registered:
+            if proposed.planned and all_targets_registered and max_weights_limit is not None:
+                conformed, weights_were_clipped = _conform_weight_vector(
+                    proposed.weights, max_weights_limit
+                )
                 target_rows = [
                     WeightTarget(
-                        hotkey_ss58=hotkey,
-                        uid=uid_by_hotkey[hotkey],
-                        score=scores[hotkey],
+                        hotkey_ss58=proposed.hotkeys[index],
+                        uid=uid_by_hotkey[proposed.hotkeys[index]],
+                        score=scores[proposed.hotkeys[index]],
+                        planned_weight=proposed.weights[index],
                         weight=weight,
+                        u16_weight=u16_weight,
                     )
-                    for hotkey, weight in zip(proposed.hotkeys, proposed.weights, strict=True)
+                    for index, weight, u16_weight in conformed
                 ]
                 targets = tuple(sorted(target_rows, key=lambda item: item.uid))
             readback = _weight_readback(
@@ -434,6 +581,20 @@ def collect_testnet_weight_plan(
         minimum_recipients_met = bool(targets) and (
             min_allowed is not None and len(targets) >= min_allowed
         )
+        rate_limit_elapsed = rate_limit is not None and (
+            rate_limit == 0
+            or readback.last_update == 0
+            or (
+                readback.last_update is not None
+                and block >= readback.last_update
+                and block - readback.last_update >= rate_limit
+            )
+        )
+        maximum_weight_limit_met = bool(targets) and (
+            max_weights_limit is not None
+            and max(target.u16_weight for target in targets) * U16_MAX
+            <= max_weights_limit * sum(target.u16_weight for target in targets)
+        )
         gates = WeightPlanGates(
             canonical_endpoint=canonical,
             snapshot_pinned=snapshot_pinned,
@@ -441,7 +602,9 @@ def collect_testnet_weight_plan(
             validator_registered=validator_registered,
             validator_permit=readback.validator_permit,
             all_targets_registered=all_targets_registered,
+            rate_limit_elapsed=rate_limit_elapsed,
             minimum_recipients_met=minimum_recipients_met,
+            maximum_weight_limit_met=maximum_weight_limit_met,
         )
         ready = (
             proposed.planned
@@ -452,13 +615,31 @@ def collect_testnet_weight_plan(
         )
         digest = (
             _digest_payload(
+                endpoint=endpoint,
+                sdk_version=version("bittensor"),
                 netuid=netuid,
                 block=block,
                 block_hash=block_hash,
+                runtime_spec_version=int(client.spec_version),
                 validator_hotkey=validator_hotkey_ss58,
+                min_allowed_weights=min_allowed,
+                max_weights_limit=max_weights_limit,
+                weights_rate_limit=rate_limit,
+                commit_reveal_weights_enabled=commit_reveal,
+                commit_reveal_period=reveal_period,
+                weights_were_clipped=weights_were_clipped,
                 targets=targets,
+                current_readback=readback,
             )
-            if targets and not errors
+            if (
+                targets
+                and not errors
+                and min_allowed is not None
+                and max_weights_limit is not None
+                and rate_limit is not None
+                and commit_reveal is not None
+                and reveal_period is not None
+            )
             else None
         )
         if not canonical or errors:
@@ -471,8 +652,12 @@ def collect_testnet_weight_plan(
             next_action = "Wait for validator permit before any weight operation."
         elif not all_targets_registered:
             next_action = "Register every scored miner and rerun against a fresh block."
+        elif not rate_limit_elapsed:
+            next_action = "Wait for the subnet weight rate limit, then build a fresh plan."
         elif not minimum_recipients_met:
             next_action = "Provide enough positive scored miners for the subnet minimum."
+        elif not maximum_weight_limit_met:
+            next_action = "Provide enough recipients to satisfy max_weights_limit."
         else:
             next_action = (
                 "Review this digest, rerun at a fresh block, then explicitly authorize signing."
@@ -486,9 +671,11 @@ def collect_testnet_weight_plan(
             runtime_spec_version=int(client.spec_version),
             validator_hotkey_ss58=validator_hotkey_ss58,
             min_allowed_weights=min_allowed,
+            max_weights_limit=max_weights_limit,
             weights_rate_limit=rate_limit,
             commit_reveal_weights_enabled=commit_reveal,
             commit_reveal_period=reveal_period,
+            weights_were_clipped=weights_were_clipped,
             targets=targets,
             current_readback=readback,
             gates=gates,
@@ -508,9 +695,11 @@ def collect_testnet_weight_plan(
             runtime_spec_version=None,
             validator_hotkey_ss58=validator_hotkey_ss58,
             min_allowed_weights=None,
+            max_weights_limit=None,
             weights_rate_limit=None,
             commit_reveal_weights_enabled=None,
             commit_reveal_period=None,
+            weights_were_clipped=False,
             targets=(),
             current_readback=empty_readback,
             gates=WeightPlanGates(
@@ -520,7 +709,9 @@ def collect_testnet_weight_plan(
                 validator_registered=False,
                 validator_permit=False,
                 all_targets_registered=False,
+                rate_limit_elapsed=False,
                 minimum_recipients_met=False,
+                maximum_weight_limit_met=False,
             ),
             ready_for_authorized_submission=False,
             plan_digest=None,

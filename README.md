@@ -163,7 +163,8 @@ registers, serves, stakes, or sets weights.
 
 After public validator/miner hotkeys exist, a second read-only command resolves
 scores to the UIDs at one exact block, reads the validator's current weights,
-checks permit/subnet gates, and emits a reviewable SHA-256 plan digest:
+checks permit, rate, recipient, max-weight, and commit/reveal gates, reproduces
+the SDK's clipping and u16 vector, and emits a reviewable SHA-256 plan digest:
 
 ```bash
 planrace testnet weight-plan \
@@ -177,11 +178,12 @@ planrace testnet weight-plan \
 planrace testnet weight-readback testnet-weight-plan.json
 ```
 
-It has no transaction, wallet, private-key, or signing input. A fresh plan is
-required immediately before any separately authorized submission. The later
-readback command verifies UID stability, an advanced `last_update`, the exact
-recipient set, and quantized weight values; finalized extrinsic evidence remains
-a separate required artifact.
+It has no transaction, wallet, private-key, or signing input. The digest binds
+the exact block/runtime, relevant subnet parameters, prior row, UID bindings,
+and final u16 vector. A fresh plan is required immediately before any separately
+authorized submission. The later readback command verifies UID stability, an
+advanced `last_update`, the exact recipient set, and quantized weight values;
+finalized extrinsic evidence remains a separate required artifact.
 
 The non-root validation worker is published for linux/amd64 and linux/arm64
 with an OCI SBOM and verifiable GitHub provenance. Testnet runs must use the
