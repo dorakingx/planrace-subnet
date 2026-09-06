@@ -161,6 +161,21 @@ See [TESTNET.md](TESTNET.md) for the public-address-only readiness check. It
 accepts only Bittensor's `test` network through the pinned SDK and never signs,
 registers, serves, stakes, or sets weights.
 
+After public validator/miner hotkeys exist, a second read-only command resolves
+scores to the UIDs at one exact block, reads the validator's current weights,
+checks permit/subnet gates, and emits a reviewable SHA-256 plan digest:
+
+```bash
+planrace testnet weight-plan \
+  --netuid NETUID \
+  --validator-hotkey-ss58 PUBLIC_VALIDATOR_HOTKEY \
+  --score PUBLIC_MINER_A_HOTKEY=1 \
+  --score PUBLIC_MINER_B_HOTKEY=3
+```
+
+It has no transaction, wallet, private-key, or signing input. A fresh plan is
+required immediately before any separately authorized submission.
+
 The non-root validation worker is published for linux/amd64 and linux/arm64
 with an OCI SBOM and verifiable GitHub provenance. Testnet runs must use the
 immutable reference documented in [WORKER_IMAGE.md](WORKER_IMAGE.md), never the

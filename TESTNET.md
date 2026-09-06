@@ -49,6 +49,32 @@ for a protocol run. It is a latest-block diagnostic, not finalized transaction
 evidence and not proof of wallet ownership. Never pass a seed, mnemonic, or
 private key in place of a public address.
 
+## Transaction-free weight plan
+
+After registration and a protocol scoring run, resolve public miner hotkeys to
+the UIDs at one exact block and inspect the validator's current weight row:
+
+```bash
+planrace testnet weight-plan \
+  --netuid NETUID \
+  --validator-hotkey-ss58 PUBLIC_VALIDATOR_HOTKEY \
+  --score PUBLIC_MINER_A_HOTKEY=SCORE_A \
+  --score PUBLIC_MINER_B_HOTKEY=SCORE_B
+```
+
+The command verifies the canonical testnet endpoint, block number/hash,
+validator registration and permit, every scored hotkey binding, subnet minimum
+recipient count, rate limit, and commit/reveal settings. It emits the prior
+on-chain weight row, normalized proposed weights, and a canonical SHA-256 plan
+digest. It exits nonzero unless all pre-signing gates pass.
+
+This command remains strictly read-only: `transaction_constructed` and
+`signature_requested` are always false, and there is no wallet path, custom RPC,
+secret, submission, or mainnet option. The exact-block read is not itself proof
+of finality. Re-run it immediately before a separately authorized signing step,
+then bind the finalized submission and later readback—not this diagnostic alone—
+into testnet evidence.
+
 ## Entry gate
 
 Begin only after protocol v2 localnet evidence and manifest verification pass,
@@ -83,8 +109,10 @@ presented as one concise `ACTION REQUIRED` step when those gates are satisfied.
    transaction hashes.
 4. Publish sanitized miner endpoints, run the real signed protocol flow, and
    preserve failures as evidence.
-5. Build weights by hotkey, resolve them to UIDs from one recorded finalized
-   metagraph snapshot, and fail if any scored hotkey is absent or duplicated.
+5. Run `planrace testnet weight-plan` to build weights by hotkey, inspect the
+   existing row, and fail if any scored hotkey is absent or duplicated. Then
+   resolve again against one recorded finalized metagraph snapshot immediately
+   before an authorized submission.
 6. Submit through SDK 11.1 `SetWeights`. It preflights registration/rate limits,
    conforms and quantizes the vector, then selects a direct set or a
    timelock-encrypted commit from the subnet's commit-reveal flag. A timelocked

@@ -36,6 +36,9 @@ simulation run a testnet run.
 - Protocol v2 localnet: `LOCALNET_V2.md` and
   `results/localnet-v2/{summary,manifest}.json` plus `epochs/`.
 - Protocol v2 testnet: **pending**; see `TESTNET.md`.
+- Testnet pre-signing diagnostics: public-address-only preflight and exact-block
+  weight plan/readback are implemented and live-smoke-tested. These diagnostics
+  are not registration, submission, finality, or protocol execution evidence.
 - Testnet worker supply chain: public multi-architecture registry digest,
   anonymous runtime check, SBOM, provenance, and attestation in
   `WORKER_IMAGE.md`. This is delivery evidence, not testnet execution evidence.

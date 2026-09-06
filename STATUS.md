@@ -16,7 +16,7 @@ Public claim: **LOCALNET EVIDENCE / TESTNET PENDING**.
   storage scoring across reuse horizons.
 - Closed multi-family schedule, conservative multi-epoch aggregation, duplicate
   strategy splitting, explicit no-new-update, and weight concentration cap.
-- Final clean Python gate: 256 tests passed, Ruff and mypy clean, and branch
+- Final clean Python gate: 267 tests passed, Ruff and mypy clean, and branch
   coverage passed the 85% threshold.
 - Seeded 512-replication v2 mechanism/adversary simulation with 0 false
   acceptance, 100% all-fail no-update, zero exact-duplicate allocation gain,
@@ -37,6 +37,12 @@ Public claim: **LOCALNET EVIDENCE / TESTNET PENDING**.
   validator-permit, and readiness gates. Live read-only block `7945778` on
   runtime spec `454` passed canonical connectivity; wallet-dependent gates
   remain false.
+- A separate transaction-free weight planner resolves public scored hotkeys to
+  UIDs at one block/hash, reads the validator's existing weight row, checks
+  permit/subnet gates, and emits a canonical SHA-256 plan digest. A live public
+  testnet smoke check at block `7946161` passed without constructing a
+  transaction or requesting a signature; it did not use or claim PlanRace-owned
+  identities.
 - The editable 10-slide checkpoint deck is validated, visually reviewed, and
   stored at `submission/PlanRace_Checkpoint_Pitch.pptx`. It distinguishes the
   verified localnet result from the pending testnet gate.

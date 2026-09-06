@@ -17,6 +17,7 @@ from planrace.evidence import (
 from planrace.mechanism_simulation import SimulationConfig, run_mechanism_simulation
 from planrace.simulation import simulate
 from planrace.testnet_preflight import collect_testnet_preflight
+from planrace.testnet_weights import collect_testnet_weight_plan
 
 app = typer.Typer(no_args_is_help=True, help="PlanRace verified query optimizer subnet")
 evidence_app = typer.Typer(no_args_is_help=True, help="Verify signed PlanRace run evidence")
@@ -83,6 +84,36 @@ def testnet_preflight_command(
         or not report.gates.registration_requirement_met
         or not report.gates.served_axon_requirement_met
     ):
+        raise typer.Exit(code=1)
+
+
+@testnet_app.command("weight-plan")
+def testnet_weight_plan_command(
+    netuid: Annotated[int, typer.Option(min=0)],
+    validator_hotkey_ss58: Annotated[
+        str,
+        typer.Option(help="Public validator hotkey address; never a seed or private key."),
+    ],
+    score: Annotated[
+        list[str] | None,
+        typer.Option(help="Repeat public SS58=score values for miners."),
+    ] = None,
+    minimum_positive_hotkeys: Annotated[int, typer.Option(min=1)] = 2,
+) -> None:
+    """Plan and read back testnet weights without constructing a transaction."""
+
+    try:
+        report = collect_testnet_weight_plan(
+            netuid=netuid,
+            validator_hotkey_ss58=validator_hotkey_ss58,
+            score_specs=score or (),
+            minimum_positive_hotkeys=minimum_positive_hotkeys,
+        )
+    except ValueError as error:
+        typer.echo(json.dumps({"error": str(error)}, sort_keys=True))
+        raise typer.Exit(code=2) from error
+    typer.echo(json.dumps(report.model_dump(mode="json"), indent=2, sort_keys=True))
+    if report.errors or not report.ready_for_authorized_submission:
         raise typer.Exit(code=1)
 
 
