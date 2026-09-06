@@ -17,6 +17,7 @@ from planrace.evidence import (
 from planrace.mechanism_simulation import SimulationConfig, run_mechanism_simulation
 from planrace.simulation import simulate
 from planrace.testnet_preflight import collect_testnet_preflight
+from planrace.testnet_provisioning import collect_testnet_provision_plan
 from planrace.testnet_submission import submit_testnet_weight_plan
 from planrace.testnet_weights import (
     collect_testnet_weight_plan,
@@ -119,6 +120,29 @@ def testnet_weight_plan_command(
         raise typer.Exit(code=2) from error
     typer.echo(json.dumps(report.model_dump(mode="json"), indent=2, sort_keys=True))
     if report.errors or not report.ready_for_authorized_submission:
+        raise typer.Exit(code=1)
+
+
+@testnet_app.command("provision-plan")
+def testnet_provision_plan_command(
+    identities: Annotated[
+        Path,
+        typer.Option(
+            exists=True,
+            dir_okay=False,
+            help="Public-only PlanRace testnet identity manifest.",
+        ),
+    ] = Path("results/testnet/identities.public.json"),
+) -> None:
+    """Plan dedicated testnet subnet creation without constructing a transaction."""
+
+    try:
+        report = collect_testnet_provision_plan(identities)
+    except ValueError as error:
+        typer.echo(json.dumps({"error": str(error)}, sort_keys=True))
+        raise typer.Exit(code=2) from error
+    typer.echo(json.dumps(report.model_dump(mode="json"), indent=2, sort_keys=True))
+    if report.errors or not report.ready_for_authorized_subnet_creation:
         raise typer.Exit(code=1)
 
 

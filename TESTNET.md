@@ -7,7 +7,7 @@ The user authorized creation of a dedicated wallet, test-TAO acquisition, and
 testnet signatures on 2026-09-06. The testnet-only `planrace-testnet` wallet now
 contains three validator and ten miner hotkeys. Its sanitized public identities
 are recorded in `results/testnet/identities.public.json`; wallet files remain
-outside the repository with owner-only permissions. At block `7946423` the
+outside the repository with owner-only permissions. At block `7946784` the
 coldkey balance was `0` test TAO and all 13 hotkeys were unregistered. This is
 identity/readiness evidence only, not a testnet deployment claim.
 
@@ -58,6 +58,33 @@ report explicitly distinguishes readiness for registration from readiness for
 a protocol run. It is a latest-block diagnostic, not finalized transaction
 evidence and not proof of wallet ownership. Never pass a seed, mnemonic, or
 private key in place of a public address.
+
+## Read-only provisioning plan
+
+Before any subnet-creation signature is considered, bind the dedicated public
+identity manifest and current economics to one latest-block plan:
+
+```bash
+planrace testnet provision-plan > testnet-provision-plan.json
+```
+
+The strict-schema report verifies the canonical endpoint, pinned block,
+runtime, public coldkey and 13 unique hotkeys, current coldkey balance, subnet
+creation price, and existential deposit. It hard-limits the entire dedicated
+wallet to 5 test TAO and the subnet-creation operation to 1.25 test TAO. Runtime
+It also requires the coldkey to own no on-chain hotkeys and all 13 planned
+hotkeys to have no existing registrations, preventing a rerun from creating a
+second subnet. Runtime v454 creates the subnet-owner hotkey `validator-00` as
+UID 0; `validator-01`, `validator-02`, and `miner-00` through `miner-09` require
+12 later burn registrations.
+
+At block `7946784`, the observed creation price was `1.0` test TAO and the
+existential deposit was `0.0000005`, while the balance remained `0`. Therefore
+`ready_for_authorized_subnet_creation=false`; no transaction or signature was
+requested. The command emits a SHA-256 plan digest even when stopped so the
+exact reviewed state can be distinguished from a later, fresh plan. Prices are
+dynamic and must be read again immediately before any separately authorized
+submission.
 
 ## Transaction-free weight plan
 
@@ -163,18 +190,20 @@ presented as one concise `ACTION REQUIRED` step when those gates are satisfied.
 
 ## Operator procedure
 
-1. Run `planrace testnet preflight`, then recheck current official Bittensor
-   testnet registration, test-TAO allocation, staking, endpoint, commit/reveal,
-   and weight requirements against the pinned SDK. Pin finalized blocks for
-   transaction evidence; the preflight itself reads the latest block.
+1. Run `planrace testnet preflight` and `planrace testnet provision-plan`, then
+   recheck current official Bittensor testnet registration, test-TAO allocation,
+   staking, endpoint, commit/reveal, and weight requirements against the pinned
+   SDK. Pin finalized blocks for transaction evidence; both diagnostics read the
+   latest block.
 2. Use only the dedicated `planrace-testnet` wallet. It is disposable and
    unencrypted at rest under owner-only `0700/0600` permissions; no mnemonic,
    seed, or private key may enter logs, screenshots, repository, shell history,
    or evidence.
 3. Obtain test TAO through the currently designated community/hackathon
-   allocation process and register only after the user authorizes the wallet
-   action. Record public addresses, netuid, UIDs, finalized runtime spec, and
-   transaction hashes.
+   allocation process. Rerun `provision-plan`; register only if its hard budget
+   gates pass and the user separately authorizes that fresh plan digest. Record
+   public addresses, netuid, UIDs, finalized runtime spec, and transaction
+   hashes.
 4. Publish sanitized miner endpoints, run the real signed protocol flow, and
    preserve failures as evidence.
 5. Run `planrace testnet weight-plan` to build weights by hotkey, inspect the

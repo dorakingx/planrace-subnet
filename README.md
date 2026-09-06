@@ -155,11 +155,21 @@ The testnet gate can be inspected without secrets or transactions:
 
 ```bash
 planrace testnet preflight
+planrace testnet provision-plan
 ```
 
 See [TESTNET.md](TESTNET.md) for the public-address-only readiness check. It
 accepts only Bittensor's `test` network through the pinned SDK and never signs,
 registers, serves, stakes, or sets weights.
+
+`provision-plan` additionally binds the dedicated public identity manifest,
+latest-block balance, subnet creation price, existential deposit, and all 13
+planned roles to a SHA-256 digest. It enforces a 5 test TAO total-wallet budget
+and a 1.25 test TAO subnet-creation cap, and denies creation when the coldkey
+already owns a hotkey or any planned hotkey is already registered. The runtime
+creates `validator-00` as UID 0 with the subnet; the other two validators and
+ten miners remain 12 separate burn registrations. The command exits nonzero
+until every gate passes and never opens the wallet or constructs a transaction.
 
 After public validator/miner hotkeys exist, a second read-only command resolves
 scores to the UIDs at one exact block, reads the validator's current weights,
