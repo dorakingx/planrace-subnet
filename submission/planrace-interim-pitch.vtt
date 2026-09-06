@@ -1,0 +1,196 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:05.250
+PlanRace is a proposed Bittensor market for verified query
+optimization.
+
+2
+00:00:05.250 --> 00:00:11.775
+Miners discover executable index plans. Validators check the results
+on hidden workloads.
+
+3
+00:00:11.775 --> 00:00:18.675
+This interim pitch presents verified localnet evidence. Public
+testnet deployment remains pending.
+
+4
+00:00:18.700 --> 00:00:24.075
+A query can remain correct while becoming expensive as data and
+workloads change.
+
+5
+00:00:24.075 --> 00:00:30.700
+Our proposed first users are database teams investigating recurring
+performance regressions.
+
+6
+00:00:30.700 --> 00:00:41.850
+Centralized advisors offer strong integration. PlanRace explores
+whether independent solvers can find useful alternatives under a
+shared evaluation policy.
+
+7
+00:00:41.850 --> 00:00:46.225
+Buyer demand remains a hypothesis, not a customer result.
+
+8
+00:00:46.225 --> 00:00:51.350
+The commodity is a bounded structured index plan for a known correct
+query.
+
+9
+00:00:51.350 --> 00:00:56.350
+Miners can use search, learned systems, rules, or engine expertise.
+
+10
+00:00:56.350 --> 00:01:05.350
+They receive public training information and a resource budget. They
+cannot submit arbitrary executable code or their own timing claims.
+
+11
+00:01:05.350 --> 00:01:09.600
+Validators own the hidden fixtures and replay each artifact.
+
+12
+00:01:09.625 --> 00:01:16.000
+A cryptographic commitment binds each task to its hidden fixtures,
+engine, policy, and deadline.
+
+13
+00:01:16.000 --> 00:01:21.800
+Requests bind the intended receiver. Miner signatures bind submitted
+artifacts.
+
+14
+00:01:21.800 --> 00:01:27.775
+After the deadline, the validator seals submissions and reveals the
+secret seed and salt.
+
+15
+00:01:27.775 --> 00:01:32.475
+Auditors can then regenerate the fixtures and verify the commitment.
+
+16
+00:01:32.475 --> 00:01:36.675
+Exact results and policy compliance come before performance.
+
+17
+00:01:36.675 --> 00:01:44.700
+Passing candidates face the same baseline across cold and warm
+latency, setup cost, storage, and reuse horizons.
+
+18
+00:01:44.700 --> 00:01:50.350
+The protocol aggregates conservative measurements across workload
+families and epochs.
+
+19
+00:01:50.350 --> 00:01:55.650
+An all-fail round makes no new weight update. It does not clear old
+on-chain weights.
+
+20
+00:01:55.675 --> 00:02:01.550
+The committed simulation ran five hundred twelve seeded adversarial
+replications.
+
+21
+00:02:01.550 --> 00:02:08.450
+It recorded zero false acceptance and zero exact-copy allocation
+gain in those tested cases.
+
+22
+00:02:08.450 --> 00:02:19.300
+A material limitation remains: behavior-equivalent replicas improved
+availability, with a worst allocation gain of thirteen point five
+seven percentage points.
+
+23
+00:02:19.300 --> 00:02:24.675
+This is bounded simulation evidence, not a universal
+Sybil-resistance proof.
+
+24
+00:02:24.675 --> 00:02:30.275
+The verified local Subtensor run covered thirty epochs and six query
+families.
+
+25
+00:02:30.275 --> 00:02:36.100
+Three validator identities under one operator queried ten
+heterogeneous miners.
+
+26
+00:02:36.100 --> 00:02:45.000
+The run recorded three hundred authenticated requests and two
+hundred seventy signed responses, with finalized local-chain weight
+readback.
+
+27
+00:02:45.000 --> 00:02:50.325
+These are localnet results. They do not demonstrate a public testnet
+deployment.
+
+28
+00:02:50.325 --> 00:02:56.450
+Bittensor can coordinate an open population of competing
+optimization strategies.
+
+29
+00:02:56.450 --> 00:03:01.725
+PlanRace separates open-ended discovery from bounded validator
+replay.
+
+30
+00:03:01.725 --> 00:03:07.775
+Cheaper verification is an economic hypothesis that must hold as
+workloads scale.
+
+31
+00:03:07.775 --> 00:03:18.375
+Disposable workers bound evaluation resources. Independent
+operators, hardware calibration, and real buyer workloads still
+require validation.
+
+32
+00:03:18.425 --> 00:03:24.850
+The next proof gate is a dedicated public testnet run with
+registered miners and validators.
+
+33
+00:03:24.850 --> 00:03:31.825
+It must produce signed interaction, scoring, finalized weights, and
+a matching public metagraph readback.
+
+34
+00:03:31.825 --> 00:03:34.625
+Test token funding remains outstanding.
+
+35
+00:03:34.625 --> 00:03:47.350
+Later work targets independent validators and production database
+adapters. Current evidence uses generated SQLite workloads and does
+not prove private-data safety or commercial demand.
+
+36
+00:03:47.350 --> 00:03:52.475
+PlanRace has a working local mechanism and public, auditable
+evidence.
+
+37
+00:03:52.475 --> 00:03:58.150
+HackQuest accepted the project submission with its testnet-pending
+status disclosed.
+
+38
+00:03:58.150 --> 00:04:03.925
+The public repository and dashboard contain the implementation and
+its limitations.
+
+39
+00:04:03.925 --> 00:04:13.475
+This interim pitch does not replace the required testnet demo. The
+final result section will change only when real chain evidence
+exists.

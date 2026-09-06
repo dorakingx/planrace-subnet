@@ -1,10 +1,24 @@
 # Status
 
-Updated: 2026-09-06 (Asia/Tokyo)
+Updated: 2026-09-07 (Asia/Tokyo)
 
 Public claim: **LOCALNET EVIDENCE / TESTNET PENDING**.
 
 ## Complete and verified
+
+- HackQuest accepted PlanRace's project submission. The authenticated screen
+  displayed `Successfully Submit Project`; an independent public readback
+  returned `isSubmit=true` and the Bittensor Global Subnet Hackathon ID. See
+  `submission/HACKQUEST_SUBMISSION_RECEIPT.md`. Acceptance does not establish
+  competition eligibility or completion of the testnet requirements.
+- Project description, repository/dashboard links, logo, project image, team
+  introduction and a 62-second silent localnet dashboard video are saved.
+  A public Development checkpoint is posted. This short progress post alone
+  does not prove organizer acceptance of the full Checkpoint #1 proposal.
+- A 4-minute-13-second narrated interim pitch is also saved and publicly
+  accessible. Asset size and MD5 match the local file; full local decoding and
+  all 39 subtitle/narration text comparisons passed. Full perceptual review and
+  the actual testnet-result pitch remain pending; see `submission/MEDIA.md`.
 
 - Protocol v2 opaque OS-CSPRNG task creation and post-deadline commit/reveal.
 - Strict structured index artifacts and allowlisted read-only rewrite boundary.
@@ -16,8 +30,9 @@ Public claim: **LOCALNET EVIDENCE / TESTNET PENDING**.
   storage scoring across reuse horizons.
 - Closed multi-family schedule, conservative multi-epoch aggregation, duplicate
   strategy splitting, explicit no-new-update, and weight concentration cap.
-- Final clean Python gate: 280 tests passed, Ruff and mypy clean, and branch
-  coverage passed the 85% threshold.
+- Published implementation CI at commit `826e9ff835f339699b28594772b510963fa7237c`
+  passed 306 Python tests, Ruff, mypy over 35 source files and the 85% coverage
+  gate. Dashboard E2E passed three tests. Run `34042058721` concluded success.
 - Seeded 512-replication v2 mechanism/adversary simulation with 0 false
   acceptance, 100% all-fail no-update, zero exact-duplicate allocation gain,
   and separately disclosed behavior-equivalent availability-replica gain
@@ -81,13 +96,18 @@ Public claim: **LOCALNET EVIDENCE / TESTNET PENDING**.
 
 ## Next gates
 
-1. Rename the authenticated HackQuest draft to PlanRace and post Checkpoint #1;
-   all six checkpoint reviews have no unresolved P0/P1 and the matching public
-   deployment is ready.
-2. Obtain the organizer/community test-TAO allocation for the public coldkey,
+1. Obtain the organizer/community test-TAO allocation for the public coldkey,
    then register the dedicated identities and execute the authorized testnet
    flow. The public testnet faucet is currently unavailable; never substitute
    real TAO or a mainnet wallet.
+   Fresh read-only block `7947330`, runtime `454`, reports balance `0`, subnet
+   creation price `1` test TAO and all 13 hotkeys unregistered. No transaction
+   or signature was requested.
+2. Produce the actual testnet demo and final pitch, including signed interaction,
+   reveal, failure cases, scoring, aggregation, finalized weight readback and
+   raw manifest verification. Interim localnet media do not satisfy this gate.
+3. Complete the independent final review, release provenance and event-specific
+   Checkpoint #1 acceptance check, then update the accepted project submission.
 
 ## Not complete
 
@@ -96,9 +116,10 @@ Public claim: **LOCALNET EVIDENCE / TESTNET PENDING**.
   is complete.
 - Independently operated validators or independent hardware calibration.
 - PostgreSQL/DuckDB and private customer-data adapters.
-- HackQuest rename/checkpoint post, real-testnet demo/pitch videos, final
-  submission, and release tag.
+- Real-testnet demo/pitch videos, full final-review gates, and release tag.
+- Organizer-specific Checkpoint #1 proposal acceptance, beyond the verified
+  public Development checkpoint and project submission.
 
-HackQuest still shows the earlier QECForge project with no checkpoint as last
-observed. Reconfirm the portal's exact fields, video constraints, deadline time,
-and timezone before any representational submission action.
+The accepted submission explicitly discloses testnet-pending status. The official
+event still calls for a working testnet implementation and testnet demo in its
+final deliverable. Do not close the overall goal on the portal receipt alone.
