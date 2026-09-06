@@ -336,6 +336,19 @@ def audit_bundle(bundle: Path) -> dict[str, Any]:
         # Four independent groups are the minimum compatible with the 25% cap.
         minimum_distinct_strategies=4,
     )
+    _require(
+        summary.get("aggregation_policy")
+        == {
+            "minimum_tasks": aggregation_policy.minimum_tasks,
+            "minimum_tasks_per_family": aggregation_policy.minimum_tasks_per_family,
+            "minimum_availability": aggregation_policy.minimum_availability,
+            "minimum_compliance": aggregation_policy.minimum_compliance,
+            "minimum_correctness": aggregation_policy.minimum_correctness,
+            "maximum_weight": aggregation_policy.maximum_weight,
+            "minimum_distinct_strategies": aggregation_policy.minimum_distinct_strategies,
+        },
+        "stored aggregation policy does not match the audited policy",
+    )
     miner_ids = [f"miner-{index:02}" for index in range(10)]
     recomputed_aggregates = aggregate_network(
         all_observations, miner_ids=miner_ids, policy=aggregation_policy
