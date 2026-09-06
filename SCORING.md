@@ -13,8 +13,9 @@ to replay the v1 local-chain evidence. New mechanism work uses
 ## Same-worker relative measurement
 
 The validator measures the known-correct baseline and candidate in the same
-disposable worker. Trials alternate a randomized `baseline-first` /
-`candidate-first` order. Mixed workers and unbalanced order arms are invalid.
+disposable worker. Trials use deterministic balanced ABBA interleaving of
+`baseline-first` / `candidate-first` order. Mixed workers and unbalanced order
+arms are invalid.
 For each paired trial and reuse horizon `h ∈ {1, 10, 100, 1000}`:
 
 ```text

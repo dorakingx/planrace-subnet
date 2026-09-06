@@ -45,6 +45,7 @@ The authoritative command is:
 .bootstrap/bin/uv run python -u scripts/run_localnet_v2.py \
   --epochs 30 --netuid 3 \
   --worker-image sha256:8685473bb8d2ea75f5a3ab4021ad1f9f72552d6efeee240df13f25f40e5f3aef \
+  --chain-image sha256:592aa28d528ebadba5f83807d0d38e29fa954dd91ac3e180b48259d64a654e8f \
   --evaluation-workers 3 \
   --output .localnet-state/localnet-v2-continuous-final
 ```
@@ -62,8 +63,10 @@ Verified evidence checks:
   selective/copycat profiles fail the worst-family reward gate;
 - pairwise validator ranking correlation is reported, not assumed;
 - the final mechanism-derived vector is actually submitted and read back;
-- `manifest.json` verifies under the included validator signature and binds the
-  summary plus all 30 epoch files by SHA-256.
+- `manifest.json` verifies under the externally expected public development
+  signer and binds the summary plus all 30 epoch files by SHA-256. Because the
+  development signing URI is public, this signature is a tamper-evident
+  checksum—not proof of an independent operator.
 
 The completed run is `localnet-v2-1788674678`, bound to Git commit
 `a0a97bba370229b47661dfec4e665ef1723ba4e3`. It produced 300 authenticated
@@ -92,6 +95,19 @@ alone:
 .bootstrap/bin/uv run python scripts/audit_localnet_v2.py results/localnet-v2
 .bootstrap/bin/uv run planrace evidence verify results/localnet-v2/manifest.json
 ```
+
+The auditor independently verifies every Bittensor HTTP request signature and
+miner response signature, then recomputes the sandbox fixture scores, holdout
+evaluations, observations, aggregate scores, headline scores, hotkey-to-UID
+resolution, submitted vector, and readback. The official Subtensor image digest
+is part of the signed manifest alongside the worker content ID.
+
+The local evidence schedule is signed after the completed run. It is closed and
+fully disclosed, but not externally timestamped in advance, so the bundle does
+not exclude operator run-selection. Setup cost is measured once per fixture;
+the confidence bound applies to repeated query timings conditional on that
+observed setup. These limitations remain until an independently operated
+testnet run.
 
 The runner writes validator-only `run-input.json` and per-epoch checkpoints
 under the operator-selected output directory after all task deadlines. A

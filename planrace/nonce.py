@@ -27,6 +27,7 @@ class SQLiteNonceStore:
         self._clock_ns = clock_ns
         self._ttl_ns = ttl_ns
         self._max_entries = max_entries
+        self.retention = ttl_ns / 1_000_000_000
         with sqlite3.connect(self._path) as database:
             database.execute(
                 """
@@ -47,6 +48,11 @@ class SQLiteNonceStore:
                 "DELETE FROM accepted_nonces WHERE nonce_ns < ?",
                 (self._clock_ns() - self._ttl_ns,),
             )
+            count = int(database.execute("SELECT COUNT(*) FROM accepted_nonces").fetchone()[0])
+            if count >= self._max_entries:
+                # Never evict a still-fresh nonce. Capacity exhaustion must fail
+                # closed or a prior replay can become admissible again.
+                return False
             try:
                 database.execute(
                     "INSERT INTO accepted_nonces(hotkey_ss58, nonce_ns) VALUES (?, ?)",
@@ -54,15 +60,4 @@ class SQLiteNonceStore:
                 )
             except sqlite3.IntegrityError:
                 return False
-            database.execute(
-                """
-                DELETE FROM accepted_nonces
-                WHERE rowid IN (
-                    SELECT rowid FROM accepted_nonces
-                    ORDER BY nonce_ns ASC
-                    LIMIT MAX(0, (SELECT COUNT(*) FROM accepted_nonces) - ?)
-                )
-                """,
-                (self._max_entries,),
-            )
             return True

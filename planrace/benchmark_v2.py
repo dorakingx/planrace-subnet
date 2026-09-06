@@ -182,7 +182,14 @@ def _range(
     value_type: Literal["integer", "text", "boolean"],
     minimum: int | str | bool,
     maximum: int | str | bool,
-    distribution: Literal["uniform", "log_uniform", "categorical", "boundary_weighted"],
+    distribution: Literal[
+        "uniform",
+        "log_uniform",
+        "categorical",
+        "boundary_weighted",
+        "ordered_uniform_pair_low",
+        "ordered_uniform_pair_high",
+    ],
 ) -> ParameterRange:
     return ParameterRange(
         name=name,
@@ -211,9 +218,11 @@ def published_parameter_ranges(family_id: str) -> tuple[ParameterRange, ...]:
     A :class:`~planrace.models_v2.PublicTaskV2` contains one ``reference_sql``.
     Its published ranges must therefore describe exactly that SQL statement's
     placeholders, in order, rather than a lossy union across all benchmark
-    families.  Integer parameters are generated uniformly over the inclusive
-    bounds below.  Text/boolean parameters are categorical; equal endpoints
-    denote an intentionally constant category.
+    families. Standalone integer parameters are generated uniformly over the
+    inclusive bounds below. For each ordered low/high pair, two independent
+    inclusive uniform integers are drawn and sorted; the low and high fields
+    are correlated order statistics, not individually uniform. Text/boolean
+    parameters are categorical; equal endpoints denote a constant category.
     """
 
     _query_family(family_id)
@@ -221,8 +230,8 @@ def published_parameter_ranges(family_id: str) -> tuple[ParameterRange, ...]:
         return (
             _range("active", "boolean", False, True, "categorical"),
             _range("status", "text", "failed", "refunded", "categorical"),
-            _range("created_day_start", "integer", 0, 3_650, "uniform"),
-            _range("created_day_end", "integer", 0, 3_650, "uniform"),
+            _range("created_day_start", "integer", 0, 3_650, "ordered_uniform_pair_low"),
+            _range("created_day_end", "integer", 0, 3_650, "ordered_uniform_pair_high"),
         )
     if family_id == "customer-order-threshold":
         return (
@@ -233,8 +242,20 @@ def published_parameter_ranges(family_id: str) -> tuple[ParameterRange, ...]:
     if family_id == "bounded-range-scan":
         return (
             _range("status", "text", "failed", "refunded", "categorical"),
-            _range("minimum_amount_cents", "integer", 0, 5_000_000, "uniform"),
-            _range("maximum_amount_cents", "integer", 0, 5_000_000, "uniform"),
+            _range(
+                "minimum_amount_cents",
+                "integer",
+                0,
+                5_000_000,
+                "ordered_uniform_pair_low",
+            ),
+            _range(
+                "maximum_amount_cents",
+                "integer",
+                0,
+                5_000_000,
+                "ordered_uniform_pair_high",
+            ),
         )
     if family_id == "region-channel-aggregate":
         return (

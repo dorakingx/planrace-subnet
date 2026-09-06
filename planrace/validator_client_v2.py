@@ -212,16 +212,9 @@ async def _validate_endpoint(url: httpx.URL, *, allow_local_endpoint_for_tests: 
 def _address_is_forbidden(address: ipaddress.IPv4Address | ipaddress.IPv6Address) -> bool:
     mapped = address.ipv4_mapped if isinstance(address, ipaddress.IPv6Address) else None
     candidate = mapped or address
-    return any(
-        (
-            candidate.is_loopback,
-            candidate.is_private,
-            candidate.is_link_local,
-            candidate.is_multicast,
-            candidate.is_reserved,
-            candidate.is_unspecified,
-        )
-    )
+    # Fail closed unless the numeric Axon address is positively classified as
+    # globally routable. This also excludes RFC6598 shared/CGNAT space.
+    return not candidate.is_global
 
 
 def _validate_response_headers(
@@ -233,6 +226,7 @@ def _validate_response_headers(
     total = 2  # Account for the terminating CRLF.
     content_lengths = 0
     content_types: list[bytes] = []
+    content_encodings: list[bytes] = []
     saw_transfer_encoding = False
     for name, value in response.headers.raw:
         total += len(name) + 2 + len(value) + 2
@@ -251,7 +245,13 @@ def _validate_response_headers(
             saw_transfer_encoding = True
         elif lowered == b"content-type":
             content_types.append(value)
+        elif lowered == b"content-encoding":
+            content_encodings.append(value.strip().lower())
     if content_lengths and saw_transfer_encoding:
+        raise ResponseHeadersInvalidError
+    if content_encodings and content_encodings != [b"identity"]:
+        # HTTPX can materialize an entire decoded gzip/deflate chunk before an
+        # application byte limit is checked. The protocol requires identity JSON.
         raise ResponseHeadersInvalidError
     if require_json:
         if len(content_types) != 1:
@@ -276,9 +276,15 @@ async def _read_bounded_response(response: httpx.Response, *, max_response_bytes
                 raise ResponseTooLargeError
         except ValueError:
             raise ResponseTooLargeError from None
+    if response.is_stream_consumed:
+        # Mock/in-process transports may materialize identity content before
+        # returning. Production network streams remain unconsumed here.
+        if len(response.content) > max_response_bytes:
+            raise ResponseTooLargeError
+        return response.content
     chunks: list[bytes] = []
     total = 0
-    async for chunk in response.aiter_bytes():
+    async for chunk in response.aiter_raw():
         total += len(chunk)
         if total > max_response_bytes:
             raise ResponseTooLargeError

@@ -30,7 +30,7 @@ audit:
 	$(UV) run pip-audit
 
 secrets:
-	$(UV) run detect-secrets scan --all-files --exclude-files '(^uv\.lock$$|^\.git/|^\.venv/|^\.bootstrap/|^\.localnet-state/|^dashboard/node_modules/|^dashboard/\.next/|^dashboard/dist/|^dist/)' >/dev/null
+	$(UV) run detect-secrets-hook --baseline .secrets.baseline $$(git ls-files)
 
 verify: lint typecheck test secrets
 

@@ -346,7 +346,7 @@ def test_strategy_digest_ignores_cosmetic_metadata_but_binds_executable_ast() ->
     assert original.artifact_digest != cosmetic.artifact_digest
     assert optimization_strategy_digest(original) == optimization_strategy_digest(cosmetic)
     assert optimization_strategy_digest(original) != optimization_strategy_digest(changed)
-    assert optimization_strategy_digest(with_two_indexes) == optimization_strategy_digest(permuted)
+    assert optimization_strategy_digest(with_two_indexes) != optimization_strategy_digest(permuted)
 
 
 def test_unique_and_null_predicates_compile_without_raw_expressions() -> None:

@@ -1,4 +1,5 @@
 import asyncio
+import gzip
 from pathlib import Path
 
 import bittensor as bt
@@ -173,7 +174,7 @@ def test_signed_response_validates_and_replay_fails() -> None:
         verify(response, request, store=store)
 
 
-def test_memory_response_replay_store_is_bounded() -> None:
+def test_memory_response_replay_store_fails_closed_at_capacity() -> None:
     store = MemoryResponseReplayStore(max_entries=2)
     assert store.check_and_store(
         miner_hotkey="a", request_nonce=1, request_id="one", expires_at_unix_ms=1
@@ -181,11 +182,11 @@ def test_memory_response_replay_store_is_bounded() -> None:
     assert store.check_and_store(
         miner_hotkey="a", request_nonce=2, request_id="two", expires_at_unix_ms=1
     )
-    assert store.check_and_store(
+    assert not store.check_and_store(
         miner_hotkey="a", request_nonce=3, request_id="three", expires_at_unix_ms=1
     )
-    # The oldest demo-only entry is evicted; production uses SQLite retention.
-    assert store.check_and_store(
+    # A still-retained replay remains rejected after capacity exhaustion.
+    assert not store.check_and_store(
         miner_hotkey="a", request_nonce=1, request_id="one", expires_at_unix_ms=1
     )
 
@@ -462,6 +463,28 @@ def test_sqlite_response_replay_store_is_persistent(tmp_path: Path) -> None:
     )
 
 
+def test_sqlite_response_replay_store_never_evicts_live_entries(tmp_path: Path) -> None:
+    store = SQLiteResponseReplayStore(
+        tmp_path / "responses-capacity.sqlite3",
+        clock_unix_ms=lambda: 1_000,
+        max_entries=1,
+    )
+    values = {
+        "miner_hotkey": BOB.ss58_address,
+        "request_nonce": 1,
+        "request_id": "a" * 32,
+        "expires_at_unix_ms": 2_000,
+    }
+    assert store.check_and_store(**values)
+    assert not store.check_and_store(
+        miner_hotkey=CHARLIE.ss58_address,
+        request_nonce=2,
+        request_id="b" * 32,
+        expires_at_unix_ms=2_000,
+    )
+    assert not store.check_and_store(**values)
+
+
 def test_miner_service_requires_explicit_authorizer(tmp_path: Path) -> None:
     with pytest.raises(ValueError, match="authorize_hotkey"):
         create_miner_app_v2(
@@ -684,6 +707,53 @@ async def test_validator_client_rejects_oversized_stream_before_parsing() -> Non
             allow_local_endpoint_for_tests=True,
         )
     assert outcome.failure_code == "response_too_large"
+
+
+@pytest.mark.anyio
+async def test_validator_client_rejects_compressed_response_before_decoding() -> None:
+    request = request_model()
+    compressed = gzip.compress(b"x" * (8 * 1024 * 1024))
+
+    def handler(_request: httpx.Request) -> httpx.Response:
+        return httpx.Response(
+            200,
+            headers={"content-type": "application/json", "content-encoding": "gzip"},
+            content=compressed,
+        )
+
+    async with httpx.AsyncClient(transport=httpx.MockTransport(handler), trust_env=False) as client:
+        outcome = await request_optimization_v2(
+            client,
+            wallet=ALICE,
+            endpoint="http://8.8.8.8/v2/optimize",
+            receiver_ss58=BOB.ss58_address,
+            request_model=request,
+            expected_miner_uid=7,
+            metagraph_hotkeys={7: BOB.ss58_address},
+            replay_store=MemoryResponseReplayStore(),
+            clock_unix_ms=lambda: NOW_MS,
+        )
+    assert outcome.failure_code == "response_headers_invalid"
+
+
+@pytest.mark.anyio
+async def test_validator_client_rejects_rfc6598_shared_endpoint() -> None:
+    request = request_model()
+    async with httpx.AsyncClient(
+        transport=httpx.MockTransport(lambda _: httpx.Response(500)), trust_env=False
+    ) as client:
+        outcome = await request_optimization_v2(
+            client,
+            wallet=ALICE,
+            endpoint="http://100.64.0.1/v2/optimize",
+            receiver_ss58=BOB.ss58_address,
+            request_model=request,
+            expected_miner_uid=7,
+            metagraph_hotkeys={7: BOB.ss58_address},
+            replay_store=MemoryResponseReplayStore(),
+            clock_unix_ms=lambda: NOW_MS,
+        )
+    assert outcome.failure_code == "endpoint_forbidden"
 
 
 @pytest.mark.anyio

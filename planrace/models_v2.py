@@ -265,7 +265,6 @@ def optimization_strategy_digest(bundle: OptimizationBundle) -> str:
                 predicate["atoms"], key=lambda atom: canonical_json_bytes(atom)
             )
         normalized_indexes.append(normalized)
-    normalized_indexes.sort(key=canonical_json_bytes)
     payload = {
         "protocol_version": bundle.protocol_version,
         "engine_image_digest": bundle.engine_image_digest,
@@ -334,7 +333,14 @@ class ParameterRange(StrictV2Model):
     value_type: Literal["integer", "text", "boolean"]
     minimum: int | str | bool
     maximum: int | str | bool
-    distribution: Literal["uniform", "log_uniform", "categorical", "boundary_weighted"]
+    distribution: Literal[
+        "uniform",
+        "log_uniform",
+        "categorical",
+        "boundary_weighted",
+        "ordered_uniform_pair_low",
+        "ordered_uniform_pair_high",
+    ]
 
     @model_validator(mode="after")
     def validate_range_types(self) -> ParameterRange:

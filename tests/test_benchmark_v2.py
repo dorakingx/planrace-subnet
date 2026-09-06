@@ -166,11 +166,15 @@ def test_parameter_distribution_labels_match_generators() -> None:
         "paid-revenue-by-segment": (
             "categorical",
             "categorical",
-            "uniform",
-            "uniform",
+            "ordered_uniform_pair_low",
+            "ordered_uniform_pair_high",
         ),
         "customer-order-threshold": ("uniform", "categorical", "uniform"),
-        "bounded-range-scan": ("categorical", "uniform", "uniform"),
+        "bounded-range-scan": (
+            "categorical",
+            "ordered_uniform_pair_low",
+            "ordered_uniform_pair_high",
+        ),
         "region-channel-aggregate": ("categorical", "categorical"),
         "nullable-coupon": ("uniform",),
         "intentional-zero-result": ("categorical", "categorical"),

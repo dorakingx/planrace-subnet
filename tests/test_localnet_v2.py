@@ -98,6 +98,7 @@ def test_timeout_profile_is_really_async() -> None:
 def test_localnet_run_input_round_trips_for_resume(tmp_path: Path) -> None:
     task = _private_task(QUERY_FAMILIES[0].family_id)
     image = "sha256:" + "1" * 64
+    chain_image = "sha256:" + "2" * 64
     dispatch = {
         "epoch": 0,
         "task_public": task.public.model_dump(mode="json"),
@@ -110,6 +111,7 @@ def test_localnet_run_input_round_trips_for_resume(tmp_path: Path) -> None:
         started_at="2026-01-01T00:00:00Z",
         epochs=1,
         worker_image=image,
+        chain_image=chain_image,
         dispatches=[dispatch],
         tasks=[task],
     )
@@ -117,6 +119,7 @@ def test_localnet_run_input_round_trips_for_resume(tmp_path: Path) -> None:
         path,
         epochs=1,
         worker_image=image,
+        chain_image=chain_image,
     )
 
     assert started_at == "2026-01-01T00:00:00Z"

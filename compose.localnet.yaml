@@ -1,6 +1,6 @@
 services:
   subtensor:
-    image: ghcr.io/raofoundation/subtensor-localnet@sha256:966520a59b71931d81cf14b0a2ef18e74e8541bab03653b1857ed29b51be4a28
+    image: ghcr.io/opentensor/subtensor-localnet@sha256:592aa28d528ebadba5f83807d0d38e29fa954dd91ac3e180b48259d64a654e8f
     container_name: planrace-local-subtensor
     ports:
       - "127.0.0.1:9944:9944"

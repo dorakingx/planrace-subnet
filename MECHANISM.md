@@ -60,7 +60,7 @@ The complete formula and defaults are in `SCORING.md` and executable in
 | Constant or fast wrong output | Exact hidden-holdout gate → zero | Holdout/generator leakage |
 | Claim fabricated timing | Validator-owned same-worker timing | Compromised validator worker |
 | Faster/slower validator hardware | Baseline-relative paired ratios | Architecture-specific query-plan changes |
-| First/second-run cache bias | Balanced randomized interleaving | Higher-order thermal/IO drift |
+| First/second-run cache bias | Deterministic balanced ABBA interleaving | Higher-order thermal/IO drift |
 | One extreme timing sample | Winsorized center + MAD lower bound | Coordinated nonstationary noise |
 | Optimize only warm cache | Separate cold/warm metrics and four horizons | Chosen horizon masses are governance policy |
 | Index everything | Setup + storage overhead | Storage proxy may not equal buyer cost |

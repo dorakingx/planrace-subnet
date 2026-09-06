@@ -67,10 +67,37 @@ from planrace.scoring_v2 import (
 )
 from planrace.taskgen_v2 import PrivateTaskV2, audit_task_reveal
 from planrace.validator_client_v2 import request_optimization_v2
+from planrace.weights import (
+    FinalizedMetagraphSnapshot,
+    plan_hotkey_weights,
+    resolve_hotkey_weight_plan,
+)
 
 DEFAULT_PORT = 8190
 VALIDATOR_COUNT = 3
 MINER_COUNT = 10
+
+
+def _finalized_metagraph(
+    subtensor: bt.Subtensor, *, netuid: int
+) -> tuple[FinalizedMetagraphSnapshot, dict[str, Any]]:
+    """Read hotkey/UID bindings from one explicitly finalized block."""
+
+    header = next(subtensor.blocks(finalized=True))
+    info = subtensor.block_info(header.number)
+    if info is None or not info.hash:
+        raise RuntimeError("cannot resolve finalized block hash")
+    metagraph = subtensor.at(header.number).read("metagraph", netuid=netuid)
+    hotkeys = metagraph.get("hotkeys")
+    if not isinstance(hotkeys, list):
+        raise RuntimeError("finalized metagraph hotkeys are missing")
+    return (
+        FinalizedMetagraphSnapshot(
+            block_hash=info.hash,
+            uid_by_hotkey={hotkey: uid for uid, hotkey in enumerate(hotkeys)},
+        ),
+        metagraph,
+    )
 
 
 def _utc_now() -> str:
@@ -189,11 +216,24 @@ async def _dispatch_epochs(
     image_digest: str,
     validators: list[bt.Keypair],
     miners: list[bt.Keypair],
+    netuid: int,
 ) -> tuple[list[dict[str, Any]], list[Any]]:
     replay = MemoryResponseReplayStore()
     dispatch_records: list[dict[str, Any]] = []
     private_tasks: list[Any] = []
-    metagraph = {index + 3: miner.ss58_address for index, miner in enumerate(miners)}
+    subtensor = bt.Subtensor("local")
+    try:
+        dispatch_snapshot, _ = _finalized_metagraph(subtensor, netuid=netuid)
+    finally:
+        subtensor.close()
+    missing = [
+        miner.ss58_address
+        for miner in miners
+        if miner.ss58_address not in dispatch_snapshot.uid_by_hotkey
+    ]
+    if missing:
+        raise RuntimeError(f"miner hotkeys missing from finalized metagraph: {missing}")
+    metagraph = {uid: hotkey for hotkey, uid in dispatch_snapshot.uid_by_hotkey.items()}
     latest_deadline = 0
     captured: dict[str, str] = {}
     async with httpx.AsyncClient(
@@ -217,6 +257,7 @@ async def _dispatch_epochs(
             private_tasks.append(task)
             epoch_outcomes: list[dict[str, Any]] = []
             for miner_index, miner in enumerate(miners):
+                miner_uid = dispatch_snapshot.uid_by_hotkey[miner.ss58_address]
                 issued = time.time_ns() // 1_000_000
                 request = OptimizationRequestV2(
                     request_id=secrets.token_hex(16),
@@ -234,7 +275,7 @@ async def _dispatch_epochs(
                     endpoint=f"http://127.0.0.1:{base_port + miner_index}/v2/optimize",
                     receiver_ss58=miner.ss58_address,
                     request_model=request,
-                    expected_miner_uid=miner_index + 3,
+                    expected_miner_uid=miner_uid,
                     metagraph_hotkeys=metagraph,
                     replay_store=replay,
                     total_timeout_seconds=10.0,
@@ -243,7 +284,7 @@ async def _dispatch_epochs(
                 epoch_outcomes.append(
                     {
                         "miner_id": f"miner-{miner_index:02}",
-                        "uid": miner_index + 3,
+                        "uid": miner_uid,
                         "profile": PROFILE_NAMES[miner_index],
                         "request": request.model_dump(mode="json"),
                         "request_digest": optimization_request_digest(request),
@@ -425,6 +466,7 @@ def _evaluation_json(evaluation: Any) -> dict[str, Any]:
         "task_commitment": evaluation.task_commitment,
         "artifact_digest": evaluation.artifact_digest,
         "strategy_digest": evaluation.strategy_digest,
+        "behavior_digest": evaluation.behavior_digest,
         "family_id": evaluation.family_id,
         "exact_passed": evaluation.exact_passed,
         "compliant": evaluation.compliant,
@@ -471,15 +513,23 @@ def _validator_rank_analysis(epoch_payloads: list[dict[str, Any]]) -> dict[str, 
 
 
 def _submit_final_weights(
-    allocation: Any, *, netuid: int, wallet_path: Path
+    allocation: Any,
+    *,
+    netuid: int,
+    wallet_path: Path,
+    miners: list[bt.Keypair],
 ) -> tuple[dict[str, Any] | None, dict[str, Any], list[tuple[int, int]]]:
     subtensor = bt.Subtensor("local")
     wallet = bt.Wallet(name="planrace-v2-dev", hotkey="validator0", path=str(wallet_path))
     planned = dict(allocation.weights)
-    uid_weights = [
-        (index + 3, planned.get(f"miner-{index:02}", 0.0)) for index in range(MINER_COUNT)
-    ]
-    positive = [(uid, weight) for uid, weight in uid_weights if weight > 0.0]
+    hotkey_scores = {
+        miner.ss58_address: planned.get(f"miner-{index:02}", 0.0)
+        for index, miner in enumerate(miners)
+    }
+    snapshot, snapshot_metagraph = _finalized_metagraph(subtensor, netuid=netuid)
+    hotkey_plan = plan_hotkey_weights(hotkey_scores, minimum_positive_hotkeys=4)
+    uid_plan = resolve_hotkey_weight_plan(hotkey_plan, snapshot=snapshot)
+    positive = list(zip(uid_plan.uids, uid_plan.weights, strict=True))
     extrinsic: dict[str, Any] | None = None
     submitted: list[tuple[int, int]] = []
     if allocation.planned and positive:
@@ -515,6 +565,11 @@ def _submit_final_weights(
         extrinsic,
         {
             "runtime_spec_version": runtime_spec_version,
+            "submission_snapshot": {
+                "block_hash": snapshot.block_hash,
+                "block": snapshot_metagraph["block"],
+                "uid_by_hotkey": dict(snapshot.uid_by_hotkey),
+            },
             "metagraph": metagraph,
             "weights": readback,
         },
@@ -545,6 +600,7 @@ def _write_run_input(
     started_at: str,
     epochs: int,
     worker_image: str,
+    chain_image: str,
     dispatches: list[dict[str, Any]],
     tasks: list[PrivateTaskV2],
 ) -> None:
@@ -555,6 +611,7 @@ def _write_run_input(
             "started_at": started_at,
             "epochs": epochs,
             "worker_image": worker_image,
+            "chain_image": chain_image,
             "dispatches": dispatches,
             "tasks": [
                 {
@@ -572,6 +629,7 @@ def _load_run_input(
     *,
     epochs: int,
     worker_image: str,
+    chain_image: str,
 ) -> tuple[str, list[dict[str, Any]], list[PrivateTaskV2]]:
     value = _read_json_object(path)
     if value.get("schema_version") != "planrace/localnet-v2-input/1":
@@ -580,6 +638,8 @@ def _load_run_input(
         raise RuntimeError("run-input epoch count does not match --epochs")
     if value.get("worker_image") != worker_image:
         raise RuntimeError("run-input worker image does not match --worker-image")
+    if value.get("chain_image") != chain_image:
+        raise RuntimeError("run-input chain image does not match --chain-image")
     raw_dispatches = value.get("dispatches")
     raw_tasks = value.get("tasks")
     if not isinstance(raw_dispatches, list) or not isinstance(raw_tasks, list):
@@ -667,12 +727,33 @@ def _set_chain_container_paused(name: str, *, paused: bool) -> None:
     )
 
 
+def _verify_chain_container_image(name: str, *, expected_digest: str) -> None:
+    docker = shutil.which("docker")
+    if docker is None:
+        raise RuntimeError("docker executable is required")
+    configured_image = subprocess.run(  # noqa: S603 - operator-selected container name
+        [docker, "inspect", "--format", "{{.Config.Image}}", name],
+        check=True,
+        capture_output=True,
+        text=True,
+    ).stdout.strip()
+    if not configured_image.endswith("@" + expected_digest):
+        raise RuntimeError(
+            f"chain container image {configured_image!r} does not match {expected_digest}"
+        )
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--epochs", type=int, default=30)
     parser.add_argument("--netuid", type=int, default=3)
     parser.add_argument("--base-port", type=int, default=DEFAULT_PORT)
     parser.add_argument("--worker-image", required=True)
+    parser.add_argument(
+        "--chain-image",
+        required=True,
+        help="immutable sha256 digest of the official Subtensor image used by localnet",
+    )
     parser.add_argument("--output", type=Path, default=Path("results/localnet-v2"))
     parser.add_argument(
         "--resume",
@@ -694,6 +775,9 @@ def main() -> None:
         raise SystemExit("localnet v2 evidence requires at least 30 epochs")
     if not arguments.worker_image.startswith("sha256:"):
         raise SystemExit("local evidence requires an immutable local image ID")
+    if not arguments.chain_image.startswith("sha256:"):
+        raise SystemExit("local evidence requires an immutable chain image digest")
+    _verify_chain_container_image(arguments.chain_container, expected_digest=arguments.chain_image)
     run_input_path = arguments.output / "run-input.json"
     if arguments.resume:
         if (arguments.output / "manifest.json").exists():
@@ -710,6 +794,7 @@ def main() -> None:
             run_input_path,
             epochs=arguments.epochs,
             worker_image=arguments.worker_image,
+            chain_image=arguments.chain_image,
         )
         print(f"resume loaded epochs={len(tasks)} from {run_input_path}", flush=True)
     else:
@@ -724,6 +809,7 @@ def main() -> None:
                     image_digest=arguments.worker_image,
                     validators=validators,
                     miners=miners,
+                    netuid=arguments.netuid,
                 )
             )
         finally:
@@ -733,6 +819,7 @@ def main() -> None:
             started_at=started_at,
             epochs=arguments.epochs,
             worker_image=arguments.worker_image,
+            chain_image=arguments.chain_image,
             dispatches=dispatches,
             tasks=tasks,
         )
@@ -813,7 +900,9 @@ def main() -> None:
         allocation,
         netuid=arguments.netuid,
         wallet_path=Path(".localnet-state/wallets"),
+        miners=miners,
     )
+    uid_by_hotkey = readback["submission_snapshot"]["uid_by_hotkey"]
     observed_at = _utc_now()
     summary = {
         "schema_version": "planrace/localnet-v2-run/1",
@@ -826,14 +915,21 @@ def main() -> None:
         "protocol_version": "planrace/2",
         "git_commit": _git_commit(),
         "worker_image": arguments.worker_image,
+        "chain_image": arguments.chain_image,
         "started_at": started_at,
         "observed_at": observed_at,
         "operator_model": "three test validator identities under one operator",
         "validators": [
-            {"uid": index, "hotkey": key.ss58_address} for index, key in enumerate(validators)
+            {"uid": uid_by_hotkey[key.ss58_address], "hotkey": key.ss58_address}
+            for key in validators
         ],
         "miners": [
-            {"uid": index + 3, "hotkey": key.ss58_address, "profile": PROFILE_NAMES[index]}
+            {
+                "miner_id": f"miner-{index:02}",
+                "uid": uid_by_hotkey[key.ss58_address],
+                "hotkey": key.ss58_address,
+                "profile": PROFILE_NAMES[index],
+            }
             for index, key in enumerate(miners)
         ],
         "epoch_count": arguments.epochs,
@@ -914,7 +1010,8 @@ def main() -> None:
         "epoch": arguments.epochs - 1,
         "git_commit": summary["git_commit"],
         "container_digests": {
-            "validator_worker_local_content_id": arguments.worker_image.removeprefix("sha256:")
+            "validator_worker_local_content_id": arguments.worker_image.removeprefix("sha256:"),
+            "official_subtensor_image": arguments.chain_image.removeprefix("sha256:"),
         },
         "protocol_version": "planrace/2",
         "validator_hotkeys": tuple(key.ss58_address for key in validators),
@@ -937,7 +1034,7 @@ def main() -> None:
         },
         "scores": tuple(
             {
-                "uid": index + 3,
+                "uid": uid_by_hotkey[miners[index].ss58_address],
                 "miner_hotkey": miners[index].ss58_address,
                 "profile": PROFILE_NAMES[index],
                 "accepted": aggregate.task_count > 0,

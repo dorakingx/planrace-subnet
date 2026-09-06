@@ -52,9 +52,9 @@ class MemoryResponseReplayStore:
         with self._lock:
             if key in self._keys:
                 return False
+            if len(self._keys) >= self._max_entries:
+                return False
             self._keys[key] = None
-            if len(self._keys) > self._max_entries:
-                self._keys.pop(next(iter(self._keys)))
             return True
 
 
@@ -99,6 +99,11 @@ class SQLiteResponseReplayStore:
                 "DELETE FROM accepted_v2_responses WHERE expires_at_unix_ms <= ?",
                 (self._clock_unix_ms(),),
             )
+            count = int(
+                database.execute("SELECT COUNT(*) FROM accepted_v2_responses").fetchone()[0]
+            )
+            if count >= self._max_entries:
+                return False
             try:
                 database.execute(
                     """
@@ -110,17 +115,6 @@ class SQLiteResponseReplayStore:
                 )
             except sqlite3.IntegrityError:
                 return False
-            database.execute(
-                """
-                DELETE FROM accepted_v2_responses
-                WHERE rowid IN (
-                    SELECT rowid FROM accepted_v2_responses
-                    ORDER BY expires_at_unix_ms ASC
-                    LIMIT MAX(0, (SELECT COUNT(*) FROM accepted_v2_responses) - ?)
-                )
-                """,
-                (self._max_entries,),
-            )
             return True
 
 

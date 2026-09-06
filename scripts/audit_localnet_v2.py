@@ -19,6 +19,10 @@ import bittensor as bt
 
 from planrace.auth_v2 import optimization_response_signing_bytes
 from planrace.benchmark_v2 import generate_hidden_fixtures
+from planrace.evaluation_v2 import (
+    evaluate_bundle_from_sandbox_results,
+    holdout_evidence_digest,
+)
 from planrace.evidence import sign_manifest, verify_manifest_file
 from planrace.models_v2 import (
     OptimizationRequestV2,
@@ -29,6 +33,7 @@ from planrace.models_v2 import (
     optimization_request_digest,
     optimization_strategy_digest,
 )
+from planrace.sandbox_v2 import SandboxResultV2
 from planrace.scoring_v2 import (
     AggregationPolicy,
     EpochObservation,
@@ -36,7 +41,47 @@ from planrace.scoring_v2 import (
     aggregate_network,
     allocate_weights,
 )
-from planrace.taskgen_v2 import audit_task_reveal
+from planrace.taskgen_v2 import PrivateTaskV2, audit_task_reveal
+
+
+class _AuditNonceStore:
+    """Fail-closed nonce set for historical btauth transcript verification."""
+
+    retention = 10**18
+
+    def __init__(self) -> None:
+        self._seen: set[tuple[str, int]] = set()
+
+    def check_and_store(self, hotkey_ss58: str, nonce_ns: int) -> bool:
+        key = (hotkey_ss58, nonce_ns)
+        if key in self._seen:
+            return False
+        self._seen.add(key)
+        return True
+
+
+def _evaluation_json(evaluation: Any) -> dict[str, Any]:
+    return {
+        "task_id": evaluation.task_id,
+        "task_commitment": evaluation.task_commitment,
+        "artifact_digest": evaluation.artifact_digest,
+        "strategy_digest": evaluation.strategy_digest,
+        "behavior_digest": evaluation.behavior_digest,
+        "family_id": evaluation.family_id,
+        "exact_passed": evaluation.exact_passed,
+        "compliant": evaluation.compliant,
+        "eligible": evaluation.eligible,
+        "reward": evaluation.reward,
+        "failure_code": evaluation.failure_code,
+        "fixtures": [
+            {
+                "fixture_id": fixture.fixture_id,
+                "result": fixture.result.model_dump(mode="json"),
+                "score": asdict(fixture.score),
+            }
+            for fixture in evaluation.fixture_evaluations
+        ],
+    }
 
 
 def _load(path: Path) -> dict[str, Any]:
@@ -120,7 +165,10 @@ def _audit_portable_fixture_regeneration(
 def audit_bundle(bundle: Path) -> dict[str, Any]:
     bundle = bundle.resolve()
     manifest_path = bundle / "manifest.json"
-    manifest, original_digest = verify_manifest_file(manifest_path)
+    development_signer = bt.sp_core.Keypair.create_from_uri("//PlanRaceValidator0")
+    manifest, original_digest = verify_manifest_file(
+        manifest_path, expected_signer=development_signer.ss58_address
+    )
     for artifact in manifest.source_artifacts:
         artifact_path = (bundle / artifact.path).resolve()
         _require(
@@ -152,9 +200,8 @@ def audit_bundle(bundle: Path) -> dict[str, Any]:
     _require(
         len({item["profile"] for item in summary["miners"]}) == 10, "profile labels are not unique"
     )
-    miner_ids_by_profile = {
-        item["profile"]: f"miner-{int(item['uid']) - 3:02}" for item in summary["miners"]
-    }
+    miner_ids_by_profile = {item["profile"]: item["miner_id"] for item in summary["miners"]}
+    summary_miner_by_id = {item["miner_id"]: item for item in summary["miners"]}
     selective_id = miner_ids_by_profile["selective-index"]
     copycat_id = miner_ids_by_profile["copycat-sybil"]
     _require(manifest.netuid == summary["netuid"], "summary/manifest netuid mismatch")
@@ -167,11 +214,33 @@ def audit_bundle(bundle: Path) -> dict[str, Any]:
         "miner identity list mismatch",
     )
     metagraph_hotkeys = summary["chain_readback"]["metagraph"]["hotkeys"]
+    submission_snapshot = summary["chain_readback"]["submission_snapshot"]
+    _require(
+        submission_snapshot["block_hash"].startswith("0x")
+        and len(submission_snapshot["block_hash"]) == 66,
+        "finalized submission snapshot hash is invalid",
+    )
     for identity in [*summary["validators"], *summary["miners"]]:
         _require(
             metagraph_hotkeys[identity["uid"]] == identity["hotkey"],
             f"metagraph hotkey mismatch at UID {identity['uid']}",
         )
+        _require(
+            submission_snapshot["uid_by_hotkey"].get(identity["hotkey"]) == identity["uid"],
+            f"finalized hotkey/UID binding mismatch for {identity['hotkey']}",
+        )
+    _require(
+        set(manifest.container_digests)
+        == {"validator_worker_local_content_id", "official_subtensor_image"},
+        "signed container provenance is incomplete",
+    )
+    _require(
+        manifest.container_digests["validator_worker_local_content_id"]
+        == summary["worker_image"].removeprefix("sha256:")
+        and manifest.container_digests["official_subtensor_image"]
+        == summary["chain_image"].removeprefix("sha256:"),
+        "summary/manifest container digest mismatch",
+    )
 
     request_digests: list[str] = []
     response_digests: list[str] = []
@@ -182,6 +251,8 @@ def audit_bundle(bundle: Path) -> dict[str, Any]:
     all_observations: list[EpochObservation] = []
     schedule: list[ScheduledTask] = []
     sybil_epochs = 0
+    auth_nonce_store = _AuditNonceStore()
+    reveal_payloads: list[dict[str, Any]] = []
     for expected_epoch, path in enumerate(epoch_paths):
         epoch = _load(path)
         _require(epoch["epoch"] == expected_epoch, f"epoch ordering mismatch: {path}")
@@ -189,6 +260,8 @@ def audit_bundle(bundle: Path) -> dict[str, Any]:
         families.add(epoch["family"])
         public = PublicTaskV2.model_validate_json(json.dumps(epoch["task_public"]))
         reveal = TaskRevealV2.model_validate_json(json.dumps(epoch["task_reveal"]))
+        private_task = PrivateTaskV2(public=public, reveal=reveal)
+        reveal_payloads.append(epoch["task_reveal"])
         regenerated = generate_hidden_fixtures(
             bytes.fromhex(reveal.secret_seed_hex),
             family_id=public.benchmark_family_id,
@@ -214,8 +287,10 @@ def audit_bundle(bundle: Path) -> dict[str, Any]:
             f"unexpected transport rejection: {path}",
         )
         expected_strategy_groups: dict[str, list[str]] = {}
+        responses_by_miner: dict[str, SignedOptimizationResponse] = {}
         for item in accepted:
             response = SignedOptimizationResponse.model_validate_json(json.dumps(item["response"]))
+            responses_by_miner[item["miner_id"]] = response
             digest = optimization_strategy_digest(response.artifact)
             expected_strategy_groups.setdefault(digest, []).append(item["miner_id"])
         actual_strategy_groups = {
@@ -230,9 +305,90 @@ def audit_bundle(bundle: Path) -> dict[str, Any]:
             == {digest: sorted(miners) for digest, miners in expected_strategy_groups.items()},
             f"strategy evaluation grouping mismatch: {path}",
         )
+        recomputed_by_strategy: dict[str, Any] = {}
+        for digest, stored in epoch["strategy_evaluations"].items():
+            members = sorted(stored["miners"])
+            representative = responses_by_miner[members[0]].artifact
+            results = tuple(
+                SandboxResultV2.model_validate(fixture["result"])
+                for fixture in stored["evaluation"]["fixtures"]
+            )
+            recomputed = evaluate_bundle_from_sandbox_results(private_task, representative, results)
+            _require(
+                _evaluation_json(recomputed) == stored["evaluation"],
+                f"stored worker evaluation does not recompute: {path} {digest}",
+            )
+            recomputed_evidence = holdout_evidence_digest(recomputed)
+            _require(
+                stored["evidence_digest"] == recomputed_evidence,
+                f"stored holdout evidence digest does not recompute: {path} {digest}",
+            )
+            recomputed_by_strategy[digest] = recomputed
         _require(len(epoch["observations"]) == 10, f"observation count mismatch: {path}")
         observations = [EpochObservation(**item) for item in epoch["observations"]]
         observations_by_miner = {item.miner_id: item for item in observations}
+        for digest, members in expected_strategy_groups.items():
+            evaluation = recomputed_by_strategy[digest]
+            expected_evidence = holdout_evidence_digest(evaluation)
+            for miner_id in members:
+                observation = observations_by_miner[miner_id]
+                _require(
+                    (
+                        observation.epoch,
+                        observation.family,
+                        observation.task_id,
+                        observation.task_commitment,
+                        observation.evidence_digest,
+                        observation.reward,
+                        observation.available,
+                        observation.correct,
+                        observation.compliant,
+                        observation.strategy_digest,
+                        observation.behavior_digest,
+                    )
+                    == (
+                        expected_epoch,
+                        public.benchmark_family_id,
+                        public.task_id,
+                        public.commitment,
+                        expected_evidence,
+                        evaluation.reward,
+                        True,
+                        evaluation.exact_passed,
+                        evaluation.compliant,
+                        digest,
+                        evaluation.behavior_digest,
+                    ),
+                    f"observation is not bound to recomputed evaluation: {path} {miner_id}",
+                )
+        for rejected_outcome in rejected:
+            miner_id = rejected_outcome["miner_id"]
+            observation = observations_by_miner[miner_id]
+            _require(
+                observation
+                == EpochObservation(
+                    miner_id=miner_id,
+                    epoch=expected_epoch,
+                    family=public.benchmark_family_id,
+                    task_id=public.task_id,
+                    task_commitment=public.commitment,
+                    evidence_digest=domain_separated_digest(
+                        "planrace/2:unavailable-evidence",
+                        {"task": public.commitment, "miner": miner_id},
+                    ),
+                    reward=0.0,
+                    available=False,
+                    correct=False,
+                    compliant=False,
+                    strategy_digest=domain_separated_digest(
+                        "planrace/2:unavailable-strategy", {"miner": miner_id}
+                    ),
+                    behavior_digest=domain_separated_digest(
+                        "planrace/2:unavailable-behavior", {"miner": miner_id}
+                    ),
+                ),
+                f"unavailable observation does not recompute: {path} {miner_id}",
+            )
         selective_observation = observations_by_miner[selective_id]
         copycat_observation = observations_by_miner[copycat_id]
         if (
@@ -255,13 +411,30 @@ def audit_bundle(bundle: Path) -> dict[str, Any]:
 
         for outcome in outcomes:
             request = OptimizationRequestV2.model_validate_json(json.dumps(outcome["request"]))
+            identity = summary_miner_by_id[outcome["miner_id"]]
+            _require(
+                outcome["uid"] == identity["uid"] and request.miner_hotkey == identity["hotkey"],
+                f"dispatch miner/hotkey/UID binding mismatch: {path}",
+            )
             digest = optimization_request_digest(request)
             _require(digest == outcome["request_digest"], f"request digest mismatch: {path}")
             request_digests.append(digest.removeprefix("sha256:"))
             auth_headers = outcome["validator_auth_headers"]
+            try:
+                caller = bt.http_auth.verify(
+                    auth_headers,
+                    request.model_dump_json().encode("utf-8"),
+                    method="POST",
+                    path="/v2/optimize",
+                    self_hotkey_ss58=request.miner_hotkey,
+                    nonce_store=auth_nonce_store,
+                    now_ns=int(auth_headers.get("x-bittensor-nonce", "-1")),
+                )
+            except (ValueError, bt.http_auth.AuthError) as error:
+                raise RuntimeError(f"validator btauth verification failed: {path}") from error
             _require(
-                any(name.startswith("x-bittensor-") for name in auth_headers),
-                f"validator auth headers missing: {path}",
+                caller.hotkey_ss58 == request.validator_hotkey,
+                f"validator btauth sender mismatch: {path}",
             )
             if outcome["response"] is None:
                 continue
@@ -364,6 +537,60 @@ def audit_bundle(bundle: Path) -> dict[str, Any]:
         normalized_allocation == summary["allocation"],
         "stored behavior-group allocation does not recompute",
     )
+    schedule_digest = hashlib.sha256(
+        json.dumps(
+            [task.task_commitment for task in schedule],
+            ensure_ascii=False,
+            allow_nan=False,
+            sort_keys=True,
+            separators=(",", ":"),
+        ).encode("utf-8")
+    ).hexdigest()
+    reveal_digest = hashlib.sha256(
+        json.dumps(
+            reveal_payloads,
+            ensure_ascii=False,
+            allow_nan=False,
+            sort_keys=True,
+            separators=(",", ":"),
+        ).encode("utf-8")
+    ).hexdigest()
+    _require(manifest.task_commitment == schedule_digest, "schedule digest does not recompute")
+    _require(
+        manifest.task_reveal.reveal_digest == reveal_digest,
+        "aggregate reveal digest does not recompute",
+    )
+    aggregate_by_miner = {item.miner_id: item for item in recomputed_aggregates}
+    summary_miners = {item["miner_id"]: item for item in summary["miners"]}
+    _require(len(manifest.scores) == len(summary_miners), "manifest score count mismatch")
+    for miner_id, identity in summary_miners.items():
+        aggregate = aggregate_by_miner[miner_id]
+        matching = [score for score in manifest.scores if score.miner_hotkey == identity["hotkey"]]
+        _require(len(matching) == 1, f"manifest score identity mismatch: {miner_id}")
+        score = matching[0]
+        _require(
+            (
+                score.uid,
+                score.profile,
+                score.accepted,
+                score.correct,
+                score.score,
+                score.failure_code,
+                score.strategy_digest,
+                score.schedule_digest,
+            )
+            == (
+                identity["uid"],
+                identity["profile"],
+                aggregate.task_count > 0,
+                aggregate.correctness >= 0.95,
+                aggregate.reward,
+                aggregate.failure_code,
+                aggregate.strategy_digest.removeprefix("sha256:"),
+                schedule_digest,
+            ),
+            f"manifest headline score does not recompute: {miner_id}",
+        )
 
     extrinsic = summary["chain_extrinsic"]
     _require(
@@ -407,6 +634,15 @@ def audit_bundle(bundle: Path) -> dict[str, Any]:
     _require(
         list(manifest.readback.raw_weights) == [tuple(item) for item in submitted],
         "manifest raw weights mismatch",
+    )
+    submitted_total = math.fsum(value for _, value in submitted)
+    _require(
+        list(manifest.weight_plan.uids) == [uid for uid, _ in submitted]
+        and all(
+            math.isclose(actual, value / submitted_total, abs_tol=1e-12)
+            for actual, (_, value) in zip(manifest.weight_plan.weights, submitted, strict=True)
+        ),
+        "manifest weight plan does not recompute from submitted vector",
     )
     _require(
         manifest.extrinsics and manifest.extrinsics[0].success,
