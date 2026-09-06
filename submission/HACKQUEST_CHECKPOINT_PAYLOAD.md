@@ -1,6 +1,7 @@
 # HackQuest Checkpoint #1 Portal Payload
 
-Status: **content approved; authenticated paste/post pending**.
+Status: **project submitted successfully on 2026-09-07 JST**. See
+`submission/HACKQUEST_SUBMISSION_RECEIPT.md` for confirmation and remaining limitations.
 
 Use this only for project
 `da3b136a-c415-44cc-99cb-62c459e87f9f` in the Bittensor Global Subnet
@@ -19,7 +20,7 @@ team/contact data without the account owner.
 - **Project/open-source link:** https://github.com/dorakingx/planrace-subnet
 - **X link:** Leave blank unless the account owner supplies one.
 - **Project image:** `submission/planrace-hackquest-1280x720.png` (1280×720 PNG)
-- **Demo video:** Pending; do not invent a URL.
+- **Demo video:** `submission/planrace-localnet-demo.mp4` (62-second localnet evidence dashboard walkthrough; uploaded to HackQuest).
 - **Pitch video:** Pending; do not invent a URL.
 - **Fundraising status:** Bootstrapped; no external funding.
 - **Active hackathon:** Bittensor Global Subnet Hackathon
