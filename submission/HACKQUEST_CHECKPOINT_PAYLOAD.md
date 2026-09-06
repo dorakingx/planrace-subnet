@@ -8,6 +8,57 @@ Hackathon. Before submitting, confirm that the portal still shows the same
 project ID and Checkpoint #1. Do not accept legal terms, solve CAPTCHA, or alter
 team/contact data without the account owner.
 
+## Overview portal payload
+
+- **Logo:** `submission/planrace-logo.png` (800×800 PNG)
+- **Name:** PlanRace
+- **Intro:** The competitive market for verified query plans.
+- **Sector:** AI, Infra
+- **Tech tags:** Python, React, Next, Web3, Node
+- **MVP link:** https://planrace-subnet.vercel.app/
+- **Project/open-source link:** https://github.com/dorakingx/planrace-subnet
+- **X link:** Leave blank unless the account owner supplies one.
+- **Project image:** `submission/planrace-hackquest-1280x720.png` (1280×720 PNG)
+- **Demo video:** Pending; do not invent a URL.
+- **Pitch video:** Pending; do not invent a URL.
+- **Fundraising status:** Bootstrapped; no external funding.
+- **Active hackathon:** Bittensor Global Subnet Hackathon
+- **Deployment ecosystem:** Bittensor
+- **Network:** Testnet
+- **Contract address/deployed link:** Leave blank while testnet is pending. The
+  public dashboard is a Vercel deployment, not a Bittensor testnet deployment.
+
+### Overview description
+
+PlanRace is a Bittensor subnet prototype where miners compete to produce
+bounded, executable structured index plans for validator-owned, already-correct
+SQL. Validators replay every candidate against hidden workloads in disposable,
+network-disabled workers and reward only exact, policy-compliant results.
+
+The protocol uses receiver-bound signatures, replay and deadline controls,
+opaque commit/reveal fixtures, deterministic artifact digests, strict resource
+budgets, robust baseline-relative scoring, and duplicate/Sybil allocation
+controls. Miners may use any optimization technique, but they never supply raw
+DDL or self-reported benchmark results.
+
+Protocol v2 is implemented and verified on an official local Subtensor image.
+The 30-epoch localnet run recorded 300 authenticated requests, 270 signed
+responses, 30 post-deadline reveals, contained adversarial failures, and a
+finalized mechanism-derived local-chain weight readback. A 512-replication
+adversarial simulation recorded zero false acceptance and zero exact-duplicate
+allocation gain. These are localnet results, not testnet claims. Real testnet
+registration and weights remain pending.
+
+### Project progress
+
+Built protocol v2, authenticated wire messages, isolated executable-artifact
+evaluation, robust scoring and anti-duplication controls, a verified 30-epoch
+3-validator/10-miner localnet run, signed public evidence, an adversarial
+simulation, a public evidence dashboard, a multi-architecture validator worker
+image, dedicated testnet identities, and fail-closed testnet
+planning/submission/readback tooling. Test TAO, live testnet registration,
+public Axons, testnet weights, and finalized metagraph evidence remain pending.
+
 ## Project name
 
 PlanRace
