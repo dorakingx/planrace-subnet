@@ -221,6 +221,41 @@ def test_multi_epoch_gates_and_fixed_family_quota() -> None:
     assert dict(unavailable.family_scores)["joins"] < 40.0
 
 
+def test_per_family_minimum_is_an_enforced_miner_gate() -> None:
+    policy = replace(aggregation_policy(), minimum_tasks=8)
+    sparse = observations("family-sparse")
+    joins = [index for index, item in enumerate(sparse) if item.family == "joins"]
+    for index in joins[:2]:
+        sparse[index] = replace(sparse[index], available=False, correct=False, compliant=False)
+    aggregate = aggregate_miner(sparse, policy=policy)
+    assert aggregate.availability > policy.minimum_availability
+    assert not aggregate.eligible
+    assert aggregate.failure_code == "insufficient_family_tasks"
+
+
+def test_staggered_absence_cannot_create_sybil_portfolio_diversity() -> None:
+    policy = replace(
+        aggregation_policy(),
+        minimum_tasks=8,
+        minimum_distinct_strategies=4,
+        maximum_weight=0.25,
+    )
+    miner_ids = [f"copy-{index}" for index in range(4)]
+    copied: list[EpochObservation] = []
+    for index, miner_id in enumerate(miner_ids):
+        miner = observations(miner_id, reward=40.0, digest="shared-strategy")
+        miner[index] = replace(miner[index], available=False, correct=False, compliant=False)
+        copied.extend(miner)
+    aggregates = aggregate_network(copied, miner_ids=miner_ids, policy=policy)
+    assert all(item.eligible for item in aggregates)
+    assert len({item.strategy_digest for item in aggregates}) == 1
+    assert len({item.behavior_digest for item in aggregates}) == 1
+    allocation = allocate_weights(aggregates, policy=policy)
+    assert not allocation.planned
+    assert allocation.reason == "insufficient_strategy_diversity"
+    assert allocation.duplicate_groups == ((aggregates[0].behavior_digest, tuple(miner_ids)),)
+
+
 def aggregate(miner_id: str, reward: float, digest: str) -> MinerAggregate:
     return MinerAggregate(
         miner_id=miner_id,
@@ -584,6 +619,36 @@ def test_near_copy_behavior_cannot_satisfy_diversity_gate() -> None:
     assert allocation.reason == "insufficient_strategy_diversity"
     assert allocation.duplicate_groups == (
         ("same-observed-plan", tuple(f"copy-{index}" for index in range(5))),
+    )
+
+
+def test_near_copy_cannot_gain_by_sampling_a_better_noisy_replica() -> None:
+    policy = AggregationPolicy(
+        required_families=FAMILIES,
+        task_schedule=task_schedule(),
+        minimum_distinct_strategies=3,
+        maximum_weight=0.5,
+    )
+    control = allocate_weights(
+        [
+            aggregate("original", 10.0, "original"),
+            aggregate("peer-a", 10.0, "peer-a"),
+            aggregate("peer-b", 10.0, "peer-b"),
+        ],
+        policy=policy,
+    )
+    original = aggregate("original", 10.0, "original")
+    clone = replace(
+        aggregate("noisy-clone", 20.0, "clone-ast"),
+        behavior_digest=original.behavior_digest,
+    )
+    duplicated = allocate_weights(
+        [original, clone, aggregate("peer-a", 10.0, "peer-a"), aggregate("peer-b", 10.0, "peer-b")],
+        policy=policy,
+    )
+    assert control.planned and duplicated.planned
+    assert dict(duplicated.strategy_weights)[original.behavior_digest] == pytest.approx(
+        dict(control.strategy_weights)[original.behavior_digest]
     )
 
 

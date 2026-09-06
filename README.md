@@ -54,6 +54,13 @@ make verify
 make demo
 ```
 
+Verification prerequisites are Git, a POSIX shell, Make, and network access for
+the first bootstrap. The pinned bootstrap installs its own Python toolchain.
+`make verify` runs code checks, the deterministic mechanism reproduction, and
+the complete 30-epoch claim audit; allow roughly 5–10 minutes on a laptop.
+Docker is needed to regenerate sandbox or localnet evidence, but not to verify
+the evidence already committed here.
+
 Or without Make:
 
 ```bash
@@ -62,10 +69,19 @@ Or without Make:
 .bootstrap/bin/uv run ruff check .
 .bootstrap/bin/uv run mypy planrace
 .bootstrap/bin/uv run pytest
+.bootstrap/bin/uv run python scripts/verify_mechanism_v2.py --require-clean-source
+.bootstrap/bin/uv run python scripts/audit_localnet_v2.py results/localnet-v2
 .bootstrap/bin/uv run planrace simulate-v2
 ```
 
 The bootstrap installs the security-fixed, pinned `uv==0.12.7` inside `.bootstrap`; it does not modify the system Python environment.
+
+`python scripts/verify_localnet_evidence.py results/localnet-v2` is a fast
+signature-and-file-integrity check only; it does not validate the protocol
+claims. Use `make localnet-v2-audit` (or `make verify`) for fixture regeneration,
+stored-evaluation recomputation, authentication checks, aggregation, weight
+payload validation, and chain readback binding. The full auditor prints progress
+as each epoch is checked.
 
 ## Protocol v2
 

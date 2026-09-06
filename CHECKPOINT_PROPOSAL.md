@@ -21,7 +21,7 @@ searching a large, engine-specific design space. An optimizer can propose an
 index quickly; proving that it preserves results and improves a workload across
 data shapes is the expensive part. PlanRace targets teams operating recurring
 analytical or transactional SQL workloads and gives them a competitive market
-for improvements whose claims are independently replayable.
+for improvements backed by independently auditable signed transcripts.
 
 ## Why a subnet
 
@@ -59,8 +59,9 @@ compliance, correctness, minimum coverage, and worst-family performance.
 Exact executable duplicates are evaluated once and split. Byte-distinct
 strategies with the same observed hidden-fixture plans share one behavior group.
 The general mechanism default requires five positive groups. The signed localnet
-integration run precommits four—the mathematical minimum under its 25% cap—and
-no group can receive more than 25%.
+integration policy requires four—the mathematical minimum under its 25% cap—and
+no group can receive more than 25%. Its schedule was signed after the run, so it
+does not claim an externally timestamped advance commitment.
 Failed gates create no new chain update and are never presented as cleared old
 weights.
 

@@ -613,7 +613,6 @@ def _aggregate_scheduled_miner(
     )
 
     by_family: dict[str, list[float]] = defaultdict(list)
-    history: list[dict[str, int | str]] = []
     for scheduled in policy.task_schedule:
         scheduled_observation = by_task.get(scheduled.task_id)
         gated_reward = 0.0
@@ -629,14 +628,6 @@ def _aggregate_scheduled_miner(
             ):
                 gated_reward = scheduled_observation.reward
         by_family[scheduled.family].append(gated_reward)
-        history.append(
-            {
-                "epoch": scheduled.epoch,
-                "task_commitment": scheduled.task_commitment,
-                "strategy_digest": strategy_digest,
-                "behavior_digest": behavior_digest,
-            }
-        )
 
     family_scores = tuple(
         (
@@ -659,12 +650,28 @@ def _aggregate_scheduled_miner(
     # one family with repeated observations cannot shrink the global bound.
     uncertainty = policy.confidence_z * _robust_standard_error(score_values)
     reward = max(0.0, center - uncertainty) * availability * compliance
-    strategy_digest = domain_separated_digest("planrace/2:strategy-portfolio", {"history": history})
-    behavior_digest = domain_separated_digest("planrace/2:behavior-portfolio", {"history": history})
+    # Availability is scored separately and must not manufacture portfolio
+    # diversity. Fingerprint the observed executable/behavior set per family,
+    # excluding missing-task positions, so staggered absences by Sybil copies
+    # cannot bypass duplicate grouping or the concentration cap.
+    strategy_portfolio = sorted({(item.family, item.strategy_digest) for item in available})
+    behavior_portfolio = sorted({(item.family, item.behavior_digest) for item in available})
+    strategy_digest = domain_separated_digest(
+        "planrace/2:strategy-portfolio", {"family_strategies": strategy_portfolio}
+    )
+    behavior_digest = domain_separated_digest(
+        "planrace/2:behavior-portfolio", {"family_behaviors": behavior_portfolio}
+    )
+    available_by_family = Counter(item.family for item in available)
 
     failure_code: str | None = None
     if task_count < policy.minimum_tasks:
         failure_code = "insufficient_tasks"
+    elif any(
+        available_by_family[family] < policy.minimum_tasks_per_family
+        for family in policy.required_families
+    ):
+        failure_code = "insufficient_family_tasks"
     elif availability < policy.minimum_availability:
         failure_code = "availability_gate"
     elif compliance < policy.minimum_compliance:
@@ -810,10 +817,11 @@ def allocate_weights(
         for member in members:
             exact_strategy_mass[member.strategy_digest] += member.reward
         # Exact identity copies were split during task accounting, so summing
-        # reconstructs one exact strategy's mass. Observed-equivalent but
-        # byte-distinct variants compete by their best mass rather than adding
-        # mass, preventing a coalition from minting reward via near copies.
-        raw_groups[behavior_digest] = max(exact_strategy_mass.values())
+        # reconstructs one exact strategy's mass. For observed-equivalent but
+        # byte-distinct variants, use the conservative mass. Selecting the best
+        # noisy replica would let a Sybil coalition gain merely by submitting
+        # more equivalent encodings.
+        raw_groups[behavior_digest] = min(exact_strategy_mass.values())
     try:
         normalized_groups = _capped_normalize(raw_groups, policy.maximum_weight)
     except ValueError:

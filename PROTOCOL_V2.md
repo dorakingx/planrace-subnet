@@ -32,8 +32,10 @@ timings, or miner-selected index names.
    exact result, and relative performance. Only worker-authored evidence can
    reach scoring.
 8. Task rewards are deduplicated by executable strategy, aggregated over a
-   closed multi-family schedule, concentration-capped, and converted to chain
-   weights. Invalid benchmark evidence produces no update.
+   closed multi-family schedule, and grouped again by hidden-fixture behavior.
+   Missing positions cannot create portfolio diversity, and behavior-equivalent
+   encodings receive the group's conservative mass before concentration caps
+   and chain conversion. Invalid benchmark evidence produces no update.
 
 ## Artifact grammar
 

@@ -27,10 +27,13 @@ evidence over a precommitted hidden holdout and pinned engine.
    equality. Any gate failure is zero.
 6. **Benchmark:** interleave candidate and reference measurements on the same
    worker across cold/warm runs and four reuse horizons.
-7. **Aggregate:** apply fixed family quotas, robust centers, uncertainty,
-   availability, compliance, and canonical duplicate grouping.
+7. **Aggregate:** apply fixed family quotas, per-miner family coverage, robust
+   centers, uncertainty, availability, compliance, and canonical duplicate
+   grouping. Missing tasks do not contribute to a portfolio fingerprint.
 8. **Allocate:** cap concentration, publish metrics, and produce either a
-   non-negative vector or an explicit no-new-update decision.
+   non-negative vector or an explicit no-new-update decision. Byte-distinct
+   strategies with equivalent observed behavior use the conservative group mass
+   so extra noisy replicas cannot improve a coalition's allocation.
 
 ## Score and weight policy
 

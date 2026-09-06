@@ -466,6 +466,11 @@ def audit_bundle(bundle: Path) -> dict[str, Any]:
                 ).removeprefix("sha256:")
             )
 
+        print(
+            f"audited epoch {expected_epoch + 1:02d}/{len(epoch_paths):02d}",
+            flush=True,
+        )
+
     _require(validator_counts == Counter({0: 10, 1: 10, 2: 10}), "validator rotation mismatch")
     _require(
         sybil_epochs == len(epoch_paths),
