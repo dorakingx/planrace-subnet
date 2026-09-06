@@ -170,11 +170,18 @@ planrace testnet weight-plan \
   --netuid NETUID \
   --validator-hotkey-ss58 PUBLIC_VALIDATOR_HOTKEY \
   --score PUBLIC_MINER_A_HOTKEY=1 \
-  --score PUBLIC_MINER_B_HOTKEY=3
+  --score PUBLIC_MINER_B_HOTKEY=3 \
+  > testnet-weight-plan.json
+
+# Only after a separately authorized submission/reveal:
+planrace testnet weight-readback testnet-weight-plan.json
 ```
 
 It has no transaction, wallet, private-key, or signing input. A fresh plan is
-required immediately before any separately authorized submission.
+required immediately before any separately authorized submission. The later
+readback command verifies UID stability, an advanced `last_update`, the exact
+recipient set, and quantized weight values; finalized extrinsic evidence remains
+a separate required artifact.
 
 The non-root validation worker is published for linux/amd64 and linux/arm64
 with an OCI SBOM and verifiable GitHub provenance. Testnet runs must use the

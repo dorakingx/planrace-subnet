@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import json
+from pathlib import Path
 from typing import Any
 
 import pytest
@@ -9,7 +11,13 @@ from planrace import cli
 from planrace.cli import app
 from planrace.testnet_preflight import TESTNET_ENDPOINT
 from planrace.testnet_weights import TestnetWeightPlanReport as WeightPlanReport
-from planrace.testnet_weights import collect_testnet_weight_plan, parse_public_scores
+from planrace.testnet_weights import TestnetWeightReadbackReport as ReadbackReport
+from planrace.testnet_weights import (
+    collect_testnet_weight_plan,
+    load_testnet_weight_plan,
+    parse_public_scores,
+    verify_testnet_weight_readback,
+)
 
 VALIDATOR = "5" + "B" * 47
 MINER_A = "5" + "C" * 47
@@ -66,8 +74,77 @@ class FakeClient:
         self.closed = True
 
 
+class FakePostBlockInfo:
+    hash = "0x" + "2" * 64
+    number = 12_400
+
+
+class FakePostSnapshot:
+    block = 12_400
+
+    def __init__(
+        self,
+        *,
+        hotkeys: list[str] | None = None,
+        last_update: int = 12_350,
+        row: dict[int, float] | None = None,
+    ) -> None:
+        self.hotkeys = hotkeys or [VALIDATOR, MINER_A, MINER_B]
+        self.last_update = last_update
+        self.row = row if row is not None else {1: 0.25, 2: 0.75}
+
+    def block_info(self) -> FakePostBlockInfo:
+        return FakePostBlockInfo()
+
+    def read(self, name: str, **params: object) -> object:
+        assert params["netuid"] == 7
+        if name == "subnet":
+            return {"netuid": 7}
+        if name == "metagraph":
+            return {
+                "hotkeys": self.hotkeys,
+                "validator_permit": [True, False, False],
+                "last_update": [self.last_update, 0, 0],
+            }
+        if name == "weights":
+            return {0: self.row}
+        raise AssertionError(f"unexpected read {name}")
+
+
+class FakePostClient:
+    endpoint = TESTNET_ENDPOINT
+    block = 12_400
+    spec_version = 454
+
+    def __init__(
+        self,
+        *,
+        endpoint: str = TESTNET_ENDPOINT,
+        snapshot: FakePostSnapshot | None = None,
+    ) -> None:
+        self.endpoint = endpoint
+        self.snapshot = snapshot or FakePostSnapshot()
+        self.closed = False
+
+    def at(self, block: int) -> FakePostSnapshot:
+        assert block == self.block
+        return self.snapshot
+
+    def close(self) -> None:
+        self.closed = True
+
+
 def score_specs() -> tuple[str, ...]:
     return (f"{MINER_A}=1", f"{MINER_B}=3")
+
+
+def weight_plan() -> WeightPlanReport:
+    return collect_testnet_weight_plan(
+        netuid=7,
+        validator_hotkey_ss58=VALIDATOR,
+        score_specs=score_specs(),
+        client_factory=FakeClient,
+    )
 
 
 def test_plan_resolves_public_hotkeys_and_reads_existing_weights() -> None:
@@ -214,4 +291,97 @@ def test_cli_outputs_json_without_requesting_signing(
 
     assert result.exit_code == 0
     assert '"transaction_constructed": false' in result.stdout
+    assert '"signature_requested": false' in result.stdout
+
+
+def test_saved_plan_loads_and_later_matching_readback_passes(tmp_path: Path) -> None:
+    source = weight_plan()
+    path = tmp_path / "weight-plan.json"
+    path.write_text(source.model_dump_json(indent=2) + "\n")
+
+    loaded = load_testnet_weight_plan(path)
+    client = FakePostClient()
+    report = verify_testnet_weight_readback(
+        loaded,
+        client_factory=lambda: client,
+    )
+
+    assert report.source_plan_digest == source.plan_digest
+    assert report.block == 12_400
+    assert report.current_readback.last_update == 12_350
+    assert all(comparison.matches for comparison in report.comparisons)
+    assert all(report.gates.model_dump().values())
+    assert report.ready_for_testnet_evidence is True
+    assert report.transaction_constructed is False
+    assert report.signature_requested is False
+    assert client.closed is True
+
+
+def test_tampered_saved_plan_is_rejected_before_chain_access(tmp_path: Path) -> None:
+    data = weight_plan().model_dump(mode="json")
+    data["targets"][0]["weight"] = 0.5
+    path = tmp_path / "tampered.json"
+    path.write_text(json.dumps(data))
+
+    with pytest.raises(ValueError, match="digest mismatch"):
+        load_testnet_weight_plan(path)
+
+
+@pytest.mark.parametrize(
+    "snapshot, failed_gate",
+    [
+        (FakePostSnapshot(last_update=12_345), "last_update_advanced"),
+        (
+            FakePostSnapshot(hotkeys=[VALIDATOR, MINER_B, MINER_A]),
+            "target_uids_stable",
+        ),
+        (FakePostSnapshot(row={1: 0.5, 2: 0.5}), "weight_values_match"),
+        (FakePostSnapshot(row={1: 0.25, 2: 0.7, 3: 0.05}), "recipient_set_matches"),
+    ],
+)
+def test_readback_fails_closed_on_stale_or_mismatched_state(
+    snapshot: FakePostSnapshot,
+    failed_gate: str,
+) -> None:
+    report = verify_testnet_weight_readback(
+        weight_plan(),
+        client_factory=lambda: FakePostClient(snapshot=snapshot),
+    )
+
+    assert report.ready_for_testnet_evidence is False
+    assert report.gates.model_dump()[failed_gate] is False
+
+
+def test_readback_transport_failure_is_sanitized() -> None:
+    def fail() -> FakePostClient:
+        raise ConnectionError("credential-like transport details")
+
+    report = verify_testnet_weight_readback(weight_plan(), client_factory=fail)
+
+    assert report.errors == ("read-only verification failed: ConnectionError",)
+    assert "credential-like" not in report.model_dump_json()
+
+
+def test_readback_cli_emits_json_and_fails_when_gates_do_not_pass(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    source = weight_plan()
+    path = tmp_path / "weight-plan.json"
+    path.write_text(source.model_dump_json())
+    failed = verify_testnet_weight_readback(
+        source,
+        client_factory=lambda: FakePostClient(
+            snapshot=FakePostSnapshot(last_update=source.block or 0)
+        ),
+    )
+
+    def fake_verify(_: WeightPlanReport) -> ReadbackReport:
+        return failed
+
+    monkeypatch.setattr(cli, "verify_testnet_weight_readback", fake_verify)
+    result = CliRunner().invoke(app, ["testnet", "weight-readback", str(path)])
+
+    assert result.exit_code == 1
+    assert '"ready_for_testnet_evidence": false' in result.stdout
     assert '"signature_requested": false' in result.stdout

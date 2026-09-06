@@ -73,7 +73,7 @@ blocks the HackQuest checkpoint.
 ## Gate decision
 
 - Checkpoint: **CONTENT PASS / PUBLICATION PENDING**. All six reviews are
-  complete with no unresolved P0/P1. A matching production deployment and the
-  authenticated HackQuest portal recheck remain before posting.
+  complete with no unresolved P0/P1. The matching GitHub CI and production
+  deployment pass; only the authenticated HackQuest portal recheck/post remains.
 - Final: requires a second fresh review after testnet, media, portal submission
   draft, deployment, and release candidate are immutable.

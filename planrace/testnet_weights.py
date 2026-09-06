@@ -7,6 +7,7 @@ import json
 import math
 from collections.abc import Callable, Mapping, Sequence
 from importlib.metadata import version
+from pathlib import Path
 from typing import Protocol, SupportsFloat, SupportsInt, cast
 
 from pydantic import BaseModel, ConfigDict
@@ -68,6 +69,52 @@ class TestnetWeightPlanReport(_StrictModel):
     gates: WeightPlanGates
     ready_for_authorized_submission: bool
     plan_digest: str | None
+    next_action: str
+    limitations: tuple[str, ...]
+    errors: tuple[str, ...]
+
+
+class WeightComparison(_StrictModel):
+    uid: int
+    hotkey_ss58: str
+    expected: float
+    observed: float | None
+    absolute_error: float | None
+    matches: bool
+
+
+class WeightReadbackGates(_StrictModel):
+    canonical_endpoint: bool
+    snapshot_pinned: bool
+    later_block: bool
+    subnet_exists: bool
+    validator_uid_stable: bool
+    target_uids_stable: bool
+    validator_permit: bool
+    last_update_advanced: bool
+    recipient_set_matches: bool
+    weight_values_match: bool
+
+
+class TestnetWeightReadbackReport(_StrictModel):
+    schema_version: str = "planrace/testnet-weight-readback/1"
+    read_only: bool = True
+    transaction_constructed: bool = False
+    signature_requested: bool = False
+    network: str = "test"
+    endpoint: str
+    sdk_version: str
+    netuid: int
+    source_plan_digest: str
+    source_block: int
+    block: int | None
+    block_hash: str | None
+    runtime_spec_version: int | None
+    validator_hotkey_ss58: str
+    comparisons: tuple[WeightComparison, ...]
+    current_readback: WeightReadback
+    gates: WeightReadbackGates
+    ready_for_testnet_evidence: bool
     next_action: str
     limitations: tuple[str, ...]
     errors: tuple[str, ...]
@@ -235,6 +282,60 @@ def _digest_payload(
     }
     canonical = json.dumps(payload, separators=(",", ":"), sort_keys=True).encode()
     return "sha256:" + hashlib.sha256(canonical).hexdigest()
+
+
+def _validated_plan_digest(report: TestnetWeightPlanReport) -> str:
+    if (
+        report.block is None
+        or report.block_hash is None
+        or report.plan_digest is None
+        or not report.targets
+    ):
+        raise ValueError("weight plan has no complete proposed operation")
+    expected = _digest_payload(
+        netuid=report.netuid,
+        block=report.block,
+        block_hash=report.block_hash,
+        validator_hotkey=report.validator_hotkey_ss58,
+        targets=report.targets,
+    )
+    if report.plan_digest != expected:
+        raise ValueError("weight plan digest mismatch")
+    if (
+        report.endpoint != TESTNET_ENDPOINT
+        or report.network != "test"
+        or not report.read_only
+        or report.transaction_constructed
+        or report.signature_requested
+        or report.errors
+        or not report.ready_for_authorized_submission
+        or not all(report.gates.model_dump().values())
+    ):
+        raise ValueError("source weight plan did not pass every pre-signing gate")
+    if len({target.uid for target in report.targets}) != len(report.targets):
+        raise ValueError("weight plan contains duplicate target UIDs")
+    if len({target.hotkey_ss58 for target in report.targets}) != len(report.targets):
+        raise ValueError("weight plan contains duplicate target hotkeys")
+    if not math.isclose(
+        math.fsum(target.weight for target in report.targets),
+        1.0,
+        abs_tol=1e-12,
+    ):
+        raise ValueError("weight plan target weights are not normalized")
+    return expected
+
+
+def load_testnet_weight_plan(path: Path) -> TestnetWeightPlanReport:
+    """Load and validate a saved pre-signing plan without accepting extra fields."""
+
+    try:
+        report = TestnetWeightPlanReport.model_validate_json(path.read_bytes())
+    except OSError as error:
+        raise ValueError(f"cannot read weight plan: {type(error).__name__}") from error
+    except ValueError as error:
+        raise ValueError("weight plan schema validation failed") from error
+    _validated_plan_digest(report)
+    return report
 
 
 def collect_testnet_weight_plan(
@@ -426,6 +527,177 @@ def collect_testnet_weight_plan(
             next_action="Stop: restore canonical read-only testnet state and rerun.",
             limitations=limitations,
             errors=(f"read-only planning failed: {type(error).__name__}",),
+        )
+    finally:
+        if client is not None:
+            client.close()
+
+
+def _empty_readback_gates() -> WeightReadbackGates:
+    return WeightReadbackGates(
+        canonical_endpoint=False,
+        snapshot_pinned=False,
+        later_block=False,
+        subnet_exists=False,
+        validator_uid_stable=False,
+        target_uids_stable=False,
+        validator_permit=False,
+        last_update_advanced=False,
+        recipient_set_matches=False,
+        weight_values_match=False,
+    )
+
+
+def verify_testnet_weight_readback(
+    source: TestnetWeightPlanReport,
+    *,
+    client_factory: ClientFactory = _default_client,
+    quantization_tolerance: float = 2.0 / 65_535.0,
+) -> TestnetWeightReadbackReport:
+    """Verify a later public chain row against a saved, digest-bound plan."""
+
+    if quantization_tolerance <= 0.0 or not math.isfinite(quantization_tolerance):
+        raise ValueError("quantization_tolerance must be finite and positive")
+    _validated_plan_digest(source)
+    source_block = cast(int, source.block)
+    source_plan_digest = cast(str, source.plan_digest)
+
+    limitations = (
+        "This exact-block readback is not proof that the block is finalized.",
+        "A matching row does not identify or prove success of a specific extrinsic.",
+        "Final evidence must separately bind the finalized extrinsic and block hash.",
+        "No wallet path, private key, transaction, signature, or submission is used.",
+    )
+    empty_readback = WeightReadback(
+        validator_uid=None,
+        validator_permit=False,
+        last_update=None,
+        weights=(),
+    )
+    client: TestnetClient | None = None
+    try:
+        client = client_factory()
+        endpoint = str(client.endpoint)
+        block = int(client.block)
+        snapshot = client.at(block)
+        info = snapshot.block_info()
+        block_hash = str(_field(info, "hash", ""))
+        info_number = _optional_int(_field(info, "number"))
+        canonical = endpoint == TESTNET_ENDPOINT
+        pinned = int(snapshot.block) == block and info_number == block
+        later_block = block > source_block
+        errors: list[str] = []
+        if not canonical:
+            errors.append("SDK resolved an unexpected endpoint; readback is denied")
+        if not block_hash.startswith("0x") or len(block_hash) != 66:
+            errors.append("testnet returned an invalid block hash")
+
+        subnet = snapshot.read("subnet", netuid=source.netuid)
+        subnet_exists = subnet is not None
+        validator_uid_stable = False
+        target_uids_stable = False
+        readback = empty_readback
+        comparisons: tuple[WeightComparison, ...] = ()
+        recipient_set_matches = False
+        weight_values_match = False
+        if subnet_exists:
+            metagraph = snapshot.read("metagraph", netuid=source.netuid)
+            hotkeys = _hotkeys(metagraph)
+            uid_by_hotkey = {hotkey: uid for uid, hotkey in enumerate(hotkeys)}
+            validator_uid = uid_by_hotkey.get(source.validator_hotkey_ss58)
+            validator_uid_stable = (
+                validator_uid is not None and validator_uid == source.current_readback.validator_uid
+            )
+            target_uids_stable = all(
+                uid_by_hotkey.get(target.hotkey_ss58) == target.uid for target in source.targets
+            )
+            readback = _weight_readback(
+                snapshot,
+                netuid=source.netuid,
+                metagraph=metagraph,
+                validator_uid=validator_uid,
+            )
+            observed = dict(readback.weights)
+            expected_uids = {target.uid for target in source.targets}
+            recipient_set_matches = set(observed) == expected_uids
+            comparison_rows: list[WeightComparison] = []
+            for target in source.targets:
+                observed_weight = observed.get(target.uid)
+                error = (
+                    abs(observed_weight - target.weight) if observed_weight is not None else None
+                )
+                comparison_rows.append(
+                    WeightComparison(
+                        uid=target.uid,
+                        hotkey_ss58=target.hotkey_ss58,
+                        expected=target.weight,
+                        observed=observed_weight,
+                        absolute_error=error,
+                        matches=(error is not None and error <= quantization_tolerance),
+                    )
+                )
+            comparisons = tuple(comparison_rows)
+            weight_values_match = bool(comparisons) and all(
+                comparison.matches for comparison in comparisons
+            )
+
+        last_update_advanced = (
+            readback.last_update is not None and readback.last_update > source_block
+        )
+        gates = WeightReadbackGates(
+            canonical_endpoint=canonical,
+            snapshot_pinned=pinned,
+            later_block=later_block,
+            subnet_exists=subnet_exists,
+            validator_uid_stable=validator_uid_stable,
+            target_uids_stable=target_uids_stable,
+            validator_permit=readback.validator_permit,
+            last_update_advanced=last_update_advanced,
+            recipient_set_matches=recipient_set_matches,
+            weight_values_match=weight_values_match,
+        )
+        ready = all(gates.model_dump().values()) and not errors
+        next_action = (
+            "Bind this readback to the separately finalized extrinsic in signed evidence."
+            if ready
+            else "Do not claim weight completion; inspect failed gates and rerun later."
+        )
+        return TestnetWeightReadbackReport(
+            endpoint=endpoint,
+            sdk_version=version("bittensor"),
+            netuid=source.netuid,
+            source_plan_digest=source_plan_digest,
+            source_block=source_block,
+            block=block,
+            block_hash=block_hash or None,
+            runtime_spec_version=int(client.spec_version),
+            validator_hotkey_ss58=source.validator_hotkey_ss58,
+            comparisons=comparisons,
+            current_readback=readback,
+            gates=gates,
+            ready_for_testnet_evidence=ready,
+            next_action=next_action,
+            limitations=limitations,
+            errors=tuple(errors),
+        )
+    except Exception as error:
+        return TestnetWeightReadbackReport(
+            endpoint=TESTNET_ENDPOINT,
+            sdk_version=version("bittensor"),
+            netuid=source.netuid,
+            source_plan_digest=source_plan_digest,
+            source_block=source_block,
+            block=None,
+            block_hash=None,
+            runtime_spec_version=None,
+            validator_hotkey_ss58=source.validator_hotkey_ss58,
+            comparisons=(),
+            current_readback=empty_readback,
+            gates=_empty_readback_gates(),
+            ready_for_testnet_evidence=False,
+            next_action="Do not claim weight completion; restore canonical read-only state.",
+            limitations=limitations,
+            errors=(f"read-only verification failed: {type(error).__name__}",),
         )
     finally:
         if client is not None:

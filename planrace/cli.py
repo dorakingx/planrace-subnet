@@ -17,7 +17,11 @@ from planrace.evidence import (
 from planrace.mechanism_simulation import SimulationConfig, run_mechanism_simulation
 from planrace.simulation import simulate
 from planrace.testnet_preflight import collect_testnet_preflight
-from planrace.testnet_weights import collect_testnet_weight_plan
+from planrace.testnet_weights import (
+    collect_testnet_weight_plan,
+    load_testnet_weight_plan,
+    verify_testnet_weight_readback,
+)
 
 app = typer.Typer(no_args_is_help=True, help="PlanRace verified query optimizer subnet")
 evidence_app = typer.Typer(no_args_is_help=True, help="Verify signed PlanRace run evidence")
@@ -114,6 +118,23 @@ def testnet_weight_plan_command(
         raise typer.Exit(code=2) from error
     typer.echo(json.dumps(report.model_dump(mode="json"), indent=2, sort_keys=True))
     if report.errors or not report.ready_for_authorized_submission:
+        raise typer.Exit(code=1)
+
+
+@testnet_app.command("weight-readback")
+def testnet_weight_readback_command(
+    plan: Annotated[Path, typer.Argument(exists=True, dir_okay=False)],
+) -> None:
+    """Verify a later testnet weight row against a saved read-only plan."""
+
+    try:
+        source = load_testnet_weight_plan(plan)
+        report = verify_testnet_weight_readback(source)
+    except ValueError as error:
+        typer.echo(json.dumps({"error": str(error)}, sort_keys=True))
+        raise typer.Exit(code=2) from error
+    typer.echo(json.dumps(report.model_dump(mode="json"), indent=2, sort_keys=True))
+    if report.errors or not report.ready_for_testnet_evidence:
         raise typer.Exit(code=1)
 
 

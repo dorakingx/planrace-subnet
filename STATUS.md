@@ -16,7 +16,7 @@ Public claim: **LOCALNET EVIDENCE / TESTNET PENDING**.
   storage scoring across reuse horizons.
 - Closed multi-family schedule, conservative multi-epoch aggregation, duplicate
   strategy splitting, explicit no-new-update, and weight concentration cap.
-- Final clean Python gate: 267 tests passed, Ruff and mypy clean, and branch
+- Final clean Python gate: 275 tests passed, Ruff and mypy clean, and branch
   coverage passed the 85% threshold.
 - Seeded 512-replication v2 mechanism/adversary simulation with 0 false
   acceptance, 100% all-fail no-update, zero exact-duplicate allocation gain,
@@ -43,6 +43,11 @@ Public claim: **LOCALNET EVIDENCE / TESTNET PENDING**.
   testnet smoke check at block `7946161` passed without constructing a
   transaction or requesting a signature; it did not use or claim PlanRace-owned
   identities.
+- A post-submission read-only verifier validates the saved plan digest and later
+  UID stability, permit, `last_update`, exact recipients, and quantized weights.
+  A live unchanged-state check at block `7946228` failed closed on the expected
+  later-block/update/recipient gates. It explicitly does not substitute for a
+  finalized extrinsic receipt.
 - The editable 10-slide checkpoint deck is validated, visually reviewed, and
   stored at `submission/PlanRace_Checkpoint_Pitch.pptx`. It distinguishes the
   verified localnet result from the pending testnet gate.
@@ -62,8 +67,9 @@ Public claim: **LOCALNET EVIDENCE / TESTNET PENDING**.
 
 ## Next gates
 
-1. Run the independent checkpoint reviews. Do not post while a P0/critical issue
-   is open.
+1. Rename the authenticated HackQuest draft to PlanRace and post Checkpoint #1;
+   all six checkpoint reviews have no unresolved P0/P1 and the matching public
+   deployment is ready.
 2. Request exactly one user action for a dedicated testnet wallet/faucet/signature
    when local gates pass. Local public development keys must not be reused.
 

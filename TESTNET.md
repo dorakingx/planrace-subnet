@@ -59,7 +59,8 @@ planrace testnet weight-plan \
   --netuid NETUID \
   --validator-hotkey-ss58 PUBLIC_VALIDATOR_HOTKEY \
   --score PUBLIC_MINER_A_HOTKEY=SCORE_A \
-  --score PUBLIC_MINER_B_HOTKEY=SCORE_B
+  --score PUBLIC_MINER_B_HOTKEY=SCORE_B \
+  > testnet-weight-plan.json
 ```
 
 The command verifies the canonical testnet endpoint, block number/hash,
@@ -74,6 +75,21 @@ secret, submission, or mainnet option. The exact-block read is not itself proof
 of finality. Re-run it immediately before a separately authorized signing step,
 then bind the finalized submission and later readback—not this diagnostic alone—
 into testnet evidence.
+
+After a separately authorized set/commit and any required reveal period, verify
+the later public chain state:
+
+```bash
+planrace testnet weight-readback testnet-weight-plan.json
+```
+
+The saved plan is strict-schema and digest checked before network access. The
+readback fails unless the validator and target UID bindings are unchanged, the
+validator still has a permit, `last_update` is later than the plan block, the
+nonzero recipient set is exact, and normalized values match within the bounded
+u16 quantization tolerance. A successful result is still only state-readback
+evidence: it does not identify an extrinsic or prove block finality, so the
+separately finalized extrinsic receipt and hash must also be preserved.
 
 ## Entry gate
 
@@ -118,9 +134,10 @@ presented as one concise `ACTION REQUIRED` step when those gates are satisfied.
    timelock-encrypted commit from the subnet's commit-reveal flag. A timelocked
    commit is auto-revealed by the chain; immediate readback is not completion.
 7. Wait past the returned `reveal_round` when present, then query a new finalized
-   block. Require the same hotkey-to-UID bindings, an advanced validator
-   `last_update`, and normalized raw weights matching the submitted vector before
-   calling the operation successful.
+   block and run `planrace testnet weight-readback`. Require the same
+   hotkey-to-UID bindings, an advanced validator `last_update`, and normalized
+   raw weights matching the submitted vector before calling the operation
+   successful.
 8. Sign and verify the testnet manifest, binding both finalized snapshots and
    all extrinsic/readback fields.
 9. Update the dashboard/video only from that committed manifest. Keep localnet
