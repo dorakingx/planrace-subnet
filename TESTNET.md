@@ -1,7 +1,15 @@
 # Testnet
 
-Status: **pending user-authorized dedicated wallet, test-TAO allocation, and
-wallet signature**. Local public development keys must never be reused.
+Status: **dedicated wallet created; test-TAO allocation, registration, and
+on-chain execution pending**. Local public development keys were not reused.
+
+The user authorized creation of a dedicated wallet, test-TAO acquisition, and
+testnet signatures on 2026-09-06. The testnet-only `planrace-testnet` wallet now
+contains three validator and ten miner hotkeys. Its sanitized public identities
+are recorded in `results/testnet/identities.public.json`; wallet files remain
+outside the repository with owner-only permissions. At block `7946423` the
+coldkey balance was `0` test TAO and all 13 hotkeys were unregistered. This is
+identity/readiness evidence only, not a testnet deployment claim.
 
 Last read-only preflight: **2026-09-06**, block `7945778`, runtime spec `454`,
 SDK `bittensor==11.1.0`, canonical endpoint
@@ -94,6 +102,41 @@ u16 quantization tolerance. A successful result is still only state-readback
 evidence: it does not identify an extrinsic or prove block finality, so the
 separately finalized extrinsic receipt and hash must also be preserved.
 
+## Digest-authorized submission
+
+The mutating command has a deliberately narrower interface than the read-only
+planner:
+
+```bash
+planrace testnet weight-submit testnet-weight-plan.json \
+  --authorize-plan-digest sha256:REVIEWED_PLAN_DIGEST \
+  --hotkey-alias validator-00 \
+  > testnet-weight-submission.json
+```
+
+It accepts only the local `planrace-testnet` wallet, a named validator hotkey,
+and the hard-coded `test` network. It has no custom endpoint, wallet path,
+mainnet alias, seed, or private-key input. Before it can request a signature it
+requires the saved strict-schema plan and digest to match, binds the public key
+of the selected local hotkey, rebuilds the plan on the live chain, limits plan
+age to 12 blocks, and rejects changes to the runtime, subnet parameters, UID
+bindings, validator state, prior weight row, or exact conformed u16 vector.
+
+The receipt records the approved digest, pre-submit block/hash, public signer,
+submitted UID/u16 vector, including block/hash where provided, extrinsic ID,
+fee, and timelock reveal round. It always remains incomplete evidence until a
+later `weight-readback` passes and both artifacts are bound into the signed
+testnet manifest.
+
+## Test-TAO allocation request
+
+The canonical testnet has no public faucet. The official path is the Bittensor
+Discord **Requests for Testnet TAO** channel. The exact request text and public
+coldkey are in `submission/TESTNET_TAO_REQUEST.md`. At block `7946457`, subnet
+creation cost `1.0` test TAO and the existential deposit was `0.0000005`; netuid
+1 registration cost was `0.0005` at block `7946458`. These values are volatile
+and must be queried again immediately before any authorized transaction.
+
 ## Entry gate
 
 Begin only after protocol v2 localnet evidence and manifest verification pass,
@@ -120,8 +163,10 @@ presented as one concise `ACTION REQUIRED` step when those gates are satisfied.
    testnet registration, test-TAO allocation, staking, endpoint, commit/reveal,
    and weight requirements against the pinned SDK. Pin finalized blocks for
    transaction evidence; the preflight itself reads the latest block.
-2. Create a dedicated testnet wallet locally; never print mnemonic/seed/private
-   key into logs, screenshots, repository, shell history, or evidence.
+2. Use only the dedicated `planrace-testnet` wallet. It is disposable and
+   unencrypted at rest under owner-only `0700/0600` permissions; no mnemonic,
+   seed, or private key may enter logs, screenshots, repository, shell history,
+   or evidence.
 3. Obtain test TAO through the currently designated community/hackathon
    allocation process and register only after the user authorizes the wallet
    action. Record public addresses, netuid, UIDs, finalized runtime spec, and

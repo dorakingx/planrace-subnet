@@ -49,6 +49,18 @@ Public claim: **LOCALNET EVIDENCE / TESTNET PENDING**.
   A live unchanged-state check at block `7946228` failed closed on the expected
   later-block/update/recipient gates. It explicitly does not substitute for a
   finalized extrinsic receipt.
+- A digest-authorized `weight-submit` boundary is implemented for the dedicated
+  wallet and hard-coded `test` network. It revalidates plan age, signer, runtime,
+  subnet parameters, UID bindings, prior weights, and exact u16 values before
+  signing; SDK retries are disabled and its receipt remains incomplete until a
+  later metagraph readback passes.
+- A disposable, testnet-only wallet now exists with one coldkey, three named
+  validator hotkeys, and ten named miner hotkeys. The local wallet directory
+  and files are owner-only (`0700/0600`), secret material was not emitted, and
+  only sanitized public addresses are tracked in
+  `results/testnet/identities.public.json`. A canonical read-only snapshot at
+  block `7946423` confirmed a zero test-TAO balance and no registrations, so no
+  deployment claim is made.
 - The editable 10-slide checkpoint deck is validated, visually reviewed, and
   stored at `submission/PlanRace_Checkpoint_Pitch.pptx`. It distinguishes the
   verified localnet result from the pending testnet gate.
@@ -71,13 +83,16 @@ Public claim: **LOCALNET EVIDENCE / TESTNET PENDING**.
 1. Rename the authenticated HackQuest draft to PlanRace and post Checkpoint #1;
    all six checkpoint reviews have no unresolved P0/P1 and the matching public
    deployment is ready.
-2. Request exactly one user action for a dedicated testnet wallet/faucet/signature
-   when local gates pass. Local public development keys must not be reused.
+2. Obtain the organizer/community test-TAO allocation for the public coldkey,
+   then register the dedicated identities and execute the authorized testnet
+   flow. The public testnet faucet is currently unavailable; never substitute
+   real TAO or a mainnet wallet.
 
 ## Not complete
 
-- Dedicated Bittensor testnet wallet, funding, registration, miner/validator
-  interaction, scoring, weight transaction, and metagraph readback.
+- Dedicated Bittensor testnet funding, registration, miner/validator interaction,
+  scoring, weight transaction, and metagraph readback. Wallet creation itself
+  is complete.
 - Independently operated validators or independent hardware calibration.
 - PostgreSQL/DuckDB and private customer-data adapters.
 - HackQuest rename/checkpoint post, real-testnet demo/pitch videos, final

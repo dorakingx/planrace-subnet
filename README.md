@@ -185,6 +185,25 @@ authorized submission. The later readback command verifies UID stability, an
 advanced `last_update`, the exact recipient set, and quantized weight values;
 finalized extrinsic evidence remains a separate required artifact.
 
+An authorized operator can submit only a recent saved plan whose exact digest
+is repeated on the command line. The command is pinned to the dedicated
+`planrace-testnet` wallet and Bittensor's `test` network; it accepts no wallet
+path, custom RPC, or mainnet selector:
+
+```bash
+planrace testnet weight-submit testnet-weight-plan.json \
+  --authorize-plan-digest sha256:REVIEWED_PLAN_DIGEST \
+  --hotkey-alias validator-00 \
+  > testnet-weight-submission.json
+```
+
+Before signing, it verifies the digest, matches the local public hotkey to the
+planned validator, rebuilds the plan against current chain state, rejects a plan
+older than 12 blocks, and requires unchanged runtime, subnet parameters, UID
+bindings, prior weights, and exact SDK-conformed u16 values. SDK retries are
+disabled to avoid an ambiguous duplicate resubmission. A success receipt still
+sets `evidence_complete=false` until a later metagraph readback is bound to it.
+
 The non-root validation worker is published for linux/amd64 and linux/arm64
 with an OCI SBOM and verifiable GitHub provenance. Testnet runs must use the
 immutable reference documented in [WORKER_IMAGE.md](WORKER_IMAGE.md), never the

@@ -1,8 +1,9 @@
 from __future__ import annotations
 
 import json
+from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any
+from typing import Any, ClassVar
 
 import pytest
 from bittensor.intents.weights import clip_to_max_weight, normalize
@@ -11,6 +12,10 @@ from typer.testing import CliRunner
 from planrace import cli
 from planrace.cli import app
 from planrace.testnet_preflight import TESTNET_ENDPOINT
+from planrace.testnet_submission import (
+    TestnetWeightSubmissionReceipt as SubmissionReceipt,
+)
+from planrace.testnet_submission import submit_testnet_weight_plan
 from planrace.testnet_weights import TestnetWeightPlanReport as WeightPlanReport
 from planrace.testnet_weights import TestnetWeightReadbackReport as ReadbackReport
 from planrace.testnet_weights import (
@@ -497,3 +502,219 @@ def test_readback_cli_emits_json_and_fails_when_gates_do_not_pass(
     assert result.exit_code == 1
     assert '"ready_for_testnet_evidence": false' in result.stdout
     assert '"signature_requested": false' in result.stdout
+
+
+class FakePublicKey:
+    ss58_address = VALIDATOR
+
+
+class FakeSigningWallet:
+    hotkeypub = FakePublicKey()
+
+
+class FakeFee:
+    tao = 0.000123
+
+
+class FakeExtrinsicResult:
+    success = True
+    block_hash = "0x" + "3" * 64
+    extrinsic_id = "12351-0002"
+    explorer_url = "https://example.invalid/extrinsic/12351-0002"
+    fee = FakeFee()
+    data: ClassVar[dict[str, Any]] = {"reveal_round": 998877}
+
+
+def fresh_weight_plan(source: WeightPlanReport, *, age: int = 5) -> WeightPlanReport:
+    assert source.block is not None
+    return source.model_copy(
+        update={
+            "block": source.block + age,
+            "block_hash": "0x" + "2" * 64,
+        }
+    )
+
+
+def test_digest_authorized_submission_rechecks_state_and_emits_receipt() -> None:
+    source = weight_plan()
+    calls: list[dict[str, object]] = []
+
+    def collect(**_: object) -> WeightPlanReport:
+        return fresh_weight_plan(source)
+
+    def wallet_factory(wallet_alias: str, hotkey_alias: str) -> FakeSigningWallet:
+        assert (wallet_alias, hotkey_alias) == ("planrace-testnet", "validator-00")
+        return FakeSigningWallet()
+
+    def submitter(**kwargs: object) -> FakeExtrinsicResult:
+        calls.append(kwargs)
+        return FakeExtrinsicResult()
+
+    receipt = submit_testnet_weight_plan(
+        source,
+        authorize_plan_digest=source.plan_digest or "",
+        hotkey_alias="validator-00",
+        plan_collector=collect,
+        wallet_factory=wallet_factory,
+        submitter=submitter,
+        clock=lambda: datetime(2026, 9, 6, 12, tzinfo=UTC),
+    )
+
+    assert receipt.schema_version == "planrace/testnet-weight-submission/1"
+    assert receipt.network == "test"
+    assert receipt.endpoint == TESTNET_ENDPOINT
+    assert receipt.signature_requested is True
+    assert receipt.sdk_reported_success is True
+    assert receipt.extrinsic_id == "12351-0002"
+    assert receipt.reveal_round == 998877
+    assert receipt.requires_delayed_readback is True
+    assert receipt.evidence_complete is False
+    assert receipt.fee_tao == "0.000123"
+    assert calls == [
+        {
+            "netuid": 7,
+            "weights": {1: 21_845, 2: 65_535},
+            "wallet": calls[0]["wallet"],
+        }
+    ]
+
+
+def test_submission_rejects_wrong_digest_before_wallet_or_network_access() -> None:
+    source = weight_plan()
+    called = False
+
+    def wallet_factory(_: str, __: str) -> FakeSigningWallet:
+        nonlocal called
+        called = True
+        return FakeSigningWallet()
+
+    with pytest.raises(ValueError, match="authorized digest"):
+        submit_testnet_weight_plan(
+            source,
+            authorize_plan_digest="sha256:" + "0" * 64,
+            hotkey_alias="validator-00",
+            wallet_factory=wallet_factory,
+        )
+    assert called is False
+
+
+@pytest.mark.parametrize(
+    "wallet_alias,hotkey_alias,message",
+    [
+        ("mainnet-wallet", "validator-00", "wallet alias"),
+        ("planrace-testnet", "default", "hotkey alias"),
+    ],
+)
+def test_submission_rejects_non_dedicated_wallet_names(
+    wallet_alias: str, hotkey_alias: str, message: str
+) -> None:
+    source = weight_plan()
+    with pytest.raises(ValueError, match=message):
+        submit_testnet_weight_plan(
+            source,
+            authorize_plan_digest=source.plan_digest or "",
+            wallet_alias=wallet_alias,
+            hotkey_alias=hotkey_alias,
+        )
+
+
+def test_submission_rejects_signer_mismatch_and_stale_plan_before_signing() -> None:
+    source = weight_plan()
+
+    class WrongPublicKey:
+        ss58_address = MINER_A
+
+    class WrongWallet:
+        hotkeypub = WrongPublicKey()
+
+    with pytest.raises(ValueError, match="does not match"):
+        submit_testnet_weight_plan(
+            source,
+            authorize_plan_digest=source.plan_digest or "",
+            hotkey_alias="validator-00",
+            wallet_factory=lambda *_: WrongWallet(),  # type: ignore[arg-type,return-value]
+        )
+
+    submitted = False
+
+    def submitter(**_: object) -> FakeExtrinsicResult:
+        nonlocal submitted
+        submitted = True
+        return FakeExtrinsicResult()
+
+    with pytest.raises(ValueError, match="stale"):
+        submit_testnet_weight_plan(
+            source,
+            authorize_plan_digest=source.plan_digest or "",
+            hotkey_alias="validator-00",
+            wallet_factory=lambda *_: FakeSigningWallet(),
+            plan_collector=lambda **_: fresh_weight_plan(source, age=13),
+            submitter=submitter,
+        )
+    assert submitted is False
+
+
+def test_submission_rejects_changed_chain_state_before_signing() -> None:
+    source = weight_plan()
+    changed = fresh_weight_plan(source).model_copy(
+        update={"commit_reveal_period": (source.commit_reveal_period or 0) + 1}
+    )
+
+    with pytest.raises(ValueError, match="state changed"):
+        submit_testnet_weight_plan(
+            source,
+            authorize_plan_digest=source.plan_digest or "",
+            hotkey_alias="validator-00",
+            wallet_factory=lambda *_: FakeSigningWallet(),
+            plan_collector=lambda **_: changed,
+        )
+
+
+def test_weight_submit_cli_outputs_receipt_without_error_details(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    source = weight_plan()
+    path = tmp_path / "weight-plan.json"
+    path.write_text(source.model_dump_json())
+    expected = SubmissionReceipt(
+        sdk_version="11.1.0",
+        source_plan_digest=source.plan_digest or "",
+        source_block=source.block or 0,
+        pre_submit_block=(source.block or 0) + 1,
+        pre_submit_block_hash="0x" + "2" * 64,
+        runtime_spec_version=454,
+        netuid=7,
+        validator_hotkey_ss58=VALIDATOR,
+        wallet_alias="planrace-testnet",
+        hotkey_alias="validator-00",
+        submitted_targets=(),
+        sdk_reported_success=True,
+        including_block_hash="0x" + "3" * 64,
+        extrinsic_id="12351-0002",
+        explorer_url=None,
+        fee_tao=None,
+        reveal_round=None,
+        submitted_at="2026-09-06T12:00:00+00:00",
+        requires_delayed_readback=False,
+        next_action="Verify readback.",
+    )
+
+    monkeypatch.setattr(cli, "submit_testnet_weight_plan", lambda *_, **__: expected)
+    result = CliRunner().invoke(
+        app,
+        [
+            "testnet",
+            "weight-submit",
+            str(path),
+            "--authorize-plan-digest",
+            source.plan_digest or "",
+            "--hotkey-alias",
+            "validator-00",
+        ],
+    )
+
+    assert result.exit_code == 0
+    assert '"network": "test"' in result.stdout
+    assert '"signature_requested": true' in result.stdout
+    assert '"evidence_complete": false' in result.stdout

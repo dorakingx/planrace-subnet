@@ -35,7 +35,9 @@ simulation run a testnet run.
 - Historical v1: `LOCALNET.md`, `results/localnet-epoch-8.json`.
 - Protocol v2 localnet: `LOCALNET_V2.md` and
   `results/localnet-v2/{summary,manifest}.json` plus `epochs/`.
-- Protocol v2 testnet: **pending**; see `TESTNET.md`.
+- Protocol v2 testnet: **wallet created, chain execution pending**; sanitized
+  public identities and the zero-balance snapshot are in
+  `results/testnet/identities.public.json`. See `TESTNET.md`.
 - Testnet transaction-free diagnostics: public-address-only preflight,
   exact-block weight planning, and later plan-bound state readback are
   implemented and live-smoke-tested. Planning also binds the elapsed rate

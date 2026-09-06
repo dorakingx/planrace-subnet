@@ -90,10 +90,10 @@ after all P0 posting gates pass.
 | Official test endpoint selected by SDK | `wss://test.finney.opentensor.ai:443` |
 | Test runtime spec / observed block | `452` / `7,905,665` |
 | Test subnet inventory | 556 netuids observed; none owned or allocated to PlanRace |
-| Dedicated testnet wallet | **not present**; no `$HOME/.bittensor/wallets` directory |
+| Dedicated testnet wallet | Baseline: absent. Created after explicit authorization on 2026-09-06 as disposable testnet-only wallet `planrace-testnet`; public identities are in `results/testnet/identities.public.json` |
 | Testnet hotkeys | none observed |
 | Testnet netuid | none allocated or recorded |
-| Test TAO | none available because no dedicated testnet wallet exists |
+| Test TAO | `0` at canonical testnet block `7946423`; organizer/community allocation pending |
 | Existing chain evidence | local chain only, netuid `2`; explicitly not testnet |
 
 Wallet creation, mnemonic backup, faucet use, and any required wallet signing
@@ -110,4 +110,6 @@ reuse of local development keys must fail closed.
 - The production deployment provenance is dirty and stale.
 - Favicon verification fails.
 - HackQuest still identifies the project as QECForge and has no checkpoint.
-- There is no testnet wallet, netuid, TAO, deployment, or testnet evidence.
+- At baseline there was no testnet wallet, netuid, TAO, deployment, or testnet
+  evidence. The post-baseline dedicated wallet is now present, but it has no
+  test TAO, netuid, registration, or protocol execution evidence yet.

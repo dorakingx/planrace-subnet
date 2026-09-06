@@ -17,6 +17,7 @@ from planrace.evidence import (
 from planrace.mechanism_simulation import SimulationConfig, run_mechanism_simulation
 from planrace.simulation import simulate
 from planrace.testnet_preflight import collect_testnet_preflight
+from planrace.testnet_submission import submit_testnet_weight_plan
 from planrace.testnet_weights import (
     collect_testnet_weight_plan,
     load_testnet_weight_plan,
@@ -25,7 +26,7 @@ from planrace.testnet_weights import (
 
 app = typer.Typer(no_args_is_help=True, help="PlanRace verified query optimizer subnet")
 evidence_app = typer.Typer(no_args_is_help=True, help="Verify signed PlanRace run evidence")
-testnet_app = typer.Typer(no_args_is_help=True, help="Read-only Bittensor testnet checks")
+testnet_app = typer.Typer(no_args_is_help=True, help="Fail-closed Bittensor testnet operations")
 app.add_typer(evidence_app, name="evidence")
 app.add_typer(testnet_app, name="testnet")
 
@@ -136,6 +137,38 @@ def testnet_weight_readback_command(
     typer.echo(json.dumps(report.model_dump(mode="json"), indent=2, sort_keys=True))
     if report.errors or not report.ready_for_testnet_evidence:
         raise typer.Exit(code=1)
+
+
+@testnet_app.command("weight-submit")
+def testnet_weight_submit_command(
+    plan: Annotated[Path, typer.Argument(exists=True, dir_okay=False)],
+    authorize_plan_digest: Annotated[
+        str,
+        typer.Option(help="Exact sha256 plan digest explicitly authorized for signing."),
+    ],
+    hotkey_alias: Annotated[
+        str,
+        typer.Option(help="Dedicated local validator alias, e.g. validator-00."),
+    ],
+    max_plan_age_blocks: Annotated[int, typer.Option(min=1, max=24)] = 12,
+) -> None:
+    """Sign and submit one recent digest-authorized weight plan on testnet only."""
+
+    try:
+        source = load_testnet_weight_plan(plan)
+        receipt = submit_testnet_weight_plan(
+            source,
+            authorize_plan_digest=authorize_plan_digest,
+            hotkey_alias=hotkey_alias,
+            max_plan_age_blocks=max_plan_age_blocks,
+        )
+    except ValueError as error:
+        typer.echo(json.dumps({"error": str(error)}, sort_keys=True))
+        raise typer.Exit(code=2) from error
+    except Exception as error:
+        typer.echo(json.dumps({"error": f"testnet submission failed: {type(error).__name__}"}))
+        raise typer.Exit(code=1) from error
+    typer.echo(json.dumps(receipt.model_dump(mode="json"), indent=2, sort_keys=True))
 
 
 def _verified_evidence(

@@ -1,0 +1,83 @@
+{
+  "balance_snapshot": {
+    "block": 7946423,
+    "coldkey_balance_rao": 0,
+    "coldkey_balance_tao": "0",
+    "runtime_spec_version": 454
+  },
+  "coldkey_ss58": "5Ehsb7JthQxuaXwgLJrzGksA6CSHDxC39QotGKaBMHGkfftJ",
+  "custody": "local-disposable-testnet-only",
+  "generated_on": "2026-09-06",
+  "miners": [
+    {
+      "hotkey_ss58": "5GR5C8t8ZHVVm2BNQKJ9qMipHm6kVc1ahihdxV5rrLv3i1bC",
+      "name": "miner-00"
+    },
+    {
+      "hotkey_ss58": "5FF7okPYnUVyYBSsYK3GESMdpcWGbgSnAByWLUFYYMCxXM8k",
+      "name": "miner-01"
+    },
+    {
+      "hotkey_ss58": "5HiaCc2m4TnbUNt3Ue6WxoaYVZQ9E5hFZCgr8JhoisVXeimN",
+      "name": "miner-02"
+    },
+    {
+      "hotkey_ss58": "5CDhScEWcXKPWE3qaDn9t5454wv5pn2qmsnpo8LZa7yEdvWH",
+      "name": "miner-03"
+    },
+    {
+      "hotkey_ss58": "5EyeMjcnQH173UKDAqWa4kvnKhXtPUrJMWRqoKnDseusTG3s",
+      "name": "miner-04"
+    },
+    {
+      "hotkey_ss58": "5DWqQrwjndwDxZKFDTxkRzj2Z5J7UNjCwDQcWpea7HZUotbw",
+      "name": "miner-05"
+    },
+    {
+      "hotkey_ss58": "5Dy8xBFBYKuERGZULK9oiymnibv8jwTwGFG2JfrpVHQxAy51",
+      "name": "miner-06"
+    },
+    {
+      "hotkey_ss58": "5FnsgAfcGN3Tyje1YsE4wC29i2LbfjxtQgyHZY5VdvSn2A9o",
+      "name": "miner-07"
+    },
+    {
+      "hotkey_ss58": "5EEbZ2DpQR67Pw4fLSjrWmJZcVWTwZNAS7wTYPjE2ae9taJg",
+      "name": "miner-08"
+    },
+    {
+      "hotkey_ss58": "5CZsbphBGQmcX6AwE1BAHx3ZXREaJvSVWakSPepEEAFbFz7U",
+      "name": "miner-09"
+    }
+  ],
+  "network": "test",
+  "registration": {
+    "netuid": null,
+    "registered_hotkeys": 0,
+    "status": "pending-test-tao"
+  },
+  "schema": "planrace/testnet-identities/1",
+  "sdk_version": "11.1.0",
+  "security": {
+    "coldkey_encrypted": false,
+    "keyfile_mode": "0600",
+    "mainnet_authorized": false,
+    "mnemonic_or_private_key_in_repository": false,
+    "wallet_directory_mode": "0700"
+  },
+  "validators": [
+    {
+      "hotkey_ss58": "5HH5toXTBj2Fdu7LNrZ7fbaFkT22xK2hc3ExCLu15pp6fznC",
+      "name": "validator-00"
+    },
+    {
+      "hotkey_ss58": "5FcLNRxHNG4m1ASY8KE33HPEPgYYwoP8pcPwGbwLwahcBuvS",
+      "name": "validator-01"
+    },
+    {
+      "hotkey_ss58": "5D2gAPkav5jDcYY2xxRfCS3hdhTAV3PsmGQbTr2EzV51ALQQ",
+      "name": "validator-02"
+    }
+  ],
+  "wallet_alias": "planrace-testnet"
+}
