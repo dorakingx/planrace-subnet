@@ -3,9 +3,40 @@
 Status: **pending user-authorized dedicated wallet, test-TAO allocation, and
 wallet signature**. Local public development keys must never be reused.
 
-Last read-only preflight: **2026-09-05**, SDK `bittensor==11.1.0`, canonical
-endpoint `wss://test.finney.opentensor.ai:443`. All mutable chain actions remain
-blocked behind the user gate below.
+Last read-only preflight: **2026-09-06**, block `7945778`, runtime spec `454`,
+SDK `bittensor==11.1.0`, canonical endpoint
+`wss://test.finney.opentensor.ai:443`. All mutable chain actions remain blocked
+behind the user gate below.
+
+## Read-only preflight
+
+The CLI has no wallet path, mnemonic, private-key, custom-RPC, registration, or
+weight-setting option. A connectivity-only check is safe to run without a
+wallet:
+
+```bash
+planrace testnet preflight
+```
+
+After dedicated public testnet identities exist, inspect one chain snapshot:
+
+```bash
+planrace testnet preflight \
+  --netuid NETUID \
+  --coldkey-ss58 PUBLIC_COLDKEY \
+  --hotkey validator=PUBLIC_VALIDATOR_HOTKEY \
+  --hotkey miner-a=PUBLIC_MINER_A_HOTKEY \
+  --hotkey miner-b=PUBLIC_MINER_B_HOTKEY \
+  --require-registered \
+  --require-served-axon
+```
+
+The bounded JSON reports the exact endpoint, SDK/runtime version, block,
+public balance, UID bindings, public Axons, validator permit, and readiness
+gates. It explicitly distinguishes readiness for registration from readiness
+for a protocol run. It is a latest-block diagnostic, not finalized transaction
+evidence and not proof of wallet ownership. Never pass a seed, mnemonic, or
+private key in place of a public address.
 
 ## Entry gate
 
@@ -29,9 +60,10 @@ presented as one concise `ACTION REQUIRED` step when those gates are satisfied.
 
 ## Operator procedure
 
-1. Recheck current official Bittensor testnet registration, test-TAO allocation,
-   staking, endpoint, commit/reveal, and weight requirements against the pinned
-   SDK and a single finalized runtime block.
+1. Run `planrace testnet preflight`, then recheck current official Bittensor
+   testnet registration, test-TAO allocation, staking, endpoint, commit/reveal,
+   and weight requirements against the pinned SDK. Pin finalized blocks for
+   transaction evidence; the preflight itself reads the latest block.
 2. Create a dedicated testnet wallet locally; never print mnemonic/seed/private
    key into logs, screenshots, repository, shell history, or evidence.
 3. Obtain test TAO through the currently designated community/hackathon

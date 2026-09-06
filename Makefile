@@ -1,6 +1,6 @@
 UV := .bootstrap/bin/uv
 
-.PHONY: help bootstrap sync test lint typecheck audit verify evidence-verify demo local-epoch localnet-v2-audit mechanism-v2 mechanism-v2-audit secrets
+.PHONY: help bootstrap sync test lint typecheck audit verify evidence-verify demo testnet-preflight local-epoch localnet-v2-audit mechanism-v2 mechanism-v2-audit secrets
 
 help:
 	@echo "PlanRace developer commands"
@@ -8,6 +8,7 @@ help:
 	@echo "  make verify              code checks plus full committed-evidence audit"
 	@echo "  make evidence-verify     reproduce and audit committed evidence"
 	@echo "  make demo                run a small protocol-v2 mechanism demo"
+	@echo "  make testnet-preflight   run the transaction-free testnet connectivity check"
 	@echo "  make localnet-v2-audit   audit committed localnet evidence"
 	@echo "  make mechanism-v2-audit  reproduce and audit mechanism evidence"
 
@@ -39,6 +40,9 @@ evidence-verify: mechanism-v2-audit localnet-v2-audit
 
 demo:
 	@$(UV) run planrace simulate-v2
+
+testnet-preflight:
+	@$(UV) run planrace testnet preflight
 
 local-epoch:
 	@$(UV) run python scripts/run_local_epoch.py --epoch 8

@@ -151,6 +151,16 @@ Not yet claimed: Bittensor testnet registration/weights, independently operated
 validators, PostgreSQL/DuckDB or private customer-data adapters, the real-testnet
 demo, or HackQuest submission. The Git-linked v2 evidence dashboard is live.
 
+The testnet gate can be inspected without secrets or transactions:
+
+```bash
+planrace testnet preflight
+```
+
+See [TESTNET.md](TESTNET.md) for the public-address-only readiness check. It
+accepts only Bittensor's `test` network through the pinned SDK and never signs,
+registers, serves, stakes, or sets weights.
+
 Dashboard verification requires Node.js `>=22.13 <25` (CI and Vercel use Node
 24) and npm 11:
 

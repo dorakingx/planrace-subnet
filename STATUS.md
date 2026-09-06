@@ -16,8 +16,8 @@ Public claim: **LOCALNET EVIDENCE / TESTNET PENDING**.
   storage scoring across reuse horizons.
 - Closed multi-family schedule, conservative multi-epoch aggregation, duplicate
   strategy splitting, explicit no-new-update, and weight concentration cap.
-- Final clean Python gate: 240 tests passed, Ruff and mypy clean, and 87.14%
-  branch coverage against the 85% threshold.
+- Final clean Python gate: 256 tests passed, Ruff and mypy clean, and branch
+  coverage passed the 85% threshold.
 - Seeded 512-replication v2 mechanism/adversary simulation with 0 false
   acceptance, 100% all-fail no-update, zero exact-duplicate allocation gain,
   and separately disclosed behavior-equivalent availability-replica gain
@@ -32,6 +32,11 @@ Public claim: **LOCALNET EVIDENCE / TESTNET PENDING**.
   into the signed summary.
 - Required protocol, market, judging, evidence, and media drafts exist and state
   their gaps explicitly.
+- A public-address-only, transaction-free testnet preflight now pins one SDK
+  snapshot and reports endpoint, block, runtime, subnet, balance, UID/Axon,
+  validator-permit, and readiness gates. Live read-only block `7945778` on
+  runtime spec `454` passed canonical connectivity; wallet-dependent gates
+  remain false.
 - The editable 10-slide checkpoint deck is validated, visually reviewed, and
   stored at `submission/PlanRace_Checkpoint_Pitch.pptx`. It distinguishes the
   verified localnet result from the pending testnet gate.
@@ -39,11 +44,11 @@ Public claim: **LOCALNET EVIDENCE / TESTNET PENDING**.
   typecheck, lint, build, evidence tests, route smoke tests, browser flows,
   accessibility, responsive layout, dependency audit, and public-link checks
   passed.
-- Production deployment `dpl_9rDSa9KHJqZc3SjwagzwmcBxnEpR` is READY at
-  `https://planrace-subnet.vercel.app/` from exact GitHub SHA `1de0703`, with
+- Production deployment `dpl_aGNeFPzcyZkYNpmZien12ogRQshX` is READY at
+  `https://planrace-subnet.vercel.app/` from exact GitHub SHA `bd4fe62`, with
   passing public page, evidence, robots, and sitemap checks.
-- GitHub Actions passed both Python verification and the complete dashboard
-  job after the cross-platform evidence-audit correction (run `34026165113`).
+- GitHub Actions passed both Python verification and the complete dashboard job
+  for the checkpoint-deck commit (run `34027507801`).
 
 ## Next gates
 

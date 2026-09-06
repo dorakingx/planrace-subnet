@@ -16,10 +16,13 @@ from planrace.evidence import (
 )
 from planrace.mechanism_simulation import SimulationConfig, run_mechanism_simulation
 from planrace.simulation import simulate
+from planrace.testnet_preflight import collect_testnet_preflight
 
 app = typer.Typer(no_args_is_help=True, help="PlanRace verified query optimizer subnet")
 evidence_app = typer.Typer(no_args_is_help=True, help="Verify signed PlanRace run evidence")
+testnet_app = typer.Typer(no_args_is_help=True, help="Read-only Bittensor testnet checks")
 app.add_typer(evidence_app, name="evidence")
+app.add_typer(testnet_app, name="testnet")
 
 
 @app.callback()
@@ -44,6 +47,43 @@ def simulate_v2_command(
         SimulationConfig(replications=replications, epochs=epochs, trials_per_task=6)
     )
     typer.echo(json.dumps(report["summary"], indent=2, sort_keys=True))
+
+
+@testnet_app.command("preflight")
+def testnet_preflight_command(
+    netuid: Annotated[int | None, typer.Option(min=0)] = None,
+    coldkey_ss58: Annotated[
+        str | None,
+        typer.Option(help="Public dedicated testnet coldkey address; never a seed or private key."),
+    ] = None,
+    hotkey: Annotated[
+        list[str] | None,
+        typer.Option(help="Repeat public role=SS58 values, e.g. validator=5..."),
+    ] = None,
+    require_registered: bool = typer.Option(False),
+    require_served_axon: bool = typer.Option(False),
+) -> None:
+    """Inspect one testnet block without constructing or signing transactions."""
+
+    try:
+        report = collect_testnet_preflight(
+            netuid=netuid,
+            coldkey_ss58=coldkey_ss58,
+            role_specs=hotkey or (),
+            require_registered=require_registered,
+            require_served_axon=require_served_axon,
+        )
+    except ValueError as error:
+        typer.echo(json.dumps({"error": str(error)}, sort_keys=True))
+        raise typer.Exit(code=2) from error
+    typer.echo(json.dumps(report.model_dump(mode="json"), indent=2, sort_keys=True))
+    if (
+        not report.chain_reachable
+        or report.errors
+        or not report.gates.registration_requirement_met
+        or not report.gates.served_axon_requirement_met
+    ):
+        raise typer.Exit(code=1)
 
 
 def _verified_evidence(
