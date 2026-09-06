@@ -21,7 +21,6 @@ from planrace.auth_v2 import optimization_response_signing_bytes
 from planrace.benchmark_v2 import generate_hidden_fixtures
 from planrace.evaluation_v2 import (
     evaluate_bundle_from_sandbox_results,
-    holdout_evidence_digest,
 )
 from planrace.evidence import sign_manifest, verify_manifest_file
 from planrace.models_v2 import (
@@ -113,6 +112,84 @@ def _readback_matches(
 def _require(condition: bool, message: str) -> None:
     if not condition:
         raise RuntimeError(message)
+
+
+def _first_difference(expected: Any, actual: Any, path: str = "$") -> str | None:
+    """Return a compact path to the first deterministic evidence mismatch."""
+
+    if isinstance(expected, float) and isinstance(actual, float):
+        if math.isclose(expected, actual, rel_tol=1e-12, abs_tol=1e-12):
+            return None
+        return f"{path}: expected {expected!r}, got {actual!r}"
+    if type(expected) is not type(actual):
+        return f"{path}: expected {type(expected).__name__}, got {type(actual).__name__}"
+    if isinstance(expected, dict):
+        if expected.keys() != actual.keys():
+            return f"{path}: expected keys {sorted(expected)}, got {sorted(actual)}"
+        for key in sorted(expected):
+            difference = _first_difference(expected[key], actual[key], f"{path}.{key}")
+            if difference is not None:
+                return difference
+        return None
+    if isinstance(expected, list):
+        if len(expected) != len(actual):
+            return f"{path}: expected {len(expected)} items, got {len(actual)}"
+        for index, (expected_item, actual_item) in enumerate(zip(expected, actual, strict=True)):
+            difference = _first_difference(expected_item, actual_item, f"{path}[{index}]")
+            if difference is not None:
+                return difference
+        return None
+    if expected != actual:
+        return f"{path}: expected {expected!r}, got {actual!r}"
+    return None
+
+
+def _stringify_floats(value: Any) -> Any:
+    if isinstance(value, float):
+        if not math.isfinite(value):
+            raise RuntimeError("stored evidence contains a non-finite measurement")
+        return format(value, ".17g")
+    if isinstance(value, dict):
+        return {str(key): _stringify_floats(item) for key, item in value.items()}
+    if isinstance(value, list):
+        return [_stringify_floats(item) for item in value]
+    return value
+
+
+def _stored_holdout_evidence_digest(evaluation: dict[str, Any]) -> str:
+    """Verify a signed historical digest using its original measured floats.
+
+    Derived confidence bounds can differ by one ULP across libm builds. The
+    surrounding audit independently recomputes them within a strict tolerance;
+    this function keeps the signed, byte-exact historical digest auditable.
+    """
+
+    fixtures = []
+    for fixture in evaluation["fixtures"]:
+        result = {
+            key: value for key, value in fixture["result"].items() if key != "artifact_digest"
+        }
+        fixtures.append(
+            {
+                "fixture_id": fixture["fixture_id"],
+                "result": _stringify_floats(result),
+                "score": _stringify_floats(fixture["score"]),
+            }
+        )
+    payload = {
+        "task_id": evaluation["task_id"],
+        "task_commitment": evaluation["task_commitment"],
+        "strategy_digest": evaluation["strategy_digest"],
+        "behavior_digest": evaluation["behavior_digest"],
+        "family_id": evaluation["family_id"],
+        "exact_passed": evaluation["exact_passed"],
+        "compliant": evaluation["compliant"],
+        "eligible": evaluation["eligible"],
+        "reward": _stringify_floats(evaluation["reward"]),
+        "failure_code": evaluation["failure_code"],
+        "fixtures": fixtures,
+    }
+    return domain_separated_digest("planrace/2:holdout-evidence", payload)
 
 
 def _committed_generator_digest(commit: str) -> str:
@@ -308,6 +385,7 @@ def audit_bundle(bundle: Path) -> dict[str, Any]:
         )
 
         recomputed_by_strategy: dict[str, Any] = {}
+        evidence_by_strategy: dict[str, str] = {}
         for digest, stored in epoch["strategy_evaluations"].items():
             members = sorted(stored["miners"])
             representative = responses_by_miner[members[0]].artifact
@@ -321,52 +399,46 @@ def audit_bundle(bundle: Path) -> dict[str, Any]:
                 results,
                 portable_database_digest=True,
             )
+            recomputed_json = _evaluation_json(recomputed)
+            difference = _first_difference(stored["evaluation"], recomputed_json)
             _require(
-                _evaluation_json(recomputed) == stored["evaluation"],
-                f"stored worker evaluation does not recompute: {path} {digest}",
+                difference is None,
+                f"stored worker evaluation does not recompute: {path} {digest}: {difference}",
             )
-            recomputed_evidence = holdout_evidence_digest(recomputed)
+            recomputed_evidence = _stored_holdout_evidence_digest(stored["evaluation"])
             _require(
                 stored["evidence_digest"] == recomputed_evidence,
                 f"stored holdout evidence digest does not recompute: {path} {digest}",
             )
             recomputed_by_strategy[digest] = recomputed
+            evidence_by_strategy[digest] = recomputed_evidence
         _require(len(epoch["observations"]) == 10, f"observation count mismatch: {path}")
         observations = [EpochObservation(**item) for item in epoch["observations"]]
         observations_by_miner = {item.miner_id: item for item in observations}
         for digest, members in expected_strategy_groups.items():
             evaluation = recomputed_by_strategy[digest]
-            expected_evidence = holdout_evidence_digest(evaluation)
+            expected_evidence = evidence_by_strategy[digest]
             for miner_id in members:
                 observation = observations_by_miner[miner_id]
+                expected_observation = EpochObservation(
+                    miner_id=miner_id,
+                    epoch=expected_epoch,
+                    family=public.benchmark_family_id,
+                    task_id=public.task_id,
+                    task_commitment=public.commitment,
+                    evidence_digest=expected_evidence,
+                    reward=evaluation.reward,
+                    available=True,
+                    correct=evaluation.exact_passed,
+                    compliant=evaluation.compliant,
+                    strategy_digest=digest,
+                    behavior_digest=evaluation.behavior_digest,
+                )
+                difference = _first_difference(asdict(expected_observation), asdict(observation))
                 _require(
-                    (
-                        observation.epoch,
-                        observation.family,
-                        observation.task_id,
-                        observation.task_commitment,
-                        observation.evidence_digest,
-                        observation.reward,
-                        observation.available,
-                        observation.correct,
-                        observation.compliant,
-                        observation.strategy_digest,
-                        observation.behavior_digest,
-                    )
-                    == (
-                        expected_epoch,
-                        public.benchmark_family_id,
-                        public.task_id,
-                        public.commitment,
-                        expected_evidence,
-                        evaluation.reward,
-                        True,
-                        evaluation.exact_passed,
-                        evaluation.compliant,
-                        digest,
-                        evaluation.behavior_digest,
-                    ),
-                    f"observation is not bound to recomputed evaluation: {path} {miner_id}",
+                    difference is None,
+                    f"observation is not bound to recomputed evaluation: {path} "
+                    f"{miner_id}: {difference}",
                 )
         for rejected_outcome in rejected:
             miner_id = rejected_outcome["miner_id"]
