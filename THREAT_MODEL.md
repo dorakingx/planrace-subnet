@@ -41,10 +41,12 @@
 
 The container boundary is not a formal proof against a kernel/runtime escape.
 The current engine and measurement evidence are local SQLite. Future-block
-entropy mixing, a public signed worker image, independent validator operators,
-production-engine semantics, and privacy-preserving buyer adapters remain open.
-Commit/reveal proves consistency with chosen material, not an unbiased curriculum.
-Exact finite fixtures do not prove universal SQL equivalence.
+entropy mixing, independent validator operators, production-engine semantics,
+and privacy-preserving buyer adapters remain open. The public SBOM/provenance
+worker in `WORKER_IMAGE.md` narrows supply-chain ambiguity but does not prove
+runtime isolation. Commit/reveal proves consistency with chosen material, not
+an unbiased curriculum. Exact finite fixtures do not prove universal SQL
+equivalence.
 
 ## Chain safety
 

@@ -8,6 +8,17 @@ SDK `bittensor==11.1.0`, canonical endpoint
 `wss://test.finney.opentensor.ai:443`. All mutable chain actions remain blocked
 behind the user gate below.
 
+The validator worker is already published for linux/amd64 and linux/arm64. The
+testnet run must use this immutable reference and record it in its signed
+manifest:
+
+```text
+ghcr.io/dorakingx/planrace-validator-worker@sha256:051d1cf58f127e5c7faa3945ad134027bc6931076a30791056c29aa82d3725b0
+```
+
+See `WORKER_IMAGE.md` for anonymous pull, SBOM, platform digests, and attestation
+verification.
+
 ## Read-only preflight
 
 The CLI has no wallet path, mnemonic, private-key, custom-RPC, registration, or

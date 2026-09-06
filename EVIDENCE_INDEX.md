@@ -36,6 +36,9 @@ simulation run a testnet run.
 - Protocol v2 localnet: `LOCALNET_V2.md` and
   `results/localnet-v2/{summary,manifest}.json` plus `epochs/`.
 - Protocol v2 testnet: **pending**; see `TESTNET.md`.
+- Testnet worker supply chain: public multi-architecture registry digest,
+  anonymous runtime check, SBOM, provenance, and attestation in
+  `WORKER_IMAGE.md`. This is delivery evidence, not testnet execution evidence.
 
 ## Product, market, and deployment
 
@@ -46,6 +49,8 @@ simulation run a testnet run.
 - `CHECKPOINT_REVIEW.md`: six-role pre-checkpoint/final review worksheet and
   current blockers.
 - `DEPLOYMENT_PROVENANCE.md`: GitHub/Vercel identity and public checks.
+- `WORKER_IMAGE.md`: immutable GHCR image, platform manifests, source commit,
+  and independent attestation command.
 - `CHECKPOINT_PROPOSAL.md` and `SUBMISSION_COPY.md`: drafts only until gates pass.
 
 ## Integrity boundaries
@@ -53,6 +58,7 @@ simulation run a testnet run.
 - OS-CSPRNG makes the current local generator unpredictable from its public task,
   but future-block entropy mixing is not implemented.
 - Three validator identities on localnet are controlled by one operator.
-- The local worker image is an immutable Docker content ID, not a public image.
+- The signed localnet run retains its local Docker content ID. The subsequently
+  published worker digest does not retroactively change that run.
 - Generated SQLite evidence is neither customer data nor a PostgreSQL result.
 - The dashboard must render the committed manifest; it must not invent values.

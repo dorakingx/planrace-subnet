@@ -161,6 +161,11 @@ See [TESTNET.md](TESTNET.md) for the public-address-only readiness check. It
 accepts only Bittensor's `test` network through the pinned SDK and never signs,
 registers, serves, stakes, or sets weights.
 
+The non-root validation worker is published for linux/amd64 and linux/arm64
+with an OCI SBOM and verifiable GitHub provenance. Testnet runs must use the
+immutable reference documented in [WORKER_IMAGE.md](WORKER_IMAGE.md), never the
+mutable `main` tag.
+
 Dashboard verification requires Node.js `>=22.13 <25` (CI and Vercel use Node
 24) and npm 11:
 

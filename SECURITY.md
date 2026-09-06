@@ -18,7 +18,10 @@
   throwaway writable tmpfs;
 - worker timeout, crash, malformed output, oversize output, and OOM are mapped to
   bounded failure observations instead of stopping the validator;
-- no secrets or real data in fixtures; CI secret scan and dependency audit.
+- no secrets or real data in fixtures; CI secret scan and dependency audit;
+- public multi-architecture worker image with a digest-pinned Python base,
+  hash-locked wheels, OCI SBOM, GitHub-hosted provenance, and signed build
+  attestation.
 
 The gitleaks allowlist requires both a committed evidence JSON path and a
 whole-line match for post-deadline `secret_seed_hex` fixture material, public
@@ -30,11 +33,13 @@ Wallet seeds, API tokens, and deployment credentials remain disallowed.
 ## Honest boundary
 
 Docker isolation materially improves the prototype but is not a formal sandbox
-escape proof. The worker image is locally content-addressed for localnet; a
-published registry digest, SBOM/signature policy, host hardening, and independent
-security review remain required. SQLite and conservative parsing do not establish
-arbitrary SQL safety or universal equivalence. Raw SQL scope must narrow to
-structured indexes/approved AST transformations if the stated kill gates fail.
+escape proof. The historical localnet run binds its original local content ID;
+the later public image and attestation in `WORKER_IMAGE.md` are intended for
+testnet and do not rewrite that evidence. Host hardening and an independent
+security review remain required. SQLite and conservative parsing do not
+establish arbitrary SQL safety or universal equivalence. Raw SQL scope must
+narrow to structured indexes/approved AST transformations if the stated kill
+gates fail.
 
 Report vulnerabilities privately to the repository owner; do not include wallet
 seeds, customer queries, live exploit data, or private infrastructure details in
