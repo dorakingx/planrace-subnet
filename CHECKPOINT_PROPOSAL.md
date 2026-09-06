@@ -1,6 +1,10 @@
 # HackQuest checkpoint proposal
 
-Status: **content pass — ready for authenticated HackQuest posting**.
+Status (2026-09-07 JST): **content pass; linked from the public Design checkpoint**.
+An immutable pre-post version of this proposal is linked from PlanRace's
+Checkpoints tab. Generic publication is verified, but organizer-specific
+Checkpoint #1 acceptance remains unconfirmed. See
+`submission/HACKQUEST_SUBMISSION_RECEIPT.md`.
 
 ## Project
 
@@ -110,9 +114,10 @@ Bittensor testnet evidence remain unfinished. Future-block entropy mixing is
 also deferred. PlanRace must continue to display **LOCALNET EVIDENCE / TESTNET
 PENDING** until those facts change.
 
-- Checkpoint gate: complete. Regenerated v2 evidence, clean Git/Vercel
-  provenance, and the six-review pass are public; only authenticated portal
-  posting remains.
+- Checkpoint content gate: complete. Regenerated v2 evidence, clean Git/Vercel
+  provenance, and the six-review pass are public. The full proposal is linked
+  from a generic Design checkpoint; official Checkpoint #1 acceptance remains
+  a separate unverified gate.
 - Final-submission gate: user-authorized dedicated testnet identities,
   registrations, signed multi-miner flow, timelock-aware weight readback, and a
   short end-to-end demo.
@@ -131,10 +136,10 @@ PENDING** until those facts change.
 ## Post gate
 
 The P0 tests, localnet v2, clean GitHub/Vercel provenance, logged-out HTTP
-checks, link/secret/dependency checks, and independent review all pass. Recheck
-the authenticated form fields and then post this proposal without adding a
-testnet-complete claim.
-The public page checked 2026-09-05 confirms Checkpoint #1 on 2026-09-20 and
-Final Submission on 2026-10-19. It displays the overall submission window ending
-at 15:59 without a rendered timezone. Reconfirm the checkpoint's exact time and
-timezone inside the authenticated form at posting.
+checks, link/secret/dependency checks, and independent content review passed
+before publication. No testnet-complete claim was added.
+The official page rechecked 2026-09-07 identifies Checkpoint #1 on September 20.
+Neither the authenticated generic checkpoint form nor event submission editor
+exposed its exact time or timezone. The overall final submission close is
+`2026-10-19T15:59:00.000Z` in public page data (October 20, 00:59 JST), not a
+Checkpoint #1 deadline. Keep that distinction until organizer confirmation.

@@ -13,8 +13,10 @@ Public claim: **LOCALNET EVIDENCE / TESTNET PENDING**.
   competition eligibility or completion of the testnet requirements.
 - Project description, repository/dashboard links, logo, project image, team
   introduction and a 62-second silent localnet dashboard video are saved.
-  A public Development checkpoint is posted. This short progress post alone
-  does not prove organizer acceptance of the full Checkpoint #1 proposal.
+  A public Development checkpoint and a Design checkpoint linking the full
+  reviewed subnet proposal are posted and visible without authentication.
+  Generic checkpoint publication does not prove organizer-specific acceptance
+  of Checkpoint #1.
 - A 4-minute-13-second narrated interim pitch is also saved and publicly
   accessible. Asset size and MD5 match the local file; full local decoding and
   all 39 subtitle/narration text comparisons passed. Full perceptual review and

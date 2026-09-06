@@ -1,6 +1,7 @@
 # Checkpoint review gate
 
-Status: **content passed; authenticated publication pending**. All six reviews
+Status: **content passed; generic Design checkpoint published 2026-09-07 JST**.
+Organizer-specific Checkpoint #1 acceptance remains unverified. All six reviews
 below are complete with no unresolved P0/P1. A new P0 or critical finding still
 blocks the HackQuest checkpoint.
 
@@ -72,8 +73,10 @@ blocks the HackQuest checkpoint.
 
 ## Gate decision
 
-- Checkpoint: **CONTENT PASS / PUBLICATION PENDING**. All six reviews are
+- Checkpoint: **CONTENT PASS / GENERIC PUBLICATION VERIFIED**. All six reviews are
   complete with no unresolved P0/P1. The matching GitHub CI and production
-  deployment pass; only the authenticated HackQuest portal recheck/post remains.
+  deployment passed at the reviewed source. The proposal is now linked from the
+  public Design checkpoint and opens without authentication. This is not an
+  organizer-specific acceptance receipt; see `submission/HACKQUEST_SUBMISSION_RECEIPT.md`.
 - Final: requires a second fresh review after testnet, media, portal submission
   draft, deployment, and release candidate are immutable.

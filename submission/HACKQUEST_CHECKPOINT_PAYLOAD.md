@@ -21,13 +21,28 @@ team/contact data without the account owner.
 - **X link:** Leave blank unless the account owner supplies one.
 - **Project image:** `submission/planrace-hackquest-1280x720.png` (1280×720 PNG)
 - **Demo video:** `submission/planrace-localnet-demo.mp4` (62-second localnet evidence dashboard walkthrough; uploaded to HackQuest).
-- **Pitch video:** Pending; do not invent a URL.
+- **Pitch video:** `submission/planrace-interim-pitch.mp4` (253.527-second narrated localnet pitch; uploaded to HackQuest, real testnet pitch pending).
 - **Fundraising status:** Bootstrapped; no external funding.
 - **Active hackathon:** Bittensor Global Subnet Hackathon
 - **Deployment ecosystem:** Bittensor
 - **Network:** Testnet
-- **Contract address/deployed link:** Leave blank while testnet is pending. The
-  public dashboard is a Vercel deployment, not a Bittensor testnet deployment.
+- **Contract address/deployed link:** The event requires a non-empty field; the
+  actual saved value is the honest testnet-pending disclosure recorded in
+  `HACKQUEST_SUBMISSION_RECEIPT.md`. Do not invent an address. The public
+  dashboard is a Vercel deployment, not a Bittensor testnet deployment.
+
+## Actual generic Design checkpoint payload — posted 2026-09-07 JST
+
+- Type: Design
+- Title: PlanRace: Subnet Proposal for Checkpoint #1
+- Description: Subnet proposal: problem, architecture, signed miner-validator flow, exact-result scoring, incentives and roadmap. Verified localnet evidence; public testnet pending. Full proposal at the link.
+- Link: https://github.com/dorakingx/planrace-subnet/blob/b1fc6c8c950a9c24f70cb870161b3b42d1ccba82/CHECKPOINT_PROPOSAL.md
+- Images: none
+
+The portal's generic checkpoint description is limited to 200 characters. The
+long draft below was not pasted into that field; the full reviewed proposal is
+reachable at the immutable Link. Publication is verified separately from
+official organizer-specific Checkpoint #1 acceptance, which remains unconfirmed.
 
 ### Overview description
 
