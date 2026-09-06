@@ -315,7 +315,12 @@ def audit_bundle(bundle: Path) -> dict[str, Any]:
                 SandboxResultV2.model_validate_json(json.dumps(fixture["result"]))
                 for fixture in stored["evaluation"]["fixtures"]
             )
-            recomputed = evaluate_bundle_from_sandbox_results(private_task, representative, results)
+            recomputed = evaluate_bundle_from_sandbox_results(
+                private_task,
+                representative,
+                results,
+                portable_database_digest=True,
+            )
             _require(
                 _evaluation_json(recomputed) == stored["evaluation"],
                 f"stored worker evaluation does not recompute: {path} {digest}",

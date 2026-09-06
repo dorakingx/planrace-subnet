@@ -255,6 +255,7 @@ def evaluate_bundle_from_sandbox_results(
     *,
     benchmark_policy: BenchmarkPolicy = DEFAULT_BENCHMARK_POLICY,
     trial_count: int = 6,
+    portable_database_digest: bool = False,
 ) -> HoldoutEvaluationV2:
     """Score already-isolated worker results with the same production gates.
 
@@ -265,16 +266,23 @@ def evaluate_bundle_from_sandbox_results(
     """
 
     family, fixtures = _validated_task_material(
-        task.public.model_dump_json(), task.reveal.model_dump_json()
+        task.public.model_dump_json(),
+        task.reveal.model_dump_json(),
+        portable_database_digest,
     )
     if len(results) != len(fixtures):
         raise EvaluationConfigurationError("worker result count does not match holdouts")
     evaluations: list[FixtureEvaluationV2] = []
-    for fixture, result in zip(fixtures, results, strict=True):
+    for fixture_index, (fixture, result) in enumerate(zip(fixtures, results, strict=True)):
+        descriptor = (
+            task.reveal.hidden_fixtures[fixture_index]
+            if portable_database_digest
+            else fixture.descriptor
+        )
         request = SandboxRequestV2(
             task=task.public,
             reveal=task.reveal,
-            fixture=fixture.descriptor,
+            fixture=descriptor,
             bundle=bundle,
             parameters=fixture.parameters,
             ordered=family.ordered,
@@ -296,7 +304,7 @@ def evaluate_bundle_from_sandbox_results(
 
 @lru_cache(maxsize=128)
 def _validated_task_material(
-    public_json: str, reveal_json: str
+    public_json: str, reveal_json: str, portable_database_digest: bool
 ) -> tuple[QueryFamily, tuple[GeneratedFixture, ...]]:
     """Validate immutable task material once per exact serialized task."""
 
@@ -304,7 +312,7 @@ def _validated_task_material(
         public=PublicTaskV2.model_validate_json(public_json),
         reveal=TaskRevealV2.model_validate_json(reveal_json),
     )
-    family = _validate_and_regenerate_task(task)
+    family = _validate_and_regenerate_task(task, portable_database_digest=portable_database_digest)
     fixtures = generate_hidden_fixtures(
         bytes.fromhex(task.reveal.secret_seed_hex), family_id=family.family_id
     )
@@ -498,7 +506,9 @@ def holdout_behavior_digest(evaluations: Sequence[FixtureEvaluationV2]) -> str:
     return domain_separated_digest("planrace/2:holdout-plan-behavior", {"plans": plans})
 
 
-def _validate_and_regenerate_task(task: PrivateTaskV2) -> QueryFamily:
+def _validate_and_regenerate_task(
+    task: PrivateTaskV2, *, portable_database_digest: bool = False
+) -> QueryFamily:
     family = next(
         (
             candidate
@@ -516,7 +526,17 @@ def _validate_and_regenerate_task(task: PrivateTaskV2) -> QueryFamily:
             for fixture in generate_hidden_fixtures(seed, family_id=family.family_id)
         )
 
-    if not audit_task_reveal(task.public, task.reveal, regenerate=regenerate):
+    if portable_database_digest:
+        regenerated = regenerate(bytes.fromhex(task.reveal.secret_seed_hex))
+        portable_fields = ("fixture_id", "content_digest", "parameter_set_digest", "row_count")
+        portable_match = len(regenerated) == len(task.reveal.hidden_fixtures) and all(
+            all(getattr(claimed, field) == getattr(actual, field) for field in portable_fields)
+            for claimed, actual in zip(task.reveal.hidden_fixtures, regenerated, strict=True)
+        )
+        reveal_valid = audit_task_reveal(task.public, task.reveal) and portable_match
+    else:
+        reveal_valid = audit_task_reveal(task.public, task.reveal, regenerate=regenerate)
+    if not reveal_valid:
         raise EvaluationConfigurationError("task reveal or regenerated fixtures do not verify")
     if task.public.reference_sql.strip() != family.sql.strip():
         raise EvaluationConfigurationError("reference SQL does not match benchmark family")

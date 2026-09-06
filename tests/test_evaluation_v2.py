@@ -6,6 +6,7 @@ import bittensor as bt
 import pytest
 from pydantic import ValidationError
 
+import planrace.evaluation_v2 as evaluation_v2
 from planrace.evaluation_v2 import (
     EvaluationConfigurationError,
     create_benchmark_task_v2,
@@ -37,6 +38,57 @@ class FixedEntropy:
         value = self.values.pop(0)
         assert len(value) == size
         return value
+
+
+def test_portable_audit_allows_only_sqlite_file_digest_variance(monkeypatch) -> None:
+    validator = bt.sp_core.Keypair.create_from_uri("//Alice")
+    task = create_benchmark_task_v2(
+        validator_hotkey=validator.ss58_address,
+        engine_image_digest="sha256:" + "1" * 64,
+        family_id="intentional-zero-result",
+        deadline_unix_ms=2_000_000,
+        entropy=FixedEntropy(),
+    )
+    generate = evaluation_v2.generate_hidden_fixtures
+
+    def with_changed_digest(seed: bytes, family_id: str):
+        return tuple(
+            fixture.__class__(
+                descriptor=fixture.descriptor.model_copy(
+                    update={"database_file_digest": "sha256:" + "f" * 64}
+                ),
+                profile=fixture.profile,
+                query_family=fixture.query_family,
+                parameters=fixture.parameters,
+                customers=fixture.customers,
+                orders=fixture.orders,
+            )
+            for fixture in generate(seed, family_id=family_id)
+        )
+
+    monkeypatch.setattr(evaluation_v2, "generate_hidden_fixtures", with_changed_digest)
+    with pytest.raises(EvaluationConfigurationError, match="regenerated fixtures"):
+        evaluation_v2._validate_and_regenerate_task(task)
+    evaluation_v2._validate_and_regenerate_task(task, portable_database_digest=True)
+
+    def with_changed_content(seed: bytes, family_id: str):
+        return tuple(
+            fixture.__class__(
+                descriptor=fixture.descriptor.model_copy(
+                    update={"content_digest": "sha256:" + "e" * 64}
+                ),
+                profile=fixture.profile,
+                query_family=fixture.query_family,
+                parameters=fixture.parameters,
+                customers=fixture.customers,
+                orders=fixture.orders,
+            )
+            for fixture in generate(seed, family_id=family_id)
+        )
+
+    monkeypatch.setattr(evaluation_v2, "generate_hidden_fixtures", with_changed_content)
+    with pytest.raises(EvaluationConfigurationError, match="regenerated fixtures"):
+        evaluation_v2._validate_and_regenerate_task(task, portable_database_digest=True)
 
 
 def test_full_committed_holdout_path_is_exact_first_and_worker_derived() -> None:
