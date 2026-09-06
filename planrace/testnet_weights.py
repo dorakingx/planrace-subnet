@@ -16,7 +16,7 @@ from planrace.network import ensure_supported_network
 from planrace.testnet_preflight import TESTNET_ENDPOINT, validate_public_ss58
 from planrace.weights import plan_hotkey_weights
 
-SCHEMA_VERSION = "planrace/testnet-weight-plan/2"
+SCHEMA_VERSION = "planrace/testnet-weight-plan/3"
 U16_MAX = 65_535
 
 
@@ -36,6 +36,8 @@ class WeightTarget(_StrictModel):
 class WeightReadback(_StrictModel):
     validator_uid: int | None
     validator_permit: bool
+    validator_is_subnet_owner: bool
+    weight_setting_authorized: bool
     last_update: int | None
     weights: tuple[tuple[int, float], ...]
 
@@ -45,7 +47,7 @@ class WeightPlanGates(_StrictModel):
     snapshot_pinned: bool
     subnet_exists: bool
     validator_registered: bool
-    validator_permit: bool
+    validator_authorized: bool
     all_targets_registered: bool
     rate_limit_elapsed: bool
     minimum_recipients_met: bool
@@ -53,7 +55,7 @@ class WeightPlanGates(_StrictModel):
 
 
 class TestnetWeightPlanReport(_StrictModel):
-    schema_version: Literal["planrace/testnet-weight-plan/2"] = "planrace/testnet-weight-plan/2"
+    schema_version: Literal["planrace/testnet-weight-plan/3"] = "planrace/testnet-weight-plan/3"
     read_only: bool = True
     transaction_constructed: bool = False
     signature_requested: bool = False
@@ -97,15 +99,15 @@ class WeightReadbackGates(_StrictModel):
     subnet_exists: bool
     validator_uid_stable: bool
     target_uids_stable: bool
-    validator_permit: bool
+    validator_authorized: bool
     last_update_advanced: bool
     recipient_set_matches: bool
     weight_values_match: bool
 
 
 class TestnetWeightReadbackReport(_StrictModel):
-    schema_version: Literal["planrace/testnet-weight-readback/2"] = (
-        "planrace/testnet-weight-readback/2"
+    schema_version: Literal["planrace/testnet-weight-readback/3"] = (
+        "planrace/testnet-weight-readback/3"
     )
     read_only: bool = True
     transaction_constructed: bool = False
@@ -292,8 +294,14 @@ def _weight_readback(
     validator_uid: int | None,
 ) -> WeightReadback:
     permits = _field(metagraph, "validator_permit", ())
+    owner_hotkey = str(_field(metagraph, "owner_hotkey", ""))
     last_updates = _field(metagraph, "last_update", ())
     permit = bool(_indexed(permits, validator_uid, False)) if validator_uid is not None else False
+    validator_is_owner = bool(
+        validator_uid is not None
+        and owner_hotkey
+        and owner_hotkey == _hotkeys(metagraph)[validator_uid]
+    )
     last_update = (
         _optional_int(_indexed(last_updates, validator_uid)) if validator_uid is not None else None
     )
@@ -301,6 +309,8 @@ def _weight_readback(
         return WeightReadback(
             validator_uid=None,
             validator_permit=False,
+            validator_is_subnet_owner=False,
+            weight_setting_authorized=False,
             last_update=None,
             weights=(),
         )
@@ -321,6 +331,8 @@ def _weight_readback(
     return WeightReadback(
         validator_uid=validator_uid,
         validator_permit=permit,
+        validator_is_subnet_owner=validator_is_owner,
+        weight_setting_authorized=permit or validator_is_owner,
         last_update=last_update,
         weights=tuple(sorted(weights)),
     )
@@ -506,6 +518,8 @@ def collect_testnet_weight_plan(
     empty_readback = WeightReadback(
         validator_uid=None,
         validator_permit=False,
+        validator_is_subnet_owner=False,
+        weight_setting_authorized=False,
         last_update=None,
         weights=(),
     )
@@ -600,7 +614,7 @@ def collect_testnet_weight_plan(
             snapshot_pinned=snapshot_pinned,
             subnet_exists=subnet_exists,
             validator_registered=validator_registered,
-            validator_permit=readback.validator_permit,
+            validator_authorized=readback.weight_setting_authorized,
             all_targets_registered=all_targets_registered,
             rate_limit_elapsed=rate_limit_elapsed,
             minimum_recipients_met=minimum_recipients_met,
@@ -648,8 +662,11 @@ def collect_testnet_weight_plan(
             next_action = "Choose an existing testnet subnet and rerun."
         elif not validator_registered:
             next_action = "Register the validator only after explicit signing authorization."
-        elif not readback.validator_permit:
-            next_action = "Wait for validator permit before any weight operation."
+        elif not readback.weight_setting_authorized:
+            next_action = (
+                "Wait for validator permit or use the registered subnet-owner hotkey "
+                "before any weight operation."
+            )
         elif not all_targets_registered:
             next_action = "Register every scored miner and rerun against a fresh block."
         elif not rate_limit_elapsed:
@@ -707,7 +724,7 @@ def collect_testnet_weight_plan(
                 snapshot_pinned=False,
                 subnet_exists=False,
                 validator_registered=False,
-                validator_permit=False,
+                validator_authorized=False,
                 all_targets_registered=False,
                 rate_limit_elapsed=False,
                 minimum_recipients_met=False,
@@ -732,7 +749,7 @@ def _empty_readback_gates() -> WeightReadbackGates:
         subnet_exists=False,
         validator_uid_stable=False,
         target_uids_stable=False,
-        validator_permit=False,
+        validator_authorized=False,
         last_update_advanced=False,
         recipient_set_matches=False,
         weight_values_match=False,
@@ -762,6 +779,8 @@ def verify_testnet_weight_readback(
     empty_readback = WeightReadback(
         validator_uid=None,
         validator_permit=False,
+        validator_is_subnet_owner=False,
+        weight_setting_authorized=False,
         last_update=None,
         weights=(),
     )
@@ -842,7 +861,7 @@ def verify_testnet_weight_readback(
             subnet_exists=subnet_exists,
             validator_uid_stable=validator_uid_stable,
             target_uids_stable=target_uids_stable,
-            validator_permit=readback.validator_permit,
+            validator_authorized=readback.weight_setting_authorized,
             last_update_advanced=last_update_advanced,
             recipient_set_matches=recipient_set_matches,
             weight_values_match=weight_values_match,

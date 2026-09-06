@@ -34,18 +34,19 @@ Public claim: **LOCALNET EVIDENCE / TESTNET PENDING**.
   their gaps explicitly.
 - A public-address-only, transaction-free testnet preflight now pins one SDK
   snapshot and reports endpoint, block, runtime, subnet, balance, UID/Axon,
-  validator-permit, and readiness gates. Live read-only block `7945778` on
-  runtime spec `454` passed canonical connectivity; wallet-dependent gates
-  remain false.
+  validator permit/subnet-owner authorization, and readiness gates. Live
+  read-only block `7945778` on runtime spec `454` passed canonical connectivity;
+  wallet-dependent gates remain false.
 - A separate transaction-free weight planner resolves public scored hotkeys to
   UIDs at one block/hash, reads the validator's existing weight row, checks
-  permit/subnet/rate-limit gates, reproduces SDK max-weight clipping and u16
-  quantization, and binds all submission parameters in a canonical SHA-256
-  plan digest. A live v2 public testnet smoke check at block `7946333` passed
+  permit-or-owner/subnet/rate-limit gates, reproduces SDK max-weight clipping
+  and u16 quantization, and binds all submission parameters in a canonical
+  SHA-256 plan digest. A live v2 public testnet smoke check at block `7946333` passed
   all nine gates without constructing a transaction or requesting a signature;
   it did not use or claim PlanRace-owned identities.
 - A post-submission read-only verifier validates the saved plan digest and later
-  UID stability, permit, `last_update`, exact recipients, and quantized weights.
+  UID stability, permit-or-owner authorization, `last_update`, exact recipients,
+  and quantized weights.
   A live unchanged-state check at block `7946228` failed closed on the expected
   later-block/update/recipient gates. It explicitly does not substitute for a
   finalized extrinsic receipt.

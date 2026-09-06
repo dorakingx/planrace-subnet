@@ -57,6 +57,7 @@ class FakeSnapshot:
         if name == "metagraph":
             return {
                 "hotkeys": [VALIDATOR, MINER_A, MINER_B],
+                "owner_hotkey": "5" + "E" * 47,
                 "validator_permit": [True, False, False],
                 "last_update": [12_000, 0, 0],
             }
@@ -111,6 +112,7 @@ class FakePostSnapshot:
         if name == "metagraph":
             return {
                 "hotkeys": self.hotkeys,
+                "owner_hotkey": "5" + "E" * 47,
                 "validator_permit": [True, False, False],
                 "last_update": [self.last_update, 0, 0],
             }
@@ -165,7 +167,7 @@ def test_plan_resolves_public_hotkeys_and_reads_existing_weights() -> None:
     )
 
     assert report.read_only is True
-    assert report.schema_version == "planrace/testnet-weight-plan/2"
+    assert report.schema_version == "planrace/testnet-weight-plan/3"
     assert report.transaction_constructed is False
     assert report.signature_requested is False
     assert report.block_hash == FakeBlockInfo.hash
@@ -181,6 +183,7 @@ def test_plan_resolves_public_hotkeys_and_reads_existing_weights() -> None:
     assert report.weights_were_clipped is False
     assert report.current_readback.weights == ((1, 0.25), (2, 0.75))
     assert report.current_readback.last_update == 12_000
+    assert report.current_readback.weight_setting_authorized is True
     assert report.gates.minimum_recipients_met is True
     assert report.ready_for_authorized_submission is True
     assert report.plan_digest is not None
@@ -213,6 +216,37 @@ def test_plan_precomputes_sdk_max_weight_clipping_and_u16_readback() -> None:
     assert [target.planned_weight for target in report.targets] == [0.25, 0.75]
     assert [target.u16_weight for target in report.targets] == [41_836, 65_535]
     assert report.targets[1].weight == pytest.approx(40_000 / 65_535, abs=2 / 65_535)
+    assert report.ready_for_authorized_submission is True
+
+
+def test_subnet_owner_is_authorized_without_validator_permit() -> None:
+    class OwnerSnapshot(FakeSnapshot):
+        def read(self, name: str, **params: object) -> object:
+            value = super().read(name, **params)
+            if name == "metagraph":
+                return {
+                    **value,  # type: ignore[arg-type]
+                    "owner_hotkey": VALIDATOR,
+                    "validator_permit": [False, False, False],
+                }
+            return value
+
+    class OwnerClient(FakeClient):
+        def at(self, block: int) -> OwnerSnapshot:
+            assert block == self.block
+            return OwnerSnapshot()
+
+    report = collect_testnet_weight_plan(
+        netuid=7,
+        validator_hotkey_ss58=VALIDATOR,
+        score_specs=score_specs(),
+        client_factory=OwnerClient,
+    )
+
+    assert report.current_readback.validator_permit is False
+    assert report.current_readback.validator_is_subnet_owner is True
+    assert report.current_readback.weight_setting_authorized is True
+    assert report.gates.validator_authorized is True
     assert report.ready_for_authorized_submission is True
 
 
@@ -417,7 +451,7 @@ def test_saved_plan_loads_and_later_matching_readback_passes(tmp_path: Path) -> 
     )
 
     assert report.source_plan_digest == source.plan_digest
-    assert report.schema_version == "planrace/testnet-weight-readback/2"
+    assert report.schema_version == "planrace/testnet-weight-readback/3"
     assert report.block == 12_400
     assert report.current_readback.last_update == 12_350
     assert all(comparison.matches for comparison in report.comparisons)

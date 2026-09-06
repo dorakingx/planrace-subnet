@@ -57,6 +57,7 @@ class FakeSnapshot:
         if name == "metagraph":
             return {
                 "hotkeys": [VALIDATOR, MINER_A, MINER_B],
+                "owner_hotkey": "5" + "E" * 47,
                 "coldkeys": [COLDKEY, COLDKEY, COLDKEY],
                 "axons": [
                     {"ip": "203.0.113.10", "port": 8091, "ip_type": 4},
@@ -140,6 +141,34 @@ def test_chain_only_snapshot_is_reachable_but_not_ready() -> None:
     assert report.ready_for_protocol_run is False
     assert report.errors == ()
     assert "Provide public netuid" in report.next_action
+
+
+def test_subnet_owner_validator_is_authorized_without_permit() -> None:
+    class OwnerSnapshot(FakeSnapshot):
+        def read(self, name: str, **params: object) -> object:
+            value = super().read(name, **params)
+            if name == "metagraph":
+                return {
+                    **value,  # type: ignore[arg-type]
+                    "owner_hotkey": VALIDATOR,
+                    "validator_permit": [False, False, False],
+                }
+            return value
+
+    report = collect_testnet_preflight(
+        netuid=7,
+        coldkey_ss58=COLDKEY,
+        role_specs=role_specs(),
+        require_registered=True,
+        require_served_axon=True,
+        client_factory=lambda: FakeClient(snapshot=OwnerSnapshot()),
+    )
+
+    assert report.roles[0].validator_permit is False
+    assert report.roles[0].is_subnet_owner is True
+    assert report.roles[0].weight_setting_authorized is True
+    assert report.gates.validator_authorized is True
+    assert report.ready_for_protocol_run is True
 
 
 def test_absent_subnet_fails_closed() -> None:
@@ -251,7 +280,7 @@ def test_cli_emits_report_from_read_only_collector(monkeypatch: pytest.MonkeyPat
     result = CliRunner().invoke(app, ["testnet", "preflight"])
 
     assert result.exit_code == 0
-    assert '"schema_version": "planrace/testnet-preflight/1"' in result.stdout
+    assert '"schema_version": "planrace/testnet-preflight/2"' in result.stdout
     assert '"read_only": true' in result.stdout
 
 

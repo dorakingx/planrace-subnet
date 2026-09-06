@@ -51,9 +51,11 @@ planrace testnet preflight \
 ```
 
 The bounded JSON reports the exact endpoint, SDK/runtime version, block,
-public balance, UID bindings, public Axons, validator permit, and readiness
-gates. It explicitly distinguishes readiness for registration from readiness
-for a protocol run. It is a latest-block diagnostic, not finalized transaction
+public balance, UID bindings, public Axons, validator permit, subnet-owner
+status, and readiness gates. A validator is authorized when it either has a
+permit or is the registered subnet-owner hotkey, matching runtime v454. The
+report explicitly distinguishes readiness for registration from readiness for
+a protocol run. It is a latest-block diagnostic, not finalized transaction
 evidence and not proof of wallet ownership. Never pass a seed, mnemonic, or
 private key in place of a public address.
 
@@ -72,9 +74,10 @@ planrace testnet weight-plan \
 ```
 
 The command verifies the canonical testnet endpoint, block number/hash,
-validator registration and permit, every scored hotkey binding, elapsed subnet
-rate limit, minimum recipient count, `max_weights_limit`, and commit/reveal
-settings. It reproduces the pinned SDK's max-weight clipping and u16
+validator registration and weight-setting authorization (permit or subnet
+ownership), every scored hotkey binding, elapsed subnet rate limit, minimum
+recipient count, `max_weights_limit`, and commit/reveal settings. It reproduces
+the pinned SDK's max-weight clipping and u16
 quantization before submission, then emits the prior on-chain row, original and
 conformed weights, exact u16 values, and a canonical SHA-256 plan digest. The
 digest binds the runtime, all relevant hyperparameters, prior readback, UID
@@ -96,11 +99,12 @@ planrace testnet weight-readback testnet-weight-plan.json
 
 The saved plan is strict-schema and digest checked before network access. The
 readback fails unless the validator and target UID bindings are unchanged, the
-validator still has a permit, `last_update` is later than the plan block, the
-nonzero recipient set is exact, and normalized values match within the bounded
-u16 quantization tolerance. A successful result is still only state-readback
-evidence: it does not identify an extrinsic or prove block finality, so the
-separately finalized extrinsic receipt and hash must also be preserved.
+validator still has a permit or subnet ownership, `last_update` is later than
+the plan block, the nonzero recipient set is exact, and normalized values match
+within the bounded u16 quantization tolerance. A successful result is still only
+state-readback evidence: it does not identify an extrinsic or prove block
+finality, so the separately finalized extrinsic receipt and hash must also be
+preserved.
 
 ## Digest-authorized submission
 
@@ -208,6 +212,11 @@ weights.
 - The commit-reveal path exposes a `reveal_round` and requires explicit
   finalization/readback evidence:
   <https://docs.learnbittensor.org/python-api/html/_modules/bittensor/core/extrinsics/asyncex/commit_reveal.html>
+- Runtime v454 allows the registered subnet-owner hotkey to set non-self
+  weights without a validator permit and exempts it from the minimum-stake
+  check:
+  <https://github.com/opentensor/subtensor/blob/v454/pallets/subtensor/src/subnets/weights.rs#L1198-L1213>
+  <https://github.com/opentensor/subtensor/blob/v454/pallets/subtensor/src/lib.rs#L3371-L3383>
 
 No mainnet, paid service, valuable key, or production customer data is
 authorized. Only the exact network alias `test` is accepted for this run;

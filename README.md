@@ -163,7 +163,8 @@ registers, serves, stakes, or sets weights.
 
 After public validator/miner hotkeys exist, a second read-only command resolves
 scores to the UIDs at one exact block, reads the validator's current weights,
-checks permit, rate, recipient, max-weight, and commit/reveal gates, reproduces
+checks weight-setting authorization (validator permit or subnet ownership),
+rate, recipient, max-weight, and commit/reveal gates, reproduces
 the SDK's clipping and u16 vector, and emits a reviewable SHA-256 plan digest:
 
 ```bash

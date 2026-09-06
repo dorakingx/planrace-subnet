@@ -18,7 +18,7 @@ from pydantic import BaseModel, ConfigDict
 from planrace.network import ensure_supported_network
 
 TESTNET_ENDPOINT = "wss://test.finney.opentensor.ai:443"
-SCHEMA_VERSION = "planrace/testnet-preflight/1"
+SCHEMA_VERSION = "planrace/testnet-preflight/2"
 _ROLE_RE = re.compile(r"[a-z][a-z0-9_-]{0,31}\Z")
 _SS58_RE = re.compile(r"5[1-9A-HJ-NP-Za-km-z]{47}\Z")
 
@@ -44,6 +44,8 @@ class RoleStatus(_StrictModel):
     axon_served: bool
     axon: PublicAxon | None
     validator_permit: bool
+    is_subnet_owner: bool
+    weight_setting_authorized: bool
     blocks_since_last_update: int | None
 
 
@@ -76,7 +78,7 @@ class PreflightGates(_StrictModel):
     coldkey_balance_positive: bool
     required_roles_present: bool
     all_roles_registered: bool
-    validator_permit: bool
+    validator_authorized: bool
     miner_axons_served: bool
     registration_requirement_met: bool
     served_axon_requirement_met: bool
@@ -262,6 +264,7 @@ def _role_statuses(
     coldkeys = _field(metagraph, "coldkeys", ())
     axons = _field(metagraph, "axons", ())
     permits = _field(metagraph, "validator_permit", ())
+    owner_hotkey = str(_field(metagraph, "owner_hotkey", ""))
     last_updates = _field(metagraph, "last_update", ())
     hotkey_list = list(hotkeys) if isinstance(hotkeys, Sequence) else []
 
@@ -272,6 +275,8 @@ def _role_statuses(
         registered_coldkey = _indexed(coldkeys, uid) if uid is not None else None
         last_update = _optional_int(_indexed(last_updates, uid)) if uid is not None else None
         blocks_since = max(0, snapshot.block - last_update) if last_update is not None else None
+        validator_permit = bool(_indexed(permits, uid, False)) if uid is not None else False
+        is_subnet_owner = bool(uid is not None and owner_hotkey and address == owner_hotkey)
         output.append(
             RoleStatus(
                 role=role,
@@ -285,9 +290,9 @@ def _role_statuses(
                 ),
                 axon_served=served,
                 axon=axon,
-                validator_permit=(
-                    bool(_indexed(permits, uid, False)) if uid is not None else False
-                ),
+                validator_permit=validator_permit,
+                is_subnet_owner=is_subnet_owner,
+                weight_setting_authorized=validator_permit or is_subnet_owner,
                 blocks_since_last_update=blocks_since,
             )
         )
@@ -302,7 +307,7 @@ def _empty_gates() -> PreflightGates:
         coldkey_balance_positive=False,
         required_roles_present=False,
         all_roles_registered=False,
-        validator_permit=False,
+        validator_authorized=False,
         miner_axons_served=False,
         registration_requirement_met=False,
         served_axon_requirement_met=False,
@@ -372,8 +377,8 @@ def collect_testnet_preflight(
             and sum(1 for role in role_names if role.startswith("miner")) >= 2
         )
         all_registered = bool(role_statuses) and all(item.registered for item in role_statuses)
-        validator_permit = any(
-            item.role == "validator" and item.validator_permit for item in role_statuses
+        validator_authorized = any(
+            item.role == "validator" and item.weight_setting_authorized for item in role_statuses
         )
         miners = tuple(item for item in role_statuses if item.role.startswith("miner"))
         miners_served = len(miners) >= 2 and all(item.axon_served for item in miners)
@@ -389,7 +394,7 @@ def collect_testnet_preflight(
             coldkey_balance_positive=balance_positive,
             required_roles_present=required_roles,
             all_roles_registered=all_registered,
-            validator_permit=validator_permit,
+            validator_authorized=validator_authorized,
             miner_axons_served=miners_served,
             registration_requirement_met=registration_met,
             served_axon_requirement_met=served_met,
@@ -406,7 +411,7 @@ def collect_testnet_preflight(
                 ready_for_registration,
                 all_registered,
                 ownership_matches,
-                validator_permit,
+                validator_authorized,
                 miners_served,
                 registration_met,
                 served_met,
@@ -427,9 +432,9 @@ def collect_testnet_preflight(
             next_action = (
                 "Registration is pending and requires an explicit user-authorized signature."
             )
-        elif not validator_permit or not miners_served:
+        elif not validator_authorized or not miners_served:
             next_action = (
-                "Serve public Axons and satisfy validator-permit gates before protocol run."
+                "Serve public Axons and satisfy validator authorization before protocol run."
             )
         else:
             next_action = (
