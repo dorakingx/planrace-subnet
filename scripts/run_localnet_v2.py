@@ -45,6 +45,8 @@ from planrace.localnet_v2 import PROFILE_NAMES
 from planrace.models_v2 import (
     ArtifactBudget,
     OptimizationRequestV2,
+    PublicTaskV2,
+    TaskRevealV2,
     domain_separated_digest,
     optimization_request_digest,
     optimization_strategy_digest,
@@ -63,7 +65,7 @@ from planrace.scoring_v2 import (
     allocate_weights,
     kendall_tau_b,
 )
-from planrace.taskgen_v2 import audit_task_reveal
+from planrace.taskgen_v2 import PrivateTaskV2, audit_task_reveal
 from planrace.validator_client_v2 import request_optimization_v2
 
 DEFAULT_PORT = 8190
@@ -522,7 +524,120 @@ def _submit_final_weights(
 
 def _write_json(path: Path, value: Any) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_bytes(_canonical_bytes(value) + b"\n")
+    temporary = path.with_name(f"{path.name}.tmp")
+    temporary.write_bytes(_canonical_bytes(value) + b"\n")
+    temporary.replace(path)
+
+
+def _read_json_object(path: Path) -> dict[str, Any]:
+    try:
+        value = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as error:
+        raise RuntimeError(f"cannot read checkpoint {path}: {error}") from error
+    if not isinstance(value, dict):
+        raise RuntimeError(f"checkpoint must contain a JSON object: {path}")
+    return value
+
+
+def _write_run_input(
+    path: Path,
+    *,
+    started_at: str,
+    epochs: int,
+    worker_image: str,
+    dispatches: list[dict[str, Any]],
+    tasks: list[PrivateTaskV2],
+) -> None:
+    _write_json(
+        path,
+        {
+            "schema_version": "planrace/localnet-v2-input/1",
+            "started_at": started_at,
+            "epochs": epochs,
+            "worker_image": worker_image,
+            "dispatches": dispatches,
+            "tasks": [
+                {
+                    "public": task.public.model_dump(mode="json"),
+                    "reveal": task.reveal.model_dump(mode="json"),
+                }
+                for task in tasks
+            ],
+        },
+    )
+
+
+def _load_run_input(
+    path: Path,
+    *,
+    epochs: int,
+    worker_image: str,
+) -> tuple[str, list[dict[str, Any]], list[PrivateTaskV2]]:
+    value = _read_json_object(path)
+    if value.get("schema_version") != "planrace/localnet-v2-input/1":
+        raise RuntimeError("unsupported localnet run-input schema")
+    if value.get("epochs") != epochs:
+        raise RuntimeError("run-input epoch count does not match --epochs")
+    if value.get("worker_image") != worker_image:
+        raise RuntimeError("run-input worker image does not match --worker-image")
+    raw_dispatches = value.get("dispatches")
+    raw_tasks = value.get("tasks")
+    if not isinstance(raw_dispatches, list) or not isinstance(raw_tasks, list):
+        raise RuntimeError("run-input dispatches and tasks must be arrays")
+    if len(raw_dispatches) != epochs or len(raw_tasks) != epochs:
+        raise RuntimeError("run-input does not contain the requested number of epochs")
+
+    dispatches: list[dict[str, Any]] = []
+    tasks: list[PrivateTaskV2] = []
+    for epoch, (raw_dispatch, raw_task) in enumerate(zip(raw_dispatches, raw_tasks, strict=True)):
+        if not isinstance(raw_dispatch, dict) or not isinstance(raw_task, dict):
+            raise RuntimeError(f"run-input epoch {epoch} must contain JSON objects")
+        if raw_dispatch.get("epoch") != epoch:
+            raise RuntimeError(f"run-input dispatch sequence differs at epoch {epoch}")
+        public = PublicTaskV2.model_validate_json(
+            json.dumps(raw_task.get("public"), separators=(",", ":"))
+        )
+        reveal = TaskRevealV2.model_validate_json(
+            json.dumps(raw_task.get("reveal"), separators=(",", ":"))
+        )
+        if raw_dispatch.get("task_public") != public.model_dump(mode="json"):
+            raise RuntimeError(f"run-input public task differs at epoch {epoch}")
+        dispatches.append(dict(raw_dispatch))
+        tasks.append(PrivateTaskV2(public=public, reveal=reveal))
+
+    started_at = value.get("started_at")
+    if not isinstance(started_at, str) or not started_at:
+        raise RuntimeError("run-input started_at is missing")
+    return started_at, dispatches, tasks
+
+
+def _load_epoch_checkpoint(
+    path: Path,
+    *,
+    record: dict[str, Any],
+    task: PrivateTaskV2,
+) -> tuple[dict[str, Any], list[EpochObservation]]:
+    payload = _read_json_object(path)
+    epoch = int(record["epoch"])
+    if payload.get("epoch") != epoch:
+        raise RuntimeError(f"checkpoint epoch differs for epoch {epoch}")
+    if payload.get("task_public") != record.get("task_public"):
+        raise RuntimeError(f"checkpoint public task differs for epoch {epoch}")
+    if payload.get("task_reveal") != task.reveal.model_dump(mode="json"):
+        raise RuntimeError(f"checkpoint reveal differs for epoch {epoch}")
+    if payload.get("reveal_verified") is not True:
+        raise RuntimeError(f"checkpoint reveal is not verified for epoch {epoch}")
+    raw_observations = payload.get("observations")
+    if not isinstance(raw_observations, list):
+        raise RuntimeError(f"checkpoint observations are missing for epoch {epoch}")
+    observations = [
+        EpochObservation(**observation)
+        for observation in raw_observations
+        if isinstance(observation, dict)
+    ]
+    if len(observations) != MINER_COUNT or len(observations) != len(raw_observations):
+        raise RuntimeError(f"checkpoint observations are incomplete for epoch {epoch}")
+    return payload, observations
 
 
 def _set_chain_container_paused(name: str, *, paused: bool) -> None:
@@ -559,6 +674,11 @@ def main() -> None:
     parser.add_argument("--base-port", type=int, default=DEFAULT_PORT)
     parser.add_argument("--worker-image", required=True)
     parser.add_argument("--output", type=Path, default=Path("results/localnet-v2"))
+    parser.add_argument(
+        "--resume",
+        action="store_true",
+        help="resume evaluation from a previously written run-input and epoch checkpoints",
+    )
     parser.add_argument("--evaluation-workers", type=int, choices=range(1, 4), default=3)
     parser.add_argument("--chain-container", default="planrace-local-subtensor")
     parser.add_argument(
@@ -574,32 +694,64 @@ def main() -> None:
         raise SystemExit("localnet v2 evidence requires at least 30 epochs")
     if not arguments.worker_image.startswith("sha256:"):
         raise SystemExit("local evidence requires an immutable local image ID")
-    if arguments.output.exists() and any(arguments.output.iterdir()):
+    run_input_path = arguments.output / "run-input.json"
+    if arguments.resume:
+        if (arguments.output / "manifest.json").exists():
+            raise SystemExit("refusing to resume a completed evidence directory")
+        if not run_input_path.is_file():
+            raise SystemExit(f"resume requires an existing run input: {run_input_path}")
+    elif arguments.output.exists() and any(arguments.output.iterdir()):
         raise SystemExit(f"refusing to overwrite non-empty evidence directory: {arguments.output}")
     arguments.output.mkdir(parents=True, exist_ok=True)
 
     validators, miners = _public_identities()
-    processes = _start_miners(arguments.base_port, arguments.output)
-    started_at = _utc_now()
-    try:
-        asyncio.run(_wait_for_miners(arguments.base_port, processes))
-        dispatches, tasks = asyncio.run(
-            _dispatch_epochs(
-                epochs=arguments.epochs,
-                base_port=arguments.base_port,
-                image_digest=arguments.worker_image,
-                validators=validators,
-                miners=miners,
-            )
+    if arguments.resume:
+        started_at, dispatches, tasks = _load_run_input(
+            run_input_path,
+            epochs=arguments.epochs,
+            worker_image=arguments.worker_image,
         )
-    finally:
-        _stop_miners(processes)
+        print(f"resume loaded epochs={len(tasks)} from {run_input_path}", flush=True)
+    else:
+        processes = _start_miners(arguments.base_port, arguments.output)
+        started_at = _utc_now()
+        try:
+            asyncio.run(_wait_for_miners(arguments.base_port, processes))
+            dispatches, tasks = asyncio.run(
+                _dispatch_epochs(
+                    epochs=arguments.epochs,
+                    base_port=arguments.base_port,
+                    image_digest=arguments.worker_image,
+                    validators=validators,
+                    miners=miners,
+                )
+            )
+        finally:
+            _stop_miners(processes)
+        _write_run_input(
+            run_input_path,
+            started_at=started_at,
+            epochs=arguments.epochs,
+            worker_image=arguments.worker_image,
+            dispatches=dispatches,
+            tasks=tasks,
+        )
+        print(f"checkpointed run input after all task deadlines: {run_input_path}", flush=True)
 
     def evaluate(
-        pair: tuple[dict[str, Any], Any],
+        pair: tuple[dict[str, Any], PrivateTaskV2],
     ) -> tuple[dict[str, Any], list[EpochObservation]]:
         record, task = pair
-        return _evaluate_epoch(record, task, image_digest=arguments.worker_image)
+        epoch = int(record["epoch"])
+        checkpoint = arguments.output / "checkpoints" / f"epoch-{epoch:03}.json"
+        if checkpoint.is_file():
+            loaded = _load_epoch_checkpoint(checkpoint, record=record, task=task)
+            print(f"checkpoint epoch={epoch:02} loaded", flush=True)
+            return loaded
+        evaluated_epoch = _evaluate_epoch(record, task, image_digest=arguments.worker_image)
+        _write_json(checkpoint, evaluated_epoch[0])
+        print(f"checkpoint epoch={epoch:02} written", flush=True)
+        return evaluated_epoch
 
     if arguments.pause_chain_during_evaluation:
         _set_chain_container_paused(arguments.chain_container, paused=True)

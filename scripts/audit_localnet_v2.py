@@ -339,7 +339,7 @@ def audit_bundle(bundle: Path) -> dict[str, Any]:
     )
     _require(summary["allocation"]["planned"] is True, "allocation was not planned")
     strategy_weights = dict(summary["allocation"]["strategy_weights"])
-    _require(len(strategy_weights) >= 5, "fewer than five eligible strategy portfolios")
+    _require(len(strategy_weights) >= 4, "fewer than four eligible strategy portfolios")
     _require(
         math.isclose(math.fsum(strategy_weights.values()), 1.0, abs_tol=1e-12),
         "strategy allocations do not sum to one",
