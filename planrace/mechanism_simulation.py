@@ -37,6 +37,7 @@ from planrace.scoring_v2 import (
 
 WORKLOAD_FAMILIES: tuple[str, ...] = ("joins", "aggregates", "range", "skew")
 Category = Literal["honest", "gaming", "sybil"]
+PORTABLE_FLOAT_TOLERANCE = 1e-12
 
 
 @dataclass(frozen=True, slots=True)
@@ -1135,8 +1136,94 @@ def verify_evidence_bundle(
         regenerated_root = Path(directory)
         regenerated_manifest = write_evidence_bundle(regenerated, regenerated_root)
         for filename in regenerated_manifest["artifacts"]:
-            if (regenerated_root / filename).read_bytes() != (output_dir / filename).read_bytes():
+            difference = _artifact_reproduction_difference(
+                output_dir / filename, regenerated_root / filename
+            )
+            if difference is not None:
                 raise ValueError(
-                    f"mechanism artifact does not reproduce from seed and config: {filename}"
+                    "mechanism artifact does not reproduce from seed and config: "
+                    f"{filename}: {difference}"
                 )
     return manifest
+
+
+def _artifact_reproduction_difference(expected: Path, actual: Path) -> str | None:
+    """Compare regenerated artifacts while allowing only negligible libm drift."""
+
+    expected_bytes = expected.read_bytes()
+    actual_bytes = actual.read_bytes()
+    if expected_bytes == actual_bytes:
+        return None
+    if expected.suffix == ".json":
+        return _semantic_difference(json.loads(expected_bytes), json.loads(actual_bytes))
+    if expected.suffix == ".csv":
+        expected_rows = list(csv.reader(io.StringIO(expected_bytes.decode("utf-8"))))
+        actual_rows = list(csv.reader(io.StringIO(actual_bytes.decode("utf-8"))))
+        return _csv_difference(expected_rows, actual_rows)
+    return "byte content differs"
+
+
+def _semantic_difference(expected: Any, actual: Any, path: str = "$") -> str | None:
+    if isinstance(expected, float) and isinstance(actual, float):
+        if math.isclose(
+            expected,
+            actual,
+            rel_tol=PORTABLE_FLOAT_TOLERANCE,
+            abs_tol=PORTABLE_FLOAT_TOLERANCE,
+        ):
+            return None
+        return f"{path}: expected {expected!r}, got {actual!r}"
+    if type(expected) is not type(actual):
+        return f"{path}: expected {type(expected).__name__}, got {type(actual).__name__}"
+    if isinstance(expected, dict):
+        if expected.keys() != actual.keys():
+            return f"{path}: object keys differ"
+        for key in sorted(expected):
+            difference = _semantic_difference(expected[key], actual[key], f"{path}.{key}")
+            if difference is not None:
+                return difference
+        return None
+    if isinstance(expected, list):
+        if len(expected) != len(actual):
+            return f"{path}: expected {len(expected)} items, got {len(actual)}"
+        for index, (expected_item, actual_item) in enumerate(zip(expected, actual, strict=True)):
+            difference = _semantic_difference(expected_item, actual_item, f"{path}[{index}]")
+            if difference is not None:
+                return difference
+        return None
+    if expected != actual:
+        return f"{path}: expected {expected!r}, got {actual!r}"
+    return None
+
+
+def _csv_difference(expected: list[list[str]], actual: list[list[str]]) -> str | None:
+    if len(expected) != len(actual):
+        return f"expected {len(expected)} rows, got {len(actual)}"
+    for row_index, (expected_row, actual_row) in enumerate(zip(expected, actual, strict=True)):
+        if len(expected_row) != len(actual_row):
+            return f"row {row_index}: expected {len(expected_row)} cells, got {len(actual_row)}"
+        for column_index, (expected_cell, actual_cell) in enumerate(
+            zip(expected_row, actual_row, strict=True)
+        ):
+            if expected_cell == actual_cell:
+                continue
+            try:
+                expected_number = float(expected_cell)
+                actual_number = float(actual_cell)
+            except ValueError:
+                return f"row {row_index}, column {column_index}: text differs"
+            if not (
+                math.isfinite(expected_number)
+                and math.isfinite(actual_number)
+                and math.isclose(
+                    expected_number,
+                    actual_number,
+                    rel_tol=PORTABLE_FLOAT_TOLERANCE,
+                    abs_tol=PORTABLE_FLOAT_TOLERANCE,
+                )
+            ):
+                return (
+                    f"row {row_index}, column {column_index}: "
+                    f"expected {expected_cell!r}, got {actual_cell!r}"
+                )
+    return None

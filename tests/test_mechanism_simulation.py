@@ -7,6 +7,7 @@ from planrace.mechanism_simulation import (
     MINER_PROFILES,
     VALIDATOR_SCENARIOS,
     SimulationConfig,
+    _artifact_reproduction_difference,
     run_mechanism_simulation,
     verify_evidence_bundle,
     write_evidence_bundle,
@@ -105,6 +106,23 @@ def test_evidence_bundle_hashes_every_output(tmp_path) -> None:  # type: ignore[
     ).read_bytes()
     verified = verify_evidence_bundle(tmp_path)
     assert verified["config_sha256"] == manifest["config_sha256"]
+
+
+def test_artifact_reproduction_allows_only_negligible_float_drift(tmp_path) -> None:  # type: ignore[no-untyped-def]
+    expected_json = tmp_path / "expected.json"
+    actual_json = tmp_path / "actual.json"
+    expected_json.write_text('{"score":0.6111209699560776}\n', encoding="utf-8")
+    actual_json.write_text('{"score":0.6111209699560777}\n', encoding="utf-8")
+    assert _artifact_reproduction_difference(expected_json, actual_json) is None
+
+    actual_json.write_text('{"score":0.6112}\n', encoding="utf-8")
+    assert _artifact_reproduction_difference(expected_json, actual_json) is not None
+
+    expected_csv = tmp_path / "expected.csv"
+    actual_csv = tmp_path / "actual.csv"
+    expected_csv.write_text("name,score\ntrial,0.6111209699560776\n", encoding="utf-8")
+    actual_csv.write_text("name,score\ntrial,0.6111209699560777\n", encoding="utf-8")
+    assert _artifact_reproduction_difference(expected_csv, actual_csv) is None
 
 
 def test_evidence_bundle_verifier_rejects_tampering(tmp_path) -> None:  # type: ignore[no-untyped-def]
