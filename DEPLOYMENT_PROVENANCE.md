@@ -55,3 +55,31 @@ promotion step.
 | Vercel project root | `dashboard` |
 | Build result | Ready; evidence verification passed; build log had no warning, error, or failure |
 | Logged-out HTTP verification | Eight public routes passed with expected headers and signed v2 values |
+
+## Submission-package production record (2026-09-07 JST)
+
+PR #1 integrated the published submission receipts, interim media and full
+proposal checkpoint link. Its CI run `34046171321` passed all jobs before merge:
+306 Python tests, 85% coverage, three browser E2E tests, source/evidence audits,
+dependency and secret scans, and worker-image checks. The merged file tree was
+verified identical to the tested PR head.
+
+| Field | Value |
+|---|---|
+| Branch / commit | `main` / `c602a21eef392264439607999af6eced66a55505` |
+| Tested PR head | `32be37d85c6c96500c659620675eb4a3526f4320` |
+| Production deployment | `dpl_E7Y24aoSWhg5vgj9fTeLVzeMFMBb` / `planrace-subnet-3bekv3iz5-doraking.vercel.app` |
+| Canonical alias | `https://planrace-subnet.vercel.app` |
+| Source / status | Provider-controlled Git checkout / READY |
+| Build log | Cloned `main` at `c602a21`; evidence signature check and Next.js build passed |
+| Build-to-ready interval | 26.853 seconds, from provider timestamps |
+| `gitDirty` | Not emitted for provider Git checkout; do not synthesize a `0` metadata field |
+| Public route checks | Eight HTTP 200 responses, canonical metadata, security headers and explicit testnet-pending labels |
+| Downloaded manifest SHA-256 | `4e6ed9471fa6adae6e0cafc69446aa24296657b24160c8b151932824a56ffdb3`; exact committed byte match |
+| Bounded runtime-error check | No project error clusters reported from `2026-09-06T16:46:20Z` to the observation shortly after deployment |
+
+This is a historical verified record, not an assertion that future main commits
+or deployments have passed the same checks. The separate post-merge CI has run
+ID `34046510708`; consult that run for its final state. No drains or continuous
+monitoring coverage were established by the short runtime-error query. The
+dashboard continues to show localnet evidence, not a public testnet run.
