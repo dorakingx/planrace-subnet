@@ -30,6 +30,7 @@ jobs:
       - run: uv run python scripts/audit_localnet_v2.py results/localnet-v2
       - run: uv run python scripts/verify_mechanism_v2.py --require-clean-source
       - run: uv run pip-audit --format cyclonedx-json --output sbom.cdx.json
+      - run: uv run pip-audit --requirement requirements.worker.txt --disable-pip
       - run: uv build
       - run: uv run detect-secrets-hook --baseline .secrets.baseline $(git ls-files)
 
@@ -56,3 +57,28 @@ jobs:
       - run: npx playwright install --with-deps chromium
       - run: npm run test:e2e
       - run: npm audit --audit-level=high
+
+  worker-image:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Build non-root validator worker
+        run: >-
+          docker build
+          --build-arg VCS_REF=${{ github.sha }}
+          --file Dockerfile.validator-worker
+          --tag planrace-validator-worker:ci
+          .
+      - name: Verify immutable worker boundary
+        run: |
+          test "$(docker image inspect planrace-validator-worker:ci --format '{{.Config.User}}')" = "65532:65532"
+          test "$(docker run --rm --network none --read-only --entrypoint python planrace-validator-worker:ci --version)" = "Python 3.12.13"
+          docker run --rm --network none --read-only --entrypoint python planrace-validator-worker:ci \
+            -c "import sqlite3, planrace.sandbox_worker, pydantic, sqlglot; assert sqlite3.connect(':memory:').execute('select 1').fetchone() == (1,)"
+          set +e
+          output=$(printf '{}' | docker run --rm --network none --read-only planrace-validator-worker:ci --database /missing)
+          exit_code=$?
+          set -e
+          test "$exit_code" = "70"
+          test -z "$output"

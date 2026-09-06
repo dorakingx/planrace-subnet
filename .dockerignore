@@ -1,0 +1,7 @@
+**
+!Dockerfile.validator-worker
+!requirements.worker.txt
+!planrace/
+!planrace/**
+planrace/**/__pycache__/
+planrace/**/*.pyc
